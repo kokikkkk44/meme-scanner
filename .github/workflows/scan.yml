@@ -1,0 +1,52 @@
+name: meme-scanner
+
+on:
+  schedule:
+    # 15分おき(毎時 7分・22分・37分・52分)。GitHub の混雑で数分〜十数分遅れることがあります。
+    - cron: "7,22,37,52 * * * *"
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "normal=通常 / dry_run=Slackに送らず保存もしない / test_slack=テスト通知を1通送る"
+        type: choice
+        default: normal
+        options: [normal, dry_run, test_slack]
+
+permissions:
+  contents: write   # data フォルダの記録を保存するため
+
+concurrency:
+  group: meme-scanner
+  cancel-in-progress: false
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - run: pip install -r requirements.txt
+
+      - name: Run scanner
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SOLANATRACKER_API_KEY: ${{ secrets.SOLANATRACKER_API_KEY }}
+          DRY_RUN: ${{ inputs.mode == 'dry_run' }}
+          TEST_SLACK: ${{ inputs.mode == 'test_slack' }}
+        run: python scanner.py
+
+      - name: Save records
+        if: ${{ inputs.mode != 'dry_run' && inputs.mode != 'test_slack' }}
+        run: |
+          git config user.name "meme-scanner-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/
+          if git diff --cached --quiet; then echo "変更なし"; exit 0; fi
+          git commit -m "data: scan $(TZ=Asia/Tokyo date '+%Y-%m-%d %H:%M')"
+          for i in 1 2 3; do git pull --rebase -X theirs && git push && break; sleep 5; done

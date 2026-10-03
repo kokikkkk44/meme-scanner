@@ -1,0 +1,186 @@
+# =====================================================================
+#  ミームコイン候補スキャナー 設定ファイル
+#  ここの数字を書き換えて GitHub に保存(Commit)すると、次の実行から反映されます。
+#  「#」から右はメモ(説明)なので、動作には影響しません。
+# =====================================================================
+
+# ---------------------------------------------------------------------
+# 1. 候補の集め方
+# ---------------------------------------------------------------------
+sources:
+  dexscreener:
+    token_profiles: true        # 新しくプロフィール登録された銘柄
+    community_takeovers: true   # コミュニティ乗っ取り(CTO)された銘柄
+    token_boosts: true          # ブースト(広告)が新しく付いた銘柄
+    search_queries: []          # 検索ワードで探す場合に追加 例: ["pepe", "cat"]
+    search_max_age_hours: 24    # 検索結果のうち、作成からこの時間以内のペアだけ使う
+  pumpfun:
+    enabled: true               # pump.fun 卒業前の銘柄を Solana Tracker から取得
+    min_curve: 50               # 卒業までの進み具合(%)の下限
+    max_curve: 95               # 上限
+    limit: 100                  # 1回で取得する最大件数(多いほど見送りの記録が増える)
+    every_n_runs: 1             # 何回に1回取得するか(API回数を節約したいときは 2 以上に)
+
+# ---------------------------------------------------------------------
+# 2. 必須条件(1つでも満たさなければ「除外」)
+# ---------------------------------------------------------------------
+mandatory:
+  require_mint_renounced: true      # 追加発行の権限が放棄済み
+  require_freeze_renounced: true    # 凍結権限が放棄済み
+  reject_dangerous_extensions: true # permanent delegate / transfer hook / 送金不可 / 一時停止
+  reject_rugged: true               # RugCheck で rugged 判定
+  require_address_suffix: pump      # アドレスの末尾がこの文字なら通過。使わない場合は "" にする
+  allowed_launchpads: [Pump.Fun, pump_fun]   # 末尾が違っても、RugCheck の発行元(launchpad)がこれなら通過
+                                             # それ以外は除外(7日間は調べ直さない)
+  exclude_risk_keywords:            # RugCheck の警告(名前・説明)にこの文字が含まれたら除外
+    - {keyword: "creator history", label: "開発者のラグ歴(Creator history of rugged tokens)"}
+    - {keyword: "fee config", label: "手数料を変更できる設定(Fee config enabled)"}
+
+# ---------------------------------------------------------------------
+# 3. 判定基準(満たさなければ「見送り」)
+# ---------------------------------------------------------------------
+criteria_a:                         # A:卒業済み銘柄(DEXで取引中)
+  min_age_minutes: 15
+  min_liquidity_usd: 15000
+  max_bundle_pct: 30
+  max_top10_pct: 40                 # AMMプールを除いた上位10件
+
+# 上位10件の計算で、流動性プールの口座を見分ける方法(RugCheck の同じレポート内で照合)
+#   ① RugCheck が AMM と判定した口座  ② プール本体・プールのトークン口座  ③ 保有数がプール残高と一致
+#   ④ 保有数×価格がプールのトークン側の金額と一致(①〜③で見つからないときの予備)
+pool_detection:
+  amount_tolerance_pct: 0.5         # ③ 残高一致とみなす誤差
+  use_value_match: true             # ④ を使うか
+  value_tolerance_pct: 20           # ④ 金額一致とみなす誤差(RugCheck の価格とプール残高は時点が少しずれるため広め)
+  value_min_pool_usd: 1000          # ④ はこの金額以上のプールだけで判定
+
+criteria_b:                         # B:pump.fun 卒業前
+  min_curve_pct: 50
+  max_curve_pct: 95
+  min_mcap_usd: 15000
+  max_mcap_usd: 60000
+  min_holders: 100
+  max_dev_pct: 5
+  max_bundle_pct: 30
+
+# バンドル率などが取得できなかったときの扱い
+#   hold  = 見送りにする(安全寄り)
+#   allow = 基準を満たしたものとして進める(通知に「不明」と表示)
+on_missing_bundle: hold
+bundle_metric: current              # current=現在の保有率 / initial=購入時点の保有率
+
+# ---------------------------------------------------------------------
+# 4. リスク点数(min〜max に入ったら points を加算。上から順に最初に当てはまったもの)
+# ---------------------------------------------------------------------
+scoring:
+  bundle:
+    - {min: 15, max: 30, points: 2}
+  top10:
+    - {min: 30, max: 40, points: 2}
+    - {min: 20, max: 30, points: 1}
+  insider:
+    small_points: 1                 # インサイダーのウォレット群あり(小規模)
+    large_points: 3                 # 大規模
+    large_min_wallets: 50           # この数以上なら大規模
+    large_min_pct: 5                # または保有率がこの%を超えたら大規模
+  copycat:                          # 有名銘柄と同じシンボル(RugCheck の copycat 警告)
+    keywords: ["copycat"]
+    points: 2
+  lp:                               # 卒業済み(A)のみ
+    burn_threshold_pct: 90          # 焼却率がこれ以上なら「焼却済み」で 0 点
+    lock_only: 1                    # 焼却なしでロックのみ(ロック率90%以上)
+    partial_lock: 2                 # ロック率90%未満
+    no_lock: 3                      # ロックなし
+    unknown: 1                      # LP の状態が分からない(RugCheck に市場情報がない)
+    partial_threshold_pct: 90
+    # LP トークンがない仕組みのプールは LP 項目の対象外(0点)
+    # (LP の発行元が空欄のプールも自動で対象外。pump.fun 卒業前もボンディングカーブのため対象外)
+    no_lp_market_types: [meteoraDlmm, meteoraDamm2, dlmm, clmm, whirlpool, orca]
+  age_minutes:
+    - {min: 15, max: 60, points: 2}
+    - {min: 60, max: 360, points: 1}
+  pre_graduation: 2                 # pump.fun 卒業前
+  liquidity_usd:
+    - {min: 15000, max: 30000, points: 1}
+  price_move_1h:
+    abs_pct: 30                     # 直近1時間で ±30% を超えたら
+    points: 2
+  volume_to_liquidity:
+    ratio: 20                       # 出来高が流動性の20倍以上
+    window: h24                     # h24=24時間出来高 / h1=1時間出来高
+    points: 2
+  ads: 1                            # Dex Boost・tokenAd などの広告を購入
+  ad_order_types: [tokenAd, trendingBarAd]   # orders API で広告とみなす種類
+  no_socials: 1                     # 公式サイト・SNS がない
+  transfer_fee:
+    over_pct: 1                     # 売買税・送金手数料がこの%を超えたら
+    points: 1
+
+tiers:                              # 合計点での分類
+  small_max: 2                      # 0〜2点 → 候補(リスク小)
+  medium_max: 5                     # 3〜5点 → 候補(リスク中) / 6点以上 → 候補(リスク大)
+
+# ---------------------------------------------------------------------
+# 5. テーマ(銘柄名・シンボル・説明文から自動判定。点数には含めない)
+#    英字は大文字小文字を区別しません。
+#    「=」で始まる語は単語として一致したときだけ(例: =ai は "Snail" には反応しない)
+# ---------------------------------------------------------------------
+themes:
+  猫: [cat, kitty, kitten, meow, neko, popcat, mew, 猫, ねこ, ネコ]
+  犬: [dog, doge, shib, "=inu", puppy, "=pup", corgi, "=wif", bonk, 犬, いぬ, イヌ]
+  カエル: [pepe, frog, 蛙, カエル]
+  その他の動物: [penguin, pengu, monkey, "=ape", hamster, bear, "=bull", fish, duck, goat, horse, panda, rabbit, bunny, capybara, hippo, 動物]
+  AI: ["=ai", "=agi", agent, "=gpt", "=llm", neural, "artificial intelligence", claude, grok, openai, chatbot]
+  有名人便乗: [trump, melania, elon, musk, kanye, drake, "=cz", vitalik, saylor, "=mrbeast", "=ceo", taylor swift, obama, biden, putin]
+  政治: [maga, president, election, congress, senate, 大統領]
+  アニメ・ゲーム: [anime, manga, pokemon, pikachu, "=gta", minecraft, roblox, アニメ]
+  食べ物: [pizza, burger, sushi, ramen, banana, cookie, taco, "=egg", 寿司]
+  宇宙: [moon, mars, rocket, space, galaxy, alien, "=ufo"]
+  お金・定番ミーム: [chad, wojak, "=gm", degen, "=send", "=hodl", diamond]
+
+# ---------------------------------------------------------------------
+# 6. 通知
+# ---------------------------------------------------------------------
+notify:
+  renotify_hours: 24                # 同じ銘柄はこの時間内は再通知しない(段階が変わったら再通知)
+  daily_summary_hour_jst: 21        # 見送り・成績のまとめを送る時刻(日本時間 0〜23)
+  notify_tiers: [小, 中, 大]         # 通知する段階。例: 大を通知しないなら [小, 中]
+
+# ---------------------------------------------------------------------
+# 7. 仮想売買(ペーパートレード)。実際の売買は一切しません
+#    候補を通知した時点で amount_usd 分を買ったことにして、下のルールで損益を計算
+# ---------------------------------------------------------------------
+paper_trading:
+  enabled: true
+  amount_usd: 20
+  stop_loss_pct: -40               # 購入価格からこの%まで下がったら残りを全部売る
+  take_profit:                     # 上から順に判定
+    - {pct: 50, sell_ratio: 0.5}   # +50% で最初の数量の半分を売る
+    - {pct: 100, sell_ratio: 1.0}  # +100% で残りを全部売る
+  time_exit_minutes: 60            # 購入からこの時間がたったら残りを全部売る
+  fee_pct: 1.0                     # 1回の売買ごとの手数料・スリッページ(価格のずれ)の見込み。0 にすると無視
+  tiers: [小, 中, 大]              # 仮想売買の対象にする段階
+  max_entries_per_day:             # 1日(日本時間 0時〜24時)の仮想購入の上限回数
+    weekday: 3                     # 月〜金
+    weekend: 7                     # 土・日
+  daily_loss_limit_sol: 0.4        # その日に決済した仮想売買の損失がこの SOL 相当に達したら、その日は仮想購入しない
+
+# ---------------------------------------------------------------------
+# 8. 動作・API 回数の上限
+# ---------------------------------------------------------------------
+runtime:
+  max_runtime_sec: 300              # 1回の実行で使う最大時間(GitHub の無料枠節約)
+  rugcheck_max_per_run: 40          # RugCheck を1回で新しく調べる最大件数
+  rugcheck_skip_below_liquidity: true  # 流動性が criteria_a の基準未満なら RugCheck を省略して見送り
+                                       # (pump.fun 卒業前は対象外。false にすると全銘柄を RugCheck)
+  rugcheck_interval_sec: 0.6        # RugCheck への連続アクセスの間隔
+  rugcheck_fresh_minutes: 60        # 候補として通知する前に、これより古い RugCheck 結果は取り直す
+  st_cache_minutes: 60              # Solana Tracker の結果を使い回す時間(無料枠が厳しいときは 180 など)
+  recheck_minutes: 30               # 見送り・候補の銘柄を再チェックする間隔
+  excluded_recheck_hours: 6         # 除外銘柄を再チェックするまでの時間
+  watch_hours: 24                   # 見つけた銘柄を追いかける時間
+  max_watch: 400                    # 追いかける銘柄の上限数
+
+solana_tracker:
+  monthly_budget: 9000              # 1か月に使ってよいリクエスト数(無料プランの上限より少し少なめに)
+  daily_pacing: true                # 月の上限を日割りして、月初に使い切らないようにする
