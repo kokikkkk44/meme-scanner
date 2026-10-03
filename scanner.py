@@ -256,7 +256,9 @@ def summarize_pair(p):
         "pc_h1": fnum(pc.get("h1")),
         "pc_h6": fnum(pc.get("h6")),
         "vol_h1": fnum(vol.get("h1")),
+        "vol_h6": fnum(vol.get("h6")),
         "vol_h24": fnum(vol.get("h24")),
+        "txns_h6": sum(int(((p.get("txns") or {}).get("h6") or {}).get(k) or 0) for k in ("buys", "sells")) or None,
         "boosts": int((p.get("boosts") or {}).get("active") or 0),
         "socials": bool(info.get("websites") or info.get("socials")),
     }
@@ -490,6 +492,10 @@ class SolanaTracker:
         params = {"minCurve": c["min_curve"], "maxCurve": c["max_curve"], "minHolders": 0, "limit": c["limit"]}
         return as_list(self._call("/tokens/multi/graduating", params=params))
 
+    def token_list(self, path):
+        """トレンド・卒業済みなどの一覧(token info の配列)"""
+        return [x for x in as_list(self._call(path)) if isinstance(x, dict)]
+
     def multi(self, mints):
         out = {}
         mints = list(mints)
@@ -591,6 +597,7 @@ def build_view(mint, source, pair, rc, st, ad_types, st_unavailable=False, out_o
         "price": pick("price"),
         "pc_m5": pick("pc_m5"), "pc_h1": pick("pc_h1"), "pc_h6": pick("pc_h6"),
         "vol_h1": ps.get("vol_h1"),
+        "avg_trade_h6": (ps["vol_h6"] / ps["txns_h6"]) if ps.get("vol_h6") and ps.get("txns_h6") else None,
         "vol_h24": first(ps.get("vol_h24"), st.get("vol_h24")),
         "rc_checked": bool(rc),
         "st_checked": bool(st),
@@ -678,6 +685,30 @@ def classify(v):
             unknown("バンドル率", "st")
         elif v["bundle"] > c["max_bundle_pct"]:
             fails.append(f"バンドル{c['max_bundle_pct']}%超")
+        # --- C基準の追加項目(config.yaml で項目ごとに無効化できる) ---
+        if c.get("min_mcap_usd") is not None or c.get("max_mcap_usd") is not None:
+            lo, hi = c.get("min_mcap_usd") or 0, c.get("max_mcap_usd") or float("inf")
+            if v["mcap"] is None:
+                fails.append("時価総額が不明")
+            elif not (lo <= v["mcap"] <= hi):
+                fails.append(f"時価総額が{fmt_usd(lo)}〜{fmt_usd(hi)}の範囲外")
+        if c.get("min_holders"):
+            if v["holders"] is None:
+                unknown("保有者数", "st")
+            elif v["holders"] < c["min_holders"]:
+                fails.append(f"保有者{c['min_holders']}人未満")
+        if c.get("max_insider_pct") is not None and v["insider_pct"] is not None \
+                and v["insider_pct"] > c["max_insider_pct"]:
+            fails.append(f"インサイダー{c['max_insider_pct']}%超")
+        if c.get("max_dev_pct") is not None and v["dev_pct"] is not None and v["dev_pct"] > c["max_dev_pct"]:
+            fails.append(f"開発者の保有{c['max_dev_pct']}%超")
+        if c.get("min_avg_trade_usd") and v.get("avg_trade_h6") is not None \
+                and v["avg_trade_h6"] < c["min_avg_trade_usd"]:
+            fails.append(f"平均取引額${c['min_avg_trade_usd']}未満(Bot水増しの疑い)")
+        if c.get("max_change_h6_pct") is not None and v["pc_h6"] is not None and v["pc_h6"] > c["max_change_h6_pct"]:
+            fails.append(f"6時間で+{c['max_change_h6_pct']}%超の急騰中(押し目待ち)")
+    elif not CFG["criteria_b"].get("enabled", True):
+        fails.append("pump.fun卒業前(C基準では対象外)")
     else:
         c = CFG["criteria_b"]
         if v["curve"] is None:
@@ -1044,6 +1075,14 @@ def paper_limit():
     return lim.get("weekend" if weekend else "weekday"), ("土日" if weekend else "平日")
 
 
+def paper_amount_usd(sol_usd):
+    """仮想購入額(USD)。amount_sol があれば SOL 価格で換算、なければ amount_usd"""
+    pc = CFG["paper_trading"]
+    if pc.get("amount_sol") and sol_usd:
+        return round(pc["amount_sol"] * sol_usd, 2)
+    return pc.get("amount_usd", 20)
+
+
 def paper_check(rows, v, res, sol_usd):
     """仮想購入するかどうか。戻り値: (買うか, 通知に出す一言)"""
     pc = CFG.get("paper_trading") or {}
@@ -1062,7 +1101,10 @@ def paper_check(rows, v, res, sol_usd):
         if sol_usd and -pnl >= limit_sol * sol_usd:
             return False, f"本日の損失上限({limit_sol} SOL)に達したため見送り"
     cap_txt = f"・本日{entries + 1}/{cap}回目" if cap is not None else ""
-    return True, f"${pc['amount_usd']} 分を仮想購入{cap_txt}"
+    amt = paper_amount_usd(sol_usd)
+    v["_paper_usd"] = amt
+    sol_txt = f"({pc['amount_sol']} SOL相当)" if pc.get("amount_sol") and sol_usd else ""
+    return True, f"${amt} 分{sol_txt}を仮想購入{cap_txt}"
 
 
 def paper_open(rows, v, res):
@@ -1071,7 +1113,7 @@ def paper_open(rows, v, res):
     rows.append({
         "購入日時(JST)": jst(), "購入ts": int(now_ts()), "段階": res["tier"], "合計点": res["score"],
         "区分": v["category"], "シンボル": v["symbol"], "名前": v["name"], "アドレス": v["mint"],
-        "テーマ": "・".join(detect_themes(v)), "購入価格": fmt_price(v["price"]), "購入額USD": pc["amount_usd"],
+        "テーマ": "・".join(detect_themes(v)), "購入価格": fmt_price(v["price"]), "購入額USD": v.get("_paper_usd") or pc.get("amount_usd", 20),
         "状態": "保有中", "残り割合": 1, "利確済み段階": 0, "売却済みUSD": 0, "最終確認価格": fmt_price(v["price"]),
         "最高騰落%": 0, "最低騰落%": 0, "売却履歴": "",
     })
@@ -1176,7 +1218,7 @@ def paper_text(rows, since):
     lines.append(f"本日の仮想エントリー: {entries}/{cap}回({kind}) ｜ 本日の確定損益 ${pnl:+.2f}"
                  f"(損失上限 {pc.get('daily_loss_limit_sol')} SOL)")
     lines.append(f"保有中の仮想ポジション: {opened}件")
-    return (f"*🧪 仮想売買の成績*(${pc['amount_usd']}ずつ・手数料等{pc.get('fee_pct', 0)}%/回を差し引き・実際の売買なし)\n"
+    return (f"*🧪 仮想売買の成績*({(str(pc['amount_sol']) + ' SOL相当') if pc.get('amount_sol') else ('$' + str(pc.get('amount_usd', 20)))}ずつ・手数料等{pc.get('fee_pct', 0)}%/回を差し引き・実際の売買なし)\n"
             + "\n".join(lines))
 
 
@@ -1283,6 +1325,18 @@ def run(dry):
         # 一覧が上限件数に届いていなければ「一覧にない pump.fun 銘柄 = 進捗が範囲外」と判断できる
         grad_complete = 0 < len(st_raw) < pf["limit"]
         log(f"pump.fun卒業前 {len(st_raw)} 銘柄")
+    # Solana Tracker のトレンド・卒業済み一覧(C基準の主な探し場所)
+    for key, label in (("trending", "STトレンド"), ("graduated", "ST卒業済み")):
+        sc = CFG["sources"].get(key) or {}
+        if not sc.get("enabled") or state["runs"] % max(1, sc.get("every_n_runs", 1)) != 0 or not st_api.can():
+            continue
+        lst = st_api.token_list(sc["path"])[: sc.get("limit", 100)]
+        for ti in lst:
+            mint = (ti.get("token") or {}).get("mint")
+            if mint:
+                st_raw[mint] = ti
+                new.setdefault(mint, label)
+        log(f"{label} {len(lst)} 銘柄")
     # 発行元が Pump.Fun でないと判定済みの銘柄は、7日間は調べ直さない
     rows = []
     summ = state.setdefault("summary", {"since": t, "skip": {}, "excluded": {}, "cands": {}})

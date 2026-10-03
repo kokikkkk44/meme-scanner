@@ -14,8 +14,18 @@ sources:
     token_boosts: true          # ブースト(広告)が新しく付いた銘柄
     search_queries: []          # 検索ワードで探す場合に追加 例: ["pepe", "cat"]
     search_max_age_hours: 24    # 検索結果のうち、作成からこの時間以内のペアだけ使う
+  trending:                     # Solana Tracker のトレンド一覧(GMGN のトレンド欄に近い)。C基準の主な探し場所
+    enabled: true
+    path: /tokens/trending/6h   # 期間: 5m 15m 30m 1h 2h 3h 4h 5h 6h 12h 24h
+    limit: 100
+    every_n_runs: 2             # 何回に1回取得するか(2 = 30分に1回。API回数の節約)
+  graduated:                    # pump.fun を卒業したばかりの銘柄一覧
+    enabled: true
+    path: /tokens/multi/graduated
+    limit: 100
+    every_n_runs: 2
   pumpfun:
-    enabled: true               # pump.fun 卒業前の銘柄を Solana Tracker から取得
+    enabled: false              # pump.fun 卒業前の銘柄を Solana Tracker から取得(C基準では使わない)
     min_curve: 50               # 卒業までの進み具合(%)の下限
     max_curve: 95               # 上限
     limit: 100                  # 1回で取得する最大件数(多いほど見送りの記録が増える)
@@ -39,11 +49,18 @@ mandatory:
 # ---------------------------------------------------------------------
 # 3. 判定基準(満たさなければ「見送り」)
 # ---------------------------------------------------------------------
-criteria_a:                         # A:卒業済み銘柄(DEXで取引中)
-  min_age_minutes: 15
-  min_liquidity_usd: 15000
+criteria_a:                         # A:卒業済み銘柄(DEXで取引中)= C基準
+  min_age_minutes: 30               # 卒業(DEX上場)から30分以上
+  min_liquidity_usd: 20000
   max_bundle_pct: 30
-  max_top10_pct: 40                 # AMMプールを除いた上位10件
+  max_top10_pct: 30                 # AMMプールを除いた上位10件
+  min_mcap_usd: 60000               # 時価総額 $60K〜$500K
+  max_mcap_usd: 500000
+  min_holders: 300
+  max_insider_pct: 5                # インサイダー(開発者の仲間と思われるウォレット群)の保有率
+  max_dev_pct: 5                    # 開発者の保有率
+  min_avg_trade_usd: 20             # 6時間の出来高÷取引数。小さいと Bot の水増しの疑い
+  max_change_h6_pct: 100            # 6時間で+100%を超える急騰中は見送り(押し目待ち)
 
 # 上位10件の計算で、流動性プールの口座を見分ける方法(RugCheck の同じレポート内で照合)
 #   ① RugCheck が AMM と判定した口座  ② プール本体・プールのトークン口座  ③ 保有数がプール残高と一致
@@ -55,6 +72,7 @@ pool_detection:
   value_min_pool_usd: 1000          # ④ はこの金額以上のプールだけで判定
 
 criteria_b:                         # B:pump.fun 卒業前
+  enabled: false                    # C基準では卒業前は対象外。true にすると下の基準で判定
   min_curve_pct: 50
   max_curve_pct: 95
   min_mcap_usd: 15000
@@ -97,7 +115,7 @@ scoring:
     # (LP の発行元が空欄のプールも自動で対象外。pump.fun 卒業前もボンディングカーブのため対象外)
     no_lp_market_types: [meteoraDlmm, meteoraDamm2, dlmm, clmm, whirlpool, orca]
   age_minutes:
-    - {min: 15, max: 60, points: 2}
+    - {min: 30, max: 60, points: 2}
     - {min: 60, max: 360, points: 1}
   pre_graduation: 2                 # pump.fun 卒業前
   liquidity_usd:
@@ -152,7 +170,8 @@ notify:
 # ---------------------------------------------------------------------
 paper_trading:
   enabled: true
-  amount_usd: 20
+  amount_sol: 0.2                  # 1回の仮想購入額(SOL)。実際の取引と同じ金額
+  amount_usd: 20                   # SOL 価格が取れないときの予備
   stop_loss_pct: -40               # 購入価格からこの%まで下がったら残りを全部売る
   take_profit:                     # 上から順に判定
     - {pct: 50, sell_ratio: 0.5}   # +50% で最初の数量の半分を売る
