@@ -900,12 +900,12 @@ def fetch_news(query):
                          timeout=10, headers={"User-Agent": "Mozilla/5.0 (meme-scanner)"})
         if r.status_code != 200:
             return None
-        return parse_news(r.text)
+        return parse_news(r.text, query=query)
     except (requests.RequestException, ET.ParseError):
         return None
 
 
-def parse_news(xml_text, now=None):
+def parse_news(xml_text, now=None, query=None):
     now = now or dt.datetime.now(dt.timezone.utc)
     root = ET.fromstring(xml_text)
     general, crypto, top = 0, 0, ""
@@ -917,6 +917,9 @@ def parse_news(xml_text, now=None):
                 continue
         except (TypeError, ValueError):
             pass
+        # 見出しに銘柄名がそのまま含まれる記事だけ数える(本文だけの一致は無関係な記事が多いため)
+        if query and re.sub(r"\s+", " ", query.lower()) not in re.sub(r"\s+", " ", title.lower()):
+            continue
         if any(w in title.lower() for w in CRYPTO_WORDS):
             crypto += 1
         else:
