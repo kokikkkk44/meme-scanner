@@ -618,6 +618,7 @@ def build_view(mint, source, pair, rc, st, ad_types, st_unavailable=False, out_o
         "insider_pct": max(ins_pcts) if ins_pcts else None,
         "risks": rc.get("risks") or [],
         "launchpad": rc.get("launchpad") or [],
+        "st_market": st.get("market"),
         "pool_holders": rc.get("pool_holders") or [],
         "description": first(desc or None, st.get("description") or None, rc.get("description") or None, ""),
         "lp_locked_pct": rc.get("lp_locked_pct"),
@@ -644,7 +645,9 @@ def classify(v):
                     "reasons": ["発行元の確認待ち(RugCheck)"], "need": {"rc"}}
         allowed = {str(x).lower() for x in m.get("allowed_launchpads") or []}
         lp = [str(x).lower() for x in v.get("launchpad") or [] if x]
-        if not any(x in allowed for x in lp):
+        st_pump = str(v.get("st_market") or "").lower() in PUMPFUN_MARKETS or \
+            str(v.get("st_market") or "").lower().startswith("pumpfun")
+        if not any(x in allowed for x in lp) and not st_pump:
             name = (v.get("launchpad") or [""])[0] or "不明"
             return {"verdict": "除外", "tier": None, "score": None, "breakdown": [], "permanent": True,
                     "reasons": [f"アドレス末尾が「{suffix}」でなく、発行元も Pump.Fun でない(発行元: {name})"], "need": set()}
