@@ -18,28 +18,28 @@ sources:
     enabled: true
     path: /tokens/trending/6h   # 期間: 5m 15m 30m 1h 2h 3h 4h 5h 6h 12h 24h
     limit: 100
-    every_n_runs: 2             # 何回に1回取得するか(2 = 30分に1回。API回数の節約)
+    every_n_runs: 1             # 毎回(15分おき)取得。無料枠(月10,000回)に収まるよう monthly_budget で上限管理
   graduated:                    # pump.fun を卒業したばかりの銘柄一覧
     enabled: true
     path: /tokens/multi/graduated
     limit: 100
-    every_n_runs: 2
+    every_n_runs: 1
   trending_1h:                  # 直近1時間で勢いのある銘柄
-    enabled: true
+    enabled: false
     label: STトレンド1h
     path: /tokens/trending/1h
     limit: 100
     every_n_runs: 4             # 4 = 1時間に1回
     offset: 1                   # 他の一覧と同じ回に重ならないようにずらす
   trending_24h:                 # 1日を通して注目されている銘柄(数日たった銘柄も拾う)
-    enabled: true
+    enabled: false
     label: STトレンド24h
     path: /tokens/trending/24h
     limit: 100
     every_n_runs: 4
     offset: 2
   volume_6h:                    # 直近6時間の出来高(売買額)が多い銘柄
-    enabled: true
+    enabled: false
     label: ST出来高6h
     path: /tokens/volume/6h
     limit: 100
