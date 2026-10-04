@@ -1,9 +1,10 @@
 name: meme-scanner
 
 on:
-  schedule:
-    # 15分おき(毎時 7分・22分・37分・52分)。GitHub の混雑で数分〜十数分遅れることがあります。
-    - cron: "7,22,37,52 * * * *"
+  # 定期実行は cron-job.org から15分おきに workflow_dispatch で起動(GitHub の schedule は遅延・抜けが多いため停止)
+  # cron-job.org が止まったときの予備に戻す場合は、下の2行の # を外す
+  # schedule:
+  #   - cron: "7,22,37,52 * * * *"
   workflow_dispatch:
     inputs:
       mode:
