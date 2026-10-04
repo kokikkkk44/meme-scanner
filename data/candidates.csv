@@ -40,7 +40,7 @@
 2026-10-04 15:01,1791093673,中,5,A,SPLICE,SPLICE,839vH4BFQ2CKkF29i5KzhtcfdgabuMiRaM1qc8yGnUw,0.000206,206048.0,316995.74,,0.000501,143.2,0.000501,143.2,,,https://dexscreener.com/solana/839vH4BFQ2CKkF29i5KzhtcfdgabuMiRaM1qc8yGnUw
 2026-10-04 15:15,1791094553,大,6,A,Aiden,The Day Trader,EtfekZLHwW34nrCTbnauTD7qcc6friR7f2wTRLX9FpZ,0.0002352,235217.0,346220.93,,0.0002309,-1.83,0.0002129,-9.48,,,https://dexscreener.com/solana/EtfekZLHwW34nrCTbnauTD7qcc6friR7f2wTRLX9FpZ
 2026-10-04 15:15,1791094555,中,5,A,DUST,dust,HAcEqEVru6dRbe1grLFTPBxjxGgjn1tVpR7bLgYXdust,9.809e-05,95312.0,31380.58,,8.843e-05,-9.85,5.281e-05,-46.16,,,https://dexscreener.com/solana/HAcEqEVru6dRbe1grLFTPBxjxGgjn1tVpR7bLgYXdust
-2026-10-04 15:45,1791096348,大,8,A,TERMINAL,Agency Terminal,4nXBQvU9zaRVWCdimt8H5kDzeFzT2CzmzhLmPL3tz9Pz,0.0001009,100960.0,180005.64,,0.0001412,39.94,,,,,https://dexscreener.com/solana/4nXBQvU9zaRVWCdimt8H5kDzeFzT2CzmzhLmPL3tz9Pz
+2026-10-04 15:45,1791096348,大,8,A,TERMINAL,Agency Terminal,4nXBQvU9zaRVWCdimt8H5kDzeFzT2CzmzhLmPL3tz9Pz,0.0001009,100960.0,180005.64,,0.0001412,39.94,3.654e-05,-63.79,,,https://dexscreener.com/solana/4nXBQvU9zaRVWCdimt8H5kDzeFzT2CzmzhLmPL3tz9Pz
 2026-10-04 15:45,1791096350,大,6,A,LLM,large language model,FRgxtZsC3J3uePkMME9WkDUbQkQeZXpgdDGqhzRx3V31,0.0001083,97424.0,29862.66,AI,6.452e-05,-40.42,,,,,https://dexscreener.com/solana/FRgxtZsC3J3uePkMME9WkDUbQkQeZXpgdDGqhzRx3V31
 2026-10-04 15:45,1791096351,中,5,A,BRIDGE,Bridge,CpRkPw9M2iMDUozQFvkEeAjGJWucbLCJw3m3vZqdpump,7.211e-05,64915.0,24428.12,,6.107e-05,-15.31,,,,,https://dexscreener.com/solana/CpRkPw9M2iMDUozQFvkEeAjGJWucbLCJw3m3vZqdpump
 2026-10-04 15:45,1791096352,中,5,A,knightcat,Knight Cat,4LCZypQshWZX4Kr2aSDpaCfzZYD6wmZQtquaCBCNMJFt,0.0001302,130219.0,216687.14,猫,0.0001536,17.97,,,,,https://dexscreener.com/solana/4LCZypQshWZX4Kr2aSDpaCfzZYD6wmZQtquaCBCNMJFt
@@ -81,3 +81,4 @@
 2026-10-04 21:31,1791117069,中,4,A,SI,Super Intelligent,DMJzdNa6m8VdbMSzmfxV6S8aXeryJY1y7drwZwBctiXG,8.862e-05,82775.0,25860.23,,,,,,,,https://dexscreener.com/solana/DMJzdNa6m8VdbMSzmfxV6S8aXeryJY1y7drwZwBctiXG
 2026-10-04 21:31,1791117070,中,5,A,CLAUDIA,CLAUDIA,CruZPaRcm4xCPY2TCp5eatkwYVkSFP7e7uHmSpUfjdKH,0.0001259,125942.0,209273.6,AI,,,,,,,https://dexscreener.com/solana/CruZPaRcm4xCPY2TCp5eatkwYVkSFP7e7uHmSpUfjdKH
 2026-10-04 21:31,1791117072,中,3,A,LIFE,LIFE,7U62Lm4CKa25eRdBdYv3QeTJjJirxTVGJpA3ePkkpump,0.0001285,123007.0,33726.21,,,,,,,,https://dexscreener.com/solana/7U62Lm4CKa25eRdBdYv3QeTJjJirxTVGJpA3ePkkpump
+2026-10-04 21:45,1791117946,中,3,A,SpaceXSI,SpaceXSI,LXXLyY9kDfZ8tXDiWiH3K3nBhrufxCaWhUUoqoWouBH,0.0002078,207857.0,351475.69,宇宙,,,,,,,https://dexscreener.com/solana/LXXLyY9kDfZ8tXDiWiH3K3nBhrufxCaWhUUoqoWouBH
