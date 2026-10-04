@@ -67,7 +67,7 @@ criteria_a:                         # A:卒業済み銘柄(DEXで取引中)= C�
 #   ④ 保有数×価格がプールのトークン側の金額と一致(①〜③で見つからないときの予備)
 pool_detection:
   amount_tolerance_pct: 0.5         # ③ 残高一致とみなす誤差
-  use_value_match: true             # ④ を使うか
+  use_value_match: false            # ④ を使うか(2026-10-04: 一般の保有者をプールと誤判定するため停止)
   value_tolerance_pct: 20           # ④ 金額一致とみなす誤差(RugCheck の価格とプール残高は時点が少しずれるため広め)
   value_min_pool_usd: 1000          # ④ はこの金額以上のプールだけで判定
 
