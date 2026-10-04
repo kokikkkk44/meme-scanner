@@ -1,18 +1,483 @@
 {
- "VTd8fTsCkWTdtxtJvURJemNDuq9RCDh5uBhggUrBU15": {
-  "label": "VTd8",
+ "GoFcUtqesnWYiPkdaRgyfaripkMiHozUGBawot73L8Ci": {
+  "label": "GoFc-whale",
   "data": {
    "summary": {
-    "realized": 75908.27160581917,
-    "unrealized": -5522.588864287507,
-    "total": 70385.68274153158,
-    "totalInvested": 174885.3713784758,
-    "totalWins": 261,
-    "totalLosses": 229,
-    "averageBuyAmount": 146.67,
-    "winPercentage": 53.05,
-    "lossPercentage": 46.54,
-    "neutralPercentage": 0.41
+    "realized": -72742.07547294712,
+    "unrealized": -79786.05456732382,
+    "total": -152528.13004027097,
+    "totalInvested": 1030911.7089206049,
+    "totalWins": 6,
+    "totalLosses": 68,
+    "averageBuyAmount": 5599.18,
+    "winPercentage": 7.79,
+    "lossPercentage": 88.31,
+    "neutralPercentage": 3.9
+   },
+   "pnl_since": 1725141600000,
+   "_path": "/pnl/{w}"
+  }
+ },
+ "9KEShFaBjyBjLVWSXGE6mvWwQbJkkxw1vF2K2R1abKvy": {
+  "label": "itai",
+  "data": {
+   "summary": {
+    "realized": 483082.55452456535,
+    "unrealized": -2892.296327918245,
+    "total": 480190.2581966468,
+    "totalInvested": 2251936.3271083343,
+    "totalWins": 933,
+    "totalLosses": 2056,
+    "averageBuyAmount": 537.03,
+    "winPercentage": 30.26,
+    "lossPercentage": 66.69,
+    "neutralPercentage": 3.05
+   },
+   "pnl_since": 1725141600000,
+   "_path": "/pnl/{w}"
+  }
+ },
+ "Ej1ckSSumxx1Yh6vDwFuJLVAUg77XE6HpC45r4P6Uw9a": {
+  "label": "Ej1ck",
+  "data": {
+   "summary": {
+    "realized": -48750.275315129526,
+    "unrealized": -2741.396044511218,
+    "total": -51491.67135964075,
+    "totalInvested": 318194.02872674813,
+    "totalWins": 38,
+    "totalLosses": 128,
+    "averageBuyAmount": 568.63,
+    "winPercentage": 22.35,
+    "lossPercentage": 75.29,
+    "neutralPercentage": 2.36
+   },
+   "pnl_since": 1725141600000,
+   "_path": "/pnl/{w}"
+  }
+ },
+ "5XT2z88x9VNpAotua5KKJE95mciDhNLTraKftR1nDeAx": {
+  "label": "chungus",
+  "data": {
+   "summary": {
+    "realized": 17884.516468228292,
+    "unrealized": -7532.202054317566,
+    "total": 10352.314413910542,
+    "totalInvested": 4569605.101830788,
+    "totalWins": 235,
+    "totalLosses": 498,
+    "averageBuyAmount": 2519.52,
+    "winPercentage": 31.59,
+    "lossPercentage": 66.94,
+    "neutralPercentage": 1.47
+   },
+   "pnl_since": 1725141600000,
+   "_path": "/pnl/{w}"
+  }
+ },
+ "8fSnLTnRViK83dDesivTsPx2wiRhwti9xoafeMGjEyLJ": {
+  "label": "8fSn",
+  "data": {
+   "total": 32709.71301691224,
+   "totalSol": 269.545343248516,
+   "_path": "/wallet/{w}/basic"
+  }
+ },
+ "286CHN57Km41GsAnDv866WKd6YB6HPSjFgF4rGDJTRLf": {
+  "label": "chinaman",
+  "data": {
+   "total": 13168.749791301416,
+   "totalSol": 108.51746075275692,
+   "_path": "/wallet/{w}/basic"
+  }
+ },
+ "FxxnUxtQubemKSh6KbhECdsyEYkX611YCMz5gLHHMUtR": {
+  "label": "billy",
+  "data": {
+   "summary": {
+    "realized": -180937.8633782314,
+    "unrealized": -28840.278771646917,
+    "total": -209778.1421498783,
+    "totalInvested": 597952.2612004505,
+    "totalWins": 21,
+    "totalLosses": 186,
+    "averageBuyAmount": 906.96,
+    "winPercentage": 10.05,
+    "lossPercentage": 89,
+    "neutralPercentage": 0.95
+   },
+   "pnl_since": 1725141600000,
+   "_path": "/pnl/{w}"
+  }
+ },
+ "FdzbvwoAuQfzBvHFcWmffujmCu3GhpsEzAYAcPtQamVo": {
+  "label": "alwaysearly",
+  "data": {
+   "summary": {
+    "realized": -4614.530706184668,
+    "unrealized": -1.630087810632,
+    "total": -4616.1607939953,
+    "totalInvested": 119000.86189373919,
+    "totalWins": 111,
+    "totalLosses": 314,
+    "averageBuyAmount": 167.06,
+    "winPercentage": 26,
+    "lossPercentage": 73.54,
+    "neutralPercentage": 0.46
+   },
+   "pnl_since": 1725141600000,
+   "_path": "/pnl/{w}"
+  }
+ },
+ "Cvd6QQ4xwbhKGzKkPcR7ahzuwo3jxJVPgAc31PvMxqP1": {
+  "label": "superearly",
+  "data": {
+   "summary": {
+    "realized": -87979.17721214253,
+    "unrealized": -1492.9173688948358,
+    "total": -89472.09458103744,
+    "totalInvested": 934017.2429945582,
+    "totalWins": 45,
+    "totalLosses": 114,
+    "averageBuyAmount": 2243.58,
+    "winPercentage": 26.16,
+    "lossPercentage": 66.28,
+    "neutralPercentage": 7.56
+   },
+   "pnl_since": 1725141600000,
+   "_path": "/pnl/{w}"
+  }
+ },
+ "9RTva4wSk8E3EWYc8wtF9V94RUQGkemWtt3i8dUtsA4P": {
+  "label": "nunoeu",
+  "data": {
+   "summary": {
+    "realized": 185859.42016358237,
+    "unrealized": -592.956341476535,
+    "total": 185266.4638221048,
+    "totalInvested": 9396952.478941975,
+    "totalWins": 1069,
+    "totalLosses": 1601,
+    "averageBuyAmount": 1282.47,
+    "winPercentage": 39.71,
+    "lossPercentage": 59.47,
+    "neutralPercentage": 0.82
+   },
+   "pnl_since": 1725141600000,
+   "_path": "/pnl/{w}"
+  }
+ },
+ "8uSLJ2cauTgdYgGg4S7X79z9TRNiWXJoVBAAyw1tyGnw": {
+  "label": "kilofomo",
+  "data": {
+   "summary": {
+    "realized": -4777.882689999999,
+    "unrealized": 0,
+    "total": -4777.882689999999,
+    "totalInvested": 32355.772951,
+    "totalWins": 8,
+    "totalLosses": 26,
+    "averageBuyAmount": 524.08,
+    "winPercentage": 22.86,
+    "lossPercentage": 74.29,
+    "neutralPercentage": 2.85
+   },
+   "pnl_since": 1725141600000,
+   "_path": "/pnl/{w}"
+  }
+ },
+ "7TNYdvwDzuRKvquzn24grcGwvrtpsYK58GAWdRBnm3UT": {
+  "label": "tiktok",
+  "data": {
+   "total": 51548.199640593,
+   "totalSol": 424.6029345138671,
+   "_path": "/wallet/{w}/basic"
+  }
+ },
+ "BZmxuXQ68QeZABbDFSzveHyrXCv5EG6Ut1ATw5qZgm2Q": {
+  "label": "bottombid",
+  "data": {
+   "total": 312.71508211788756,
+   "totalSol": 2.575450672373126,
+   "_path": "/wallet/{w}/basic"
+  }
+ },
+ "34JiFUR96ULnvtp5h5gWgk6JrSvYFFB5LTnLWvPG4bTR": {
+  "label": "chibi",
+  "data": {
+   "total": 1795.752451667428,
+   "totalSol": 14.789451322465665,
+   "_path": "/wallet/{w}/basic"
+  }
+ },
+ "H3uLY81JmZbA4eCPtzmnjCAso2S41253F73YnArLpYCV": {
+  "label": "decent",
+  "data": {
+   "total": 199.63688007081987,
+   "totalSol": 1.6441686699270677,
+   "_path": "/wallet/{w}/basic"
+  }
+ },
+ "6xX7LudE5AqnTUc8dJJfzuarkSc6WMw7qRHgQXUdWauJ": {
+  "label": "early6xX7",
+  "data": {
+   "total": 2267.234815861083,
+   "totalSol": 18.672469141532478,
+   "_path": "/wallet/{w}/basic"
+  }
+ },
+ "FfztZq1outrYfyYbKw5P4LGo4xUc4XYEdf7o91UdS7qu": {
+  "label": "0xsneaky",
+  "data": {
+   "total": 456579.78368293727,
+   "totalSol": 3760.29076910752,
+   "_path": "/wallet/{w}/basic"
+  }
+ },
+ "CUwyqt27UtTBxyxvj1hPqqyLVzrUgcDWAPJvwqnnwahn": {
+  "label": "animal",
+  "data": {
+   "summary": {
+    "realized": 15438.89124282771,
+    "unrealized": -16824.518813726914,
+    "total": -1385.627570899185,
+    "totalInvested": 1005713.9182253795,
+    "totalWins": 332,
+    "totalLosses": 760,
+    "averageBuyAmount": 374.82,
+    "winPercentage": 26.56,
+    "lossPercentage": 60.8,
+    "neutralPercentage": 12.64
+   },
+   "pnl_since": 1725141600000,
+   "_path": "/pnl/{w}"
+  }
+ },
+ "24ATE6AQw7G3GHJJtWJCk3GofPjdNysqeQj46KgVRosU": {
+  "label": "s2a",
+  "data": {
+   "total": 21714.798532437646,
+   "totalSol": 178.83830908128374,
+   "_path": "/wallet/{w}/basic"
+  }
+ },
+ "S2XVoysKgsZ8ZPaUApxMCdYMjW2SFt8MjLCPwghb5VT": {
+  "label": "s2b",
+  "data": {
+   "total": 16104.816339595269,
+   "totalSol": 132.62833822872287,
+   "_path": "/wallet/{w}/basic"
+  }
+ },
+ "FVugAb5gWb6vz3zUppNoC5gWvbVA5xDGKnL9tTmTnxsU": {
+  "label": "DTD",
+  "data": {
+   "summary": {
+    "realized": 25746.624386264266,
+    "unrealized": -6601.787135223968,
+    "total": 19144.83725104032,
+    "totalInvested": 2816478.2363082394,
+    "totalWins": 733,
+    "totalLosses": 1221,
+    "averageBuyAmount": 603.17,
+    "winPercentage": 34.69,
+    "lossPercentage": 57.79,
+    "neutralPercentage": 7.52
+   },
+   "pnl_since": 1725141600000,
+   "_path": "/pnl/{w}"
+  }
+ },
+ "E1zGzPY1WdJoHSzf928NWTkZjcAhnUaN1xzF6BhCTsvS": {
+  "label": "lowcap",
+  "data": {
+   "summary": {
+    "realized": 646239.2930951676,
+    "unrealized": -42789.67740268913,
+    "total": 603449.6156924799,
+    "totalInvested": 2514555.13844037,
+    "totalWins": 1358,
+    "totalLosses": 2000,
+    "averageBuyAmount": 246.92,
+    "winPercentage": 35.96,
+    "lossPercentage": 52.97,
+    "neutralPercentage": 11.07
+   },
+   "pnl_since": 1725141600000,
+   "_path": "/pnl/{w}"
+  }
+ },
+ "64U9MukooWV5ziNXx2PCmZNmktBzQoKXnKsDBLvgCQ5g": {
+  "label": "0xn4te",
+  "data": {
+   "summary": {
+    "realized": -698331.9537008157,
+    "unrealized": -307764.6474522144,
+    "total": -1006096.6011530296,
+    "totalInvested": 5446345.520256725,
+    "totalWins": 59,
+    "totalLosses": 248,
+    "averageBuyAmount": 2949.95,
+    "winPercentage": 17.35,
+    "lossPercentage": 72.94,
+    "neutralPercentage": 9.71
+   },
+   "pnl_since": 1725141600000,
+   "_path": "/pnl/{w}"
+  }
+ },
+ "D9NKx3SkKfJzXENgdPbTDxdvxTM7p6ckxoXmHwkgugVy": {
+  "label": "henrique",
+  "data": {
+   "summary": {
+    "realized": -13703.98117546605,
+    "unrealized": -41678.08036486271,
+    "total": -55382.06154032874,
+    "totalInvested": 505869.49755300005,
+    "totalWins": 76,
+    "totalLosses": 127,
+    "averageBuyAmount": 1128.91,
+    "winPercentage": 35.85,
+    "lossPercentage": 59.91,
+    "neutralPercentage": 4.24
+   },
+   "pnl_since": 1725141600000,
+   "_path": "/pnl/{w}"
+  }
+ },
+ "7rAPgKoPA7DFYeHWpRq7SiQgB1zZN8ReasMKp6r2ATs8": {
+  "label": "fresh",
+  "data": {
+   "summary": {
+    "realized": 11124.555117203692,
+    "unrealized": -287.11546985462,
+    "total": 10837.439647349074,
+    "totalInvested": 35072.919092568656,
+    "totalWins": 14,
+    "totalLosses": 33,
+    "averageBuyAmount": 271.33,
+    "winPercentage": 29.79,
+    "lossPercentage": 70.21,
+    "neutralPercentage": 0
+   },
+   "pnl_since": 1725141600000,
+   "_path": "/pnl/{w}"
+  }
+ },
+ "6tRZkbqwy99hWuExk8TnKYpUHHcQ6jb4FjnNwjh4RkHY": {
+  "label": "chillguy",
+  "data": {
+   "summary": {
+    "realized": -529279.0430706687,
+    "unrealized": -92122.89186680583,
+    "total": -621401.9349374748,
+    "totalInvested": 10448634.891987499,
+    "totalWins": 406,
+    "totalLosses": 1134,
+    "averageBuyAmount": 530.08,
+    "winPercentage": 25.89,
+    "lossPercentage": 72.32,
+    "neutralPercentage": 1.79
+   },
+   "pnl_since": 1725141600000,
+   "_path": "/pnl/{w}"
+  }
+ },
+ "G1pRtSyKuWSjTqRDcazzKBDzqEF96i1xSURpiXj3yFcc": {
+  "label": "cryptodevin",
+  "data": {
+   "summary": {
+    "realized": 7079141.128451186,
+    "unrealized": -5975.01323462,
+    "total": 7073166.115216569,
+    "totalInvested": 22026849.68930394,
+    "totalWins": 936,
+    "totalLosses": 1457,
+    "averageBuyAmount": 2839.15,
+    "winPercentage": 37.08,
+    "lossPercentage": 57.73,
+    "neutralPercentage": 5.19
+   },
+   "pnl_since": 1725141600000,
+   "_path": "/pnl/{w}"
+  }
+ },
+ "BRnRec2n8j4Tnhzdr3TucL1B7MPMQLbTSyjUFgNPjQC6": {
+  "label": "kiloterminal",
+  "data": {
+   "summary": {
+    "realized": -95.71498070059306,
+    "unrealized": 227.12330734346696,
+    "total": 131.40832664287382,
+    "totalInvested": 6883.934553389807,
+    "totalWins": 6,
+    "totalLosses": 10,
+    "averageBuyAmount": 228.48,
+    "winPercentage": 35.29,
+    "lossPercentage": 58.82,
+    "neutralPercentage": 5.89
+   },
+   "pnl_since": 1725141600000,
+   "_path": "/pnl/{w}"
+  }
+ },
+ "JDQKDrc1TQgBRvdFh56tkta5sYcDj1SoP52Eiu64rSrT": {
+  "label": "gooddev",
+  "data": {
+   "total": 39161.30925610371,
+   "totalSol": 322.2879713795198,
+   "_path": "/wallet/{w}/basic"
+  }
+ },
+ "7EmUSAXbyXoGpqLPpurkQ97S4ovMdkbjyYPrKtJHtkqa": {
+  "label": "tekky",
+  "data": {
+   "total": 2.967199744315464,
+   "totalSol": 0.02441548520870864,
+   "_path": "/wallet/{w}/basic"
+  }
+ },
+ "HQMsv1Dxb72zWq1Xn63pzm1RKShjetsguWr87UZuA1wG": {
+  "label": "bundler",
+  "data": {
+   "summary": {
+    "realized": 149657.37370436842,
+    "unrealized": 26319.94664546228,
+    "total": 175977.320349832,
+    "totalInvested": 513591.26759703585,
+    "totalWins": 968,
+    "totalLosses": 1532,
+    "averageBuyAmount": 100.32,
+    "winPercentage": 38.25,
+    "lossPercentage": 60.53,
+    "neutralPercentage": 1.22
+   },
+   "pnl_since": 1725141600000,
+   "_path": "/pnl/{w}"
+  }
+ },
+ "GgbCFRHHAPv5i1fqt1D1buf8FPNA31oKrkZvXDyZymsT": {
+  "label": "shizuka",
+  "data": {
+   "total": 139844.50300160307,
+   "totalSol": 1150.5140820638253,
+   "_path": "/wallet/{w}/basic"
+  }
+ },
+ "D9Jibi4oneM46vCjF2qq8Azc2kPxCTfJKi6i5uMnz8Aq": {
+  "label": "ignite",
+  "data": {
+   "summary": {
+    "realized": -126531.58759379665,
+    "unrealized": 14103.65055236604,
+    "total": -112427.93704143041,
+    "totalInvested": 1698523.9427736495,
+    "totalWins": 120,
+    "totalLosses": 601,
+    "averageBuyAmount": 694.27,
+    "winPercentage": 16.42,
+    "lossPercentage": 82.22,
+    "neutralPercentage": 1.36
    },
    "pnl_since": 1725141600000,
    "_path": "/pnl/{w}"
@@ -23,8 +488,8 @@
   "data": {
    "summary": {
     "realized": 736449.6156283198,
-    "unrealized": -87697.92241076534,
-    "total": 648751.6932175524,
+    "unrealized": -57257.06189854889,
+    "total": 679192.553729769,
     "totalInvested": 2333491.8142393497,
     "totalWins": 64,
     "totalLosses": 294,
