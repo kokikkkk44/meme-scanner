@@ -30,6 +30,8 @@ from zoneinfo import ZoneInfo
 
 import requests
 import yaml
+import xml.etree.ElementTree as ET
+from email.utils import parsedate_to_datetime
 
 BASE = os.path.dirname(os.path.abspath(__file__))
 DATA = os.path.join(BASE, "data")
@@ -261,6 +263,8 @@ def summarize_pair(p):
         "txns_h6": sum(int(((p.get("txns") or {}).get("h6") or {}).get(k) or 0) for k in ("buys", "sells")) or None,
         "boosts": int((p.get("boosts") or {}).get("active") or 0),
         "socials": bool(info.get("websites") or info.get("socials")),
+        "social_types": sorted({str(x.get("type") or "").lower() for x in (info.get("socials") or []) if isinstance(x, dict)}
+                               | ({"web"} if info.get("websites") else set())),
     }
 
 
@@ -629,6 +633,7 @@ def build_view(mint, source, pair, rc, st, ad_types, st_unavailable=False, out_o
         "has_markets": rc.get("has_markets"),
         "has_ads": (ps.get("boosts") or 0) > 0 or any(t in CFG["scoring"]["ad_order_types"] for t in (ad_types or [])),
         "socials": bool(ps.get("socials") or st.get("socials")),
+        "social_types": ps.get("social_types") or [],
         "transfer_fee_pct": rc.get("transfer_fee_pct"),
     }
 
@@ -872,7 +877,96 @@ def slack_send(payload, dry):
         return False
 
 
-def candidate_payload(v, res, prev_tier=None, paper_msg=""):
+# ---------------------------------------------------------------------------
+# ナラティブ(参考・点数外):Googleニュース(RSS・無料)と公式SNSの有無
+# ---------------------------------------------------------------------------
+CRYPTO_WORDS = ("meme coin", "memecoin", "token", "crypto", "solana", "pump.fun", "airdrop", "market cap", "コイン", "仮想通貨")
+GENERIC_NAMES = {"ai", "si", "the", "coin", "token", "meme", "agent", "agency", "cat", "dog", "pepe", "inu"}
+
+
+def news_query(v):
+    """検索語。短すぎる・一般的すぎる名前は検索しない"""
+    name = re.sub(r"\s+", " ", str(v.get("name") or "")).strip()
+    if len(name) < 4 or name.lower() in GENERIC_NAMES:
+        return None
+    return name
+
+
+def fetch_news(query):
+    """Googleニュースの直近24時間の記事。戻り値: (一般記事数, 仮想通貨記事数, 代表見出し) / 失敗時 None"""
+    try:
+        r = requests.get("https://news.google.com/rss/search",
+                         params={"q": f'"{query}" when:1d', "hl": "en-US", "gl": "US", "ceid": "US:en"},
+                         timeout=10, headers={"User-Agent": "Mozilla/5.0 (meme-scanner)"})
+        if r.status_code != 200:
+            return None
+        return parse_news(r.text)
+    except (requests.RequestException, ET.ParseError):
+        return None
+
+
+def parse_news(xml_text, now=None):
+    now = now or dt.datetime.now(dt.timezone.utc)
+    root = ET.fromstring(xml_text)
+    general, crypto, top = 0, 0, ""
+    for it in root.iter("item"):
+        title = (it.findtext("title") or "").strip()
+        try:
+            pub = parsedate_to_datetime(it.findtext("pubDate") or "")
+            if (now - pub).total_seconds() > 86400:
+                continue
+        except (TypeError, ValueError):
+            pass
+        if any(w in title.lower() for w in CRYPTO_WORDS):
+            crypto += 1
+        else:
+            general += 1
+            top = top or title
+        if not top:
+            top = title
+    return general, crypto, top
+
+
+def narrative(v, state):
+    """(星の数0〜3, 表示文, CSV用の短い文)。点数(リスク)には含めない"""
+    nc = CFG.get("narrative") or {}
+    if not nc.get("enabled", True):
+        return None
+    cache = state.setdefault("news_cache", {})
+    key = v["mint"]
+    c = cache.get(key)
+    if not (c and now_ts() - c["ts"] < nc.get("cache_hours", 3) * 3600):
+        q = news_query(v)
+        res = None
+        if q and state.setdefault("_news_calls", 0) < nc.get("max_per_run", 10):
+            state["_news_calls"] += 1
+            res = fetch_news(q)
+        c = {"ts": now_ts(), "q": q, "res": list(res) if res else None}
+        cache[key] = c
+    stars, parts = 0, []
+    if c["q"] is None:
+        parts.append("ニュース: 名前が短い・一般的で検索せず")
+    elif c["res"] is None:
+        parts.append("ニュース: 取得できず")
+    else:
+        g, k, top = c["res"]
+        if g >= 5:
+            stars += 2
+        elif g >= 1:
+            stars += 1
+        parts.append(f"ニュース24h: 一般{g}件・仮想通貨{k}件" + (f"「{top[:60]}」" if top else ""))
+    st = v.get("social_types") or []
+    names = {"twitter": "X", "web": "Web", "telegram": "TG", "discord": "Discord"}
+    shown = [names.get(t, t) for t in st]
+    if ("twitter" in st and "web" in st) or len(st) >= 3:
+        stars += 1
+    parts.append("SNS: " + ("・".join(shown) if shown else ("あり" if v.get("socials") else "なし")))
+    stars = min(stars, 3)
+    text = "★" * stars + "☆" * (3 - stars) + " ｜ " + " ｜ ".join(parts)
+    return stars, text, f"{stars}/3 " + " / ".join(parts)
+
+
+def candidate_payload(v, res, prev_tier=None, paper_msg="", narr=None):
     tier = res["tier"]
     style = TIER_STYLE[tier]
     cat = "A 卒業済み" if v["category"] == "A" else "B pump.fun卒業前"
@@ -894,6 +988,7 @@ def candidate_payload(v, res, prev_tier=None, paper_msg=""):
         f"`{mint}`\n"
         f"{warn}"
         f"テーマ(参考・点数外): {'・'.join(themes) if themes else '判定なし'}\n"
+        f"{('ナラティブ(参考・点数外): ' + narr[1] + chr(10)) if narr else ''}"
         f"経過: {fmt_age(v['age_min'])} ｜ 時価総額: {fmt_usd(v['mcap'])} ｜ 流動性: {fmt_usd(v['liquidity'])}\n"
         f"値動き: 5分 {fmt_pct(v['pc_m5'], True)} ｜ 1時間 {fmt_pct(v['pc_h1'], True)} ｜ 6時間 {fmt_pct(v['pc_h6'], True)}\n"
         f"バンドル: {fmt_pct(v['bundle'])} ｜ 上位10件: {fmt_pct(v['top10'])} ｜ 開発者: {fmt_pct(v['dev_pct'])}{holders}\n"
@@ -920,7 +1015,7 @@ LOG_FIELDS = ["日時(JST)", "判定", "合計点", "点数の内訳", "理由",
               "経過(分)", "時価総額USD", "流動性USD", "価格USD", "5分%", "1時間%", "6時間%",
               "バンドル%", "スナイパー%", "上位10%", "開発者%", "保有者数", "卒業進捗%", "インサイダー数", "LP状態", "テーマ", "便乗の疑い", "除外したプール口座"]
 CAND_FIELDS = ["通知日時(JST)", "通知ts", "段階", "合計点", "区分", "シンボル", "名前", "アドレス",
-               "通知時価格", "通知時時価総額", "通知時流動性", "テーマ",
+               "通知時価格", "通知時時価総額", "通知時流動性", "テーマ", "ナラティブ",
                "1時間後価格", "1時間後%", "6時間後価格", "6時間後%", "24時間後価格", "24時間後%", "DEX Screener"]
 PAPER_CSV = os.path.join(DATA, "paper_trades.csv")
 PAPER_FIELDS = ["購入日時(JST)", "購入ts", "段階", "合計点", "区分", "シンボル", "名前", "アドレス", "テーマ",
@@ -1252,7 +1347,9 @@ def prune_state(state):
     if len(watch) > rt["max_watch"]:
         for k in sorted(watch, key=lambda k: watch[k].get("first", 0))[:len(watch) - rt["max_watch"]]:
             watch.pop(k)
-    limits = {"rc_cache": rt["watch_hours"] * 3600, "st_cache": rt["st_cache_minutes"] * 60}
+    state.pop("_news_calls", None)
+    limits = {"rc_cache": rt["watch_hours"] * 3600, "st_cache": rt["st_cache_minutes"] * 60,
+              "news_cache": 24 * 3600}
     for key, limit in limits.items():
         c = state.setdefault(key, {})
         for k in [k for k, v in c.items() if t - v.get("ts", 0) > limit or k not in watch]:
@@ -1496,7 +1593,8 @@ def run(dry):
                 buy, pmsg = False, ""
                 if (CFG.get("paper_trading") or {}).get("enabled"):
                     buy, pmsg = paper_check(paper_rows, v, res, sol_price(http, state))
-                if slack_send(candidate_payload(v, res, prev.get("tier") if changed else None, pmsg), dry):
+                narr = narrative(v, state)
+                if slack_send(candidate_payload(v, res, prev.get("tier") if changed else None, pmsg, narr), dry):
                     sent += 1
                     notified[mint] = {"ts": now_ts(), "tier": res["tier"]}
                     cand_rows.append({
@@ -1504,6 +1602,7 @@ def run(dry):
                         "区分": v["category"], "シンボル": v["symbol"], "名前": v["name"], "アドレス": mint,
                         "通知時価格": fmt_price(v["price"]), "通知時時価総額": r1(v["mcap"]),
                         "通知時流動性": r1(v["liquidity"]), "テーマ": "・".join(detect_themes(v)),
+                        "ナラティブ": narr[2] if narr else "",
                         "DEX Screener": f"https://dexscreener.com/solana/{mint}",
                     })
                     if prev_verdict == res["verdict"]:
