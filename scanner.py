@@ -889,6 +889,9 @@ def news_query(v):
     name = re.sub(r"\s+", " ", str(v.get("name") or "")).strip()
     if len(name) < 4 or name.lower() in GENERIC_NAMES:
         return None
+    # 1単語の名前(Build・Life など)は普通の英単語と区別できないため検索しない
+    if len(name.split(" ")) < 2:
+        return None
     return name
 
 
@@ -948,7 +951,7 @@ def narrative(v, state):
         cache[key] = c
     stars, parts = 0, []
     if c["q"] is None:
-        parts.append("ニュース: 名前が短い・一般的で検索せず")
+        parts.append("ニュース: 名前が1単語・短い・一般的なため検索せず")
     elif c["res"] is None:
         parts.append("ニュース: 取得できず")
     else:
