@@ -6,6 +6,10 @@ on:
       wallets:
         description: "ラベル:ウォレット をカンマ区切りで"
         required: true
+      test:
+        description: "1=詳細ログ"
+        required: false
+        default: "0"
 
 permissions:
   contents: write
@@ -23,6 +27,7 @@ jobs:
       - name: Check
         env:
           SOLANATRACKER_API_KEY: ${{ secrets.SOLANATRACKER_API_KEY }}
+          TEST: ${{ inputs.test }}
         run: python wallet_check.py "${{ inputs.wallets }}"
       - name: Save
         run: |

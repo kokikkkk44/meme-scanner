@@ -5,6 +5,7 @@ import requests
 
 ST = "https://data.solanatracker.io"
 KEY = os.environ.get("SOLANATRACKER_API_KEY", "").strip()
+TEST = os.environ.get("TEST") == "1"
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "wallet_check")
 os.makedirs(OUT, exist_ok=True)
 
@@ -37,9 +38,17 @@ def main():
     rows, raw = [], {}
     for label, w in pairs:
         label, w = label.strip(), w.strip()
-        d = get(f"/pnl/{w}?showHistoricPnL=true&hideDetails=true")
+        d, errs = None, []
+        for path in (f"/pnl/{w}", f"/pnl/{w}?showHistoricPnL=true", f"/wallet/{w}/basic"):
+            d = get(path)
+            if isinstance(d, dict) and "_error" not in d:
+                d["_path"] = path.split("?")[0].replace(w, "{w}")
+                break
+            errs.append(f'{path.replace(w, "{w}")} -> {d}')
         if isinstance(d, dict):
             d.pop("tokens", None)
+            if "_error" in d:
+                d["_error"] = " | ".join(errs)
         raw[w] = {"label": label, "data": d}
         s = pick(d, "summary") or {}
         hist = (pick(d, "historic") or {}).get("summary", {}) if isinstance(pick(d, "historic"), dict) else {}
