@@ -1329,9 +1329,13 @@ def run(dry):
         grad_complete = 0 < len(st_raw) < pf["limit"]
         log(f"pump.fun卒業前 {len(st_raw)} 銘柄")
     # Solana Tracker のトレンド・卒業済み一覧(C基準の主な探し場所)
-    for key, label in (("trending", "STトレンド"), ("graduated", "ST卒業済み")):
-        sc = CFG["sources"].get(key) or {}
-        if not sc.get("enabled") or state["runs"] % max(1, sc.get("every_n_runs", 1)) != 0 or not st_api.can():
+    default_labels = {"trending": "STトレンド", "graduated": "ST卒業済み"}
+    for key, sc in (CFG["sources"] or {}).items():
+        if not isinstance(sc, dict) or not sc.get("path"):
+            continue
+        label = sc.get("label") or default_labels.get(key, key)
+        n = max(1, sc.get("every_n_runs", 1))
+        if not sc.get("enabled") or (state["runs"] + sc.get("offset", 0)) % n != 0 or not st_api.can():
             continue
         lst = st_api.token_list(sc["path"])[: sc.get("limit", 100)]
         for ti in lst:
