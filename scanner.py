@@ -47,6 +47,7 @@ TIER_STYLE = {
     "小": {"emoji": "🟢", "color": "#2EB67D"},
     "中": {"emoji": "🟡", "color": "#ECB22E"},
     "大": {"emoji": "🔴", "color": "#E01E5A"},
+    "🎯": {"emoji": "🎯", "color": "#7C3AED"},   # 勝ちパターン(急騰→急落→横ばい)の通知
 }
 SOL_MINT = "So11111111111111111111111111111111111111112"
 PUMPFUN_MARKETS = {"pumpfun", "pump-fun", "pumpfun-bonding", "pump.fun"}
@@ -596,7 +597,8 @@ def build_view(mint, source, pair, rc, st, ad_types, st_unavailable=False, out_o
         "name": first(pick("name"), rc.get("name"), "?"),
         "symbol": first(pick("symbol"), rc.get("symbol"), "?"),
         "age_min": age,
-        "liquidity": pick("liquidity"),
+        # DEX Screener が流動性 0 を返すプール(新しい種類など)があるため、0 は「不明」として他の取得元を使う
+        "liquidity": first(main.get("liquidity") or None, sub.get("liquidity") or None),
         "mcap": pick("mcap"),
         "price": pick("price"),
         "pc_m5": pick("pc_m5"), "pc_h1": pick("pc_h1"), "pc_h6": pick("pc_h6"),
@@ -682,7 +684,9 @@ def classify(v):
             fails.append("経過時間が不明")
         elif v["age_min"] < c["min_age_minutes"]:
             fails.append(f"発行から{c['min_age_minutes']}分未満")
-        if (v["liquidity"] or 0) < c["min_liquidity_usd"]:
+        if not v["liquidity"]:
+            fails.append("流動性が取得できない(0表示)")
+        elif v["liquidity"] < c["min_liquidity_usd"]:
             fails.append(f"流動性{fmt_usd(c['min_liquidity_usd'])}未満")
         if v["top10"] is None:
             if v["rc_checked"]:
@@ -1015,6 +1019,102 @@ def candidate_payload(v, res, prev_tier=None, paper_msg="", narr=None):
 
 
 # ---------------------------------------------------------------------------
+# 🎯 勝ちパターン(急騰→急落→横ばい)の検出
+# ---------------------------------------------------------------------------
+def lp_unsafe(v):
+    """流動性が時価総額より大きいのに、LP が焼却もロック(90%以上)もされていない = 持ち逃げの典型パターン"""
+    liq, mc = v.get("liquidity"), v.get("mcap")
+    if not liq or not mc or liq <= mc or v.get("lp_applicable") is False:
+        return False
+    burn, lock = v.get("lp_burn"), v.get("lp_locked_pct")
+    return not ((burn or 0) >= 90 or (lock or 0) >= 90)
+
+
+def record_hist(w, v, t, pc):
+    """値動きの記録 [時刻, 時価総額, 保有者数, 流動性] を残す(約15〜30分ごと)"""
+    h = w.setdefault("h", [])
+    h.append([int(t), round(v["mcap"]), v.get("holders"), round(v.get("liquidity") or 0)])
+    keep = (pc.get("lookback_hours", 6) + 1) * 3600
+    w["h"] = [x for x in h if t - x[0] <= keep][-48:]
+    # 基準内の時価総額・流動性に一度でも届いた銘柄は、しばらく短い間隔で記録する
+    c = CFG["criteria_a"]
+    if v["mcap"] >= (c.get("min_mcap_usd") or 0) and (v.get("liquidity") or 0) >= pc.get("min_liquidity_usd", 0):
+        w["pw"] = int(t + pc.get("lookback_hours", 6) * 3600)
+
+
+def pattern_eval(hist, v, pc, now=None):
+    """戻り値: (情報dict, "") / (None, 理由)"""
+    now = now or now_ts()
+    H = [x for x in hist if now - x[0] <= pc["lookback_hours"] * 3600 and x[1]]
+    if len(H) < 3:
+        return None, "記録が少ない"
+    pi = max(range(len(H)), key=lambda i: H[i][1])
+    peak, cur = H[pi], H[-1]
+    if pi == len(H) - 1:
+        return None, "高値を更新中"
+    drop = (1 - cur[1] / peak[1]) * 100
+    if drop < pc["drop_from_peak_pct"]:
+        return None, f"高値からの下落が{drop:.0f}%(基準{pc['drop_from_peak_pct']}%)"
+    after = H[pi + 1:]
+    win = [x for x in after if cur[0] - x[0] <= pc["range_window_minutes"] * 60]
+    span = (cur[0] - win[0][0]) / 60 if win else 0
+    # 実行間隔のずれ(数分)を見込んで、3分短くても可
+    if len(win) < 2 or span < pc["min_range_minutes"] - 3:
+        return None, "横ばいの時間が足りない"
+    lo, hi = min(x[1] for x in win), max(x[1] for x in win)
+    mid = (lo + hi) / 2
+    band = (hi - lo) / 2 / mid * 100
+    if band > pc["band_pct"]:
+        return None, f"値幅が±{band:.0f}%(基準±{pc['band_pct']}%)"
+    prev_lo = min(x[1] for x in win[:-1])
+    if cur[1] < prev_lo * (1 - pc["new_low_tolerance_pct"] / 100):
+        return None, "横ばいの安値を更新"
+    if v.get("pc_m5") is not None and v["pc_m5"] <= -pc["max_m5_drop_pct"]:
+        return None, f"直近5分が{v['pc_m5']:.0f}%の大きな下落"
+    hs = [x[2] for x in after if x[2]]
+    if len(hs) >= 2:
+        if hs[-1] < max(hs) * (1 - pc["holders_drop_tolerance_pct"] / 100):
+            return None, f"保有者が減少({max(hs)}→{hs[-1]}人)"
+        holders_note = f"{hs[0]}→{hs[-1]}人(減っていない)"
+    else:
+        holders_note = (f"{hs[-1]}人(推移は記録不足で不明)" if hs else "不明")
+    limit = max(lo + (hi - lo) * pc["limit_position"], lo * 1.02)
+    return {
+        "peak": peak[1], "peak_ts": peak[0], "cur": cur[1], "drop": drop,
+        "lo": lo, "hi": hi, "band": band, "span": span, "n": len(win),
+        "post_low": min(x[1] for x in after), "holders_note": holders_note,
+        "limit": limit, "sl": lo * (1 - pc["sl_below_range_pct"] / 100), "tp": limit * (1 + pc["tp_pct"] / 100),
+    }, ""
+
+
+def pattern_payload(v, info, pc):
+    mint = v["mint"]
+    links = (f"<https://gmgn.ai/sol/token/{mint}|GMGN> ｜ <https://dexscreener.com/solana/{mint}|DEX Screener> ｜ "
+             f"<https://rugcheck.xyz/tokens/{mint}|RugCheck>")
+    body = (
+        f"*{v['name']} ({v['symbol']})*\n`{mint}`\n"
+        f"高値 {fmt_usd(info['peak'])}({jst(info['peak_ts'])[11:16]}) → 今 {fmt_usd(info['cur'])}(−{info['drop']:.0f}%)\n"
+        f"横ばい: {fmt_usd(info['lo'])}〜{fmt_usd(info['hi'])}(±{info['band']:.0f}%・約{info['span']:.0f}分・記録{info['n']}回)\n"
+        f"流動性: {fmt_usd(v['liquidity'])} ｜ 保有者: {info['holders_note']}\n"
+        f"値動き: 5分 {fmt_pct(v['pc_m5'], True)} ｜ 1時間 {fmt_pct(v['pc_h1'], True)} ｜ "
+        f"上位10件: {fmt_pct(v['top10'])} ｜ 開発者: {fmt_pct(v['dev_pct'])} ｜ LP: {v.get('lp_status') or '不明'}\n\n"
+        f"*目安*({(CFG.get('paper_trading') or {}).get('amount_sol', 0.05)} SOL・期限1時間): 指値 {fmt_usd(info['limit'])} ｜ 損切り {fmt_usd(info['sl'])} ｜ 利確 {fmt_usd(info['tp'])}(+{pc['tp_pct']}%)\n"
+        f"⚠️ *発注前チェック*: GMGNの5分足で ②実体が安値を更新していない ③直前の足が−15%以上の大陰線でない "
+        f"④指値が前の安値(ヒゲ)から10%以上上 ⑤滑っても損失枠に収まる を確認。記録は約15分ごとでヒゲは見えません\n\n{links}"
+    )
+    return {
+        "text": f"*🎯 横ばい中(勝ちパターンの形) — {v['symbol']}*",
+        "attachments": [{
+            "color": TIER_STYLE["🎯"]["color"],
+            "blocks": [
+                {"type": "section", "text": {"type": "mrkdwn", "text": body}},
+                {"type": "context", "elements": [{"type": "mrkdwn", "text": f"{jst()} JST ｜ 投資判断はご自身で"}]},
+            ],
+        }],
+    }
+
+
+# ---------------------------------------------------------------------------
 # 記録(CSV)
 # ---------------------------------------------------------------------------
 LOG_FIELDS = ["日時(JST)", "判定", "合計点", "点数の内訳", "理由", "区分", "シンボル", "名前", "アドレス", "検出元",
@@ -1118,7 +1218,7 @@ def update_followups(http, rows):
 
 def performance_text(rows):
     lines = []
-    for tier in ("小", "中", "大"):
+    for tier in ("小", "中", "大", "🎯"):
         rs = [r for r in rows if r.get("段階") == tier]
         if not rs:
             continue
@@ -1129,7 +1229,8 @@ def performance_text(rows):
             if vals:
                 win = sum(1 for x in vals if x > 0) / len(vals) * 100
                 parts.append(f"{label} 平均{sum(vals) / len(vals):+.1f}%(上昇{win:.0f}%・{len(vals)}件)")
-        lines.append(f"{TIER_STYLE[tier]['emoji']} リスク{tier}: 通知{len(rs)}件 ｜ " + (" ／ ".join(parts) or "まだ集計なし"))
+        label = "横ばい(勝ちパターン)" if tier == "🎯" else f"リスク{tier}"
+        lines.append(f"{TIER_STYLE[tier]['emoji']} {label}: 通知{len(rs)}件 ｜ " + (" ／ ".join(parts) or "まだ集計なし"))
     return "\n".join(lines) or "まだ候補の記録がありません"
 
 
@@ -1414,6 +1515,7 @@ def run(dry):
     state["runs"] = state.get("runs", 0) + 1
     t = now_ts()
     rt = CFG["runtime"]
+    pc = CFG.get("pattern") or {}
     watch = state["watch"]
 
     # 1) 候補を集める ------------------------------------------------------
@@ -1469,6 +1571,9 @@ def run(dry):
             due = t - last >= rt["excluded_recheck_hours"] * 3600
         else:
             due = mint in st_raw or t - last >= rt["recheck_minutes"] * 60 or not last
+            # 高値をつけた銘柄は短い間隔で記録(🎯検出用)。実行間隔のずれを見込んで2分早めに
+            if pc.get("enabled") and w.get("pw", 0) > t and t - last >= pc["recheck_minutes"] * 60 - 120:
+                due = True
         if due:
             todo.append(mint)
     todo.sort(key=lambda m: (watch[m].get("checked", 0), -watch[m]["first"]))
@@ -1578,6 +1683,8 @@ def run(dry):
         w = watch[mint]
         prev_verdict = w.get("verdict")
         w.update({"checked": now_ts(), "verdict": res["verdict"]})
+        if pc.get("enabled") and v["category"] == "A" and res["verdict"] != "除外" and v["mcap"]:
+            record_hist(w, v, now_ts(), pc)
         if prev_verdict != res["verdict"]:
             rows.append(log_row(v, res))
         main_reason = res["reasons"][0] if res["reasons"] else ""
@@ -1618,6 +1725,62 @@ def run(dry):
 
     for mint in drop:
         watch.pop(mint, None)
+
+    # 3b) 🎯 勝ちパターン(急騰→急落→横ばい) -----------------------------------------
+    if pc.get("enabled"):
+        pn = state.setdefault("pattern_notified", {})
+        for k in [k for k, ts in pn.items() if now_ts() - ts > 7 * 86400]:
+            pn.pop(k)
+        hits, why, n_pat = [], Counter(), 0
+        for mint, (src, pair, rc, st, v, res) in results.items():
+            w = watch.get(mint)
+            if not w or v["category"] != "A" or res["verdict"] == "除外" or len(w.get("h", [])) < 3:
+                continue
+            if now_ts() - pn.get(mint, 0) < pc["renotify_hours"] * 3600:
+                continue
+            info, reason = pattern_eval(w["h"], v, pc)
+            if not info:
+                why[reason.split("(")[0]] += 1
+                continue
+            hits.append([mint, info])
+        # 形が合った銘柄だけ、急騰の判定(6時間+100%)を除いた C基準と安全性を最新の情報で確認
+        need_st = [m for m, _ in hits if not (state["st_cache"].get(m) or {}).get("d")]
+        if need_st and st_api.can():
+            got = st_api.multi(need_st)
+            for m in need_st:
+                d = summarize_st(got.get(m))
+                if d:
+                    state["st_cache"][m] = {"ts": now_ts(), "d": d}
+        for mint, info in hits:
+            src, pair, _, _, _, _ = results[mint]
+            rc = get_rc(mint, fresh=True)
+            st = (state["st_cache"].get(mint) or {}).get("d")
+            v = view(mint, src, pair, rc, st)
+            base = classify(dict(v, pc_h6=None))
+            if not base["tier"]:
+                why["C基準外: " + (base["reasons"][0] if base["reasons"] else "?")] += 1
+                continue
+            score_token(v)  # LP の表示文を作る
+            if lp_unsafe(v):
+                why["🚨流動性>時価総額でLP未ロック"] += 1
+                continue
+            if (v["liquidity"] or 0) < pc["min_liquidity_usd"]:
+                why["流動性不足"] += 1
+                continue
+            if slack_send(pattern_payload(v, info, pc), dry):
+                sent += 1
+                n_pat += 1
+                pn[mint] = now_ts()
+                cand_rows.append({
+                    "通知日時(JST)": jst(), "通知ts": int(now_ts()), "段階": "🎯", "合計点": "",
+                    "区分": v["category"], "シンボル": v["symbol"], "名前": v["name"], "アドレス": mint,
+                    "通知時価格": fmt_price(v["price"]), "通知時時価総額": r1(v["mcap"]),
+                    "通知時流動性": r1(v["liquidity"]), "テーマ": "・".join(detect_themes(v)), "ナラティブ": "",
+                    "DEX Screener": f"https://dexscreener.com/solana/{mint}",
+                })
+        log(f"🎯 勝ちパターン: 通知 {n_pat} 件 ｜ 形が合わなかった理由 "
+            + (", ".join(f"{k} {n}" for k, n in why.most_common(5)) or "なし"))
+
     counts = Counter(r[5]["verdict"] for r in results.values())
     log("判定結果: " + (", ".join(f"{k} {n}" for k, n in counts.items()) or "なし") + f" ｜ 通知 {sent} 件")
 
