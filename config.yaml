@@ -25,21 +25,21 @@ sources:
     limit: 100
     every_n_runs: 1
   trending_1h:                  # 直近1時間で勢いのある銘柄
-    enabled: false
+    enabled: true 
     label: STトレンド1h
     path: /tokens/trending/1h
     limit: 100
     every_n_runs: 4             # 4 = 1時間に1回
     offset: 1                   # 他の一覧と同じ回に重ならないようにずらす
   trending_24h:                 # 1日を通して注目されている銘柄(数日たった銘柄も拾う)
-    enabled: false
+    enabled: true 
     label: STトレンド24h
     path: /tokens/trending/24h
     limit: 100
     every_n_runs: 4
     offset: 2
   volume_6h:                    # 直近6時間の出来高(売買額)が多い銘柄
-    enabled: false
+    enabled: true 
     label: ST出来高6h
     path: /tokens/volume/6h
     limit: 100
