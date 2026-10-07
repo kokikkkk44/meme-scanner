@@ -220,8 +220,8 @@ pattern:
   rug_step_drop_pct: 70             # 1回の記録(約15分)でこれ以上下がったらラグの疑い
   frozen_records: 4                 # 直近この回数の記録で値幅が frozen_band_pct 未満なら「売買がほぼない」として対象外
   frozen_band_pct: 1
-  fast_watch_min_mcap_usd: 15000    # これ以上の時価総額・流動性になった銘柄は15分ごとに記録(生まれたて枠・すき間枠用)
-  fast_watch_min_liquidity_usd: 8000
+  fast_watch_min_mcap_usd: 10000    # これ以上の時価総額・流動性になった銘柄は15分ごとに記録(生まれたて枠・すき間枠用)
+  fast_watch_min_liquidity_usd: 4000
   peak_confirm_minutes: 30          # 一瞬だけの急騰は高値にしない: 前後この時間内に高値の85%以上の記録があるものを高値とする
   peak_confirm_ratio: 0.85
 
@@ -250,7 +250,7 @@ sections:
       drop_from_peak_pct: 40        # 高値から-40〜65%(動画: 高値$10K超なら-40〜50%で買う)
       max_drop_from_peak_pct: 65
       max_drop_minutes: 60
-      min_liquidity_usd: 10000
+      min_liquidity_usd: 5000           # (10/7 10K→5K) 0.05〜0.1 SOLなら自分の売買の影響は小さい。大口の売りは損切り-25%(-50%まで滑る前提)で受ける
       sl_from_entry_pct: 25         # 損切りは指値から-25%(流動性が薄いので-50%まで滑る前提)
       tp_steps: [[2, 半分], [3, 残り]]
       note: "⚠️ 生まれたて枠: 流動性が薄く損切りは-50%まで滑る前提。GMGNの保有者タブでフィッシング・バンドル20%以下も確認\n"
@@ -264,7 +264,7 @@ sections:
   すき間枠:
     pattern:
       max_drop_minutes: 150
-      min_liquidity_usd: 10000
+      min_liquidity_usd: 5000           # (10/7 10K→5K) 0.05〜0.1 SOLなら自分の売買の影響は小さい。大口の売りは損切り-25%(-50%まで滑る前提)で受ける
       sl_from_entry_pct: 25
       tp_steps: [[1.5, 半分], [2, 残り]]
       note: "⚠️ すき間枠: 流動性が薄く損切りは-50%まで滑る前提。GMGNの保有者タブでフィッシング・バンドル20%以下も確認\n"
