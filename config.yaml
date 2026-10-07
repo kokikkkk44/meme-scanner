@@ -209,9 +209,56 @@ pattern:
   second_range_min_minutes: 30      # 2回目の通知は1回目からこの時間以上あける
   max_drop_minutes: 150             # (10/7 90→150) 高値から-40%に届くまでがこの時間より長い「階段状の下落」は対象外
   limit_above_low_pct: 5            # (10/7 10→5) 指値は高値後の最安値からこの%以上上(発注前チェック④)。今の値段がこれより低ければ通知しない
+  max_drop_from_peak_pct: 75        # 高値からこれ以上の暴落はラグの疑いとして対象外
+  rug_step_drop_pct: 70             # 1回の記録(約15分)でこれ以上下がったらラグの疑い
+  frozen_records: 4                 # 直近この回数の記録で値幅が frozen_band_pct 未満なら「売買がほぼない」として対象外
+  frozen_band_pct: 1
+  fast_watch_min_mcap_usd: 15000    # これ以上の時価総額・流動性になった銘柄は15分ごとに記録(生まれたて枠・すき間枠用)
+  fast_watch_min_liquidity_usd: 8000
+
   limit_position: 0.25              # 指値の目安 = 横ばいの下限 + 値幅 × この割合
   sl_below_range_pct: 8             # 損切りの目安 = 横ばいの下限からこの%下
   tp_pct: 40                        # 利確の目安 = 指値から +この%
+
+# ---------------------------------------------------------------------
+# 5d. 3つの区分(10/7〜)。🎯は区分ごとの設定で判定し、区分名を付けて通知する
+#   スキャナー枠: 卒業済み・時価総額$60K〜$250K・流動性$30K以上(C基準・上の pattern 設定)
+#   生まれたて枠: 卒業前、または時価総額$60K未満で発行24時間以内
+#   すき間枠    : それ以外(卒業済みで流動性$30K未満・発行24時間超の小型など)
+#   どの枠でも見送り: 時価総額$250K超/Pump.fun以外/流動性>時価総額でLP未ロック
+# ---------------------------------------------------------------------
+sections:
+  newborn_max_age_hours: 24
+  生まれたて枠:
+    pattern:                        # 上の pattern 設定に上書き
+      drop_from_peak_pct: 40        # 高値から-40〜65%(動画: 高値$10K超なら-40〜50%で買う)
+      max_drop_from_peak_pct: 65
+      max_drop_minutes: 60
+      min_liquidity_usd: 10000
+      sl_from_entry_pct: 25         # 損切りは指値から-25%(流動性が薄いので-50%まで滑る前提)
+      tp_steps: [[2, 半分], [3, 残り]]
+      note: "⚠️ 生まれたて枠: 流動性が薄く損切りは-50%まで滑る前提。GMGNの保有者タブでフィッシング・バンドル20%以下も確認\n"
+    safety:
+      max_top10_pct: 40             # プールを除く上位10件
+      max_single_holder_pct: 10     # プールを除く1人
+      max_insider_pct: 10
+      max_bundle_pct: 20
+      max_dev_pct: 5
+      min_holders: 100
+  すき間枠:
+    pattern:
+      max_drop_minutes: 150
+      min_liquidity_usd: 10000
+      sl_from_entry_pct: 25
+      tp_steps: [[1.5, 半分], [2, 残り]]
+      note: "⚠️ すき間枠: 流動性が薄く損切りは-50%まで滑る前提。GMGNの保有者タブでフィッシング・バンドル20%以下も確認\n"
+    safety:
+      max_top10_pct: 40
+      max_single_holder_pct: 10
+      max_insider_pct: 10
+      max_bundle_pct: 20
+      max_dev_pct: 5
+      min_holders: 150
 
 # ---------------------------------------------------------------------
 # 6. 通知
