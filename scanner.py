@@ -1043,7 +1043,8 @@ def record_hist(w, v, t, pc):
 
 
 def pattern_eval(hist, v, pc, now=None):
-    """戻り値: (情報dict, "") / (None, 理由)"""
+    """戻り値: (情報dict, "") / (None, 理由)
+    急騰→急落(短時間で高値から-40%以上)→横ばい の形かを、約15分ごとの記録で判定する"""
     now = now or now_ts()
     H = [x for x in hist if now - x[0] <= pc["lookback_hours"] * 3600 and x[1]]
     if len(H) < 3:
@@ -1056,6 +1057,12 @@ def pattern_eval(hist, v, pc, now=None):
     if drop < pc["drop_from_peak_pct"]:
         return None, f"高値からの下落が{drop:.0f}%(基準{pc['drop_from_peak_pct']}%)"
     after = H[pi + 1:]
+    # ① 階段状の下落を除外: 高値から-40%に届くまでの時間が長いもの(じわじわ下げ続けている)は対象外
+    target = peak[1] * (1 - pc["drop_from_peak_pct"] / 100)
+    reach = next((x for x in after if x[1] <= target), None)
+    mins_to_drop = (reach[0] - peak[0]) / 60 if reach else 0
+    if reach and mins_to_drop > pc.get("max_drop_minutes", 90):
+        return None, f"階段状の下落(高値から{pc['drop_from_peak_pct']}%下落に{mins_to_drop:.0f}分)"
     win = [x for x in after if cur[0] - x[0] <= pc["range_window_minutes"] * 60]
     span = (cur[0] - win[0][0]) / 60 if win else 0
     # 実行間隔のずれ(数分)を見込んで、3分短くても可
@@ -1078,13 +1085,35 @@ def pattern_eval(hist, v, pc, now=None):
         holders_note = f"{hs[0]}→{hs[-1]}人(減っていない)"
     else:
         holders_note = (f"{hs[-1]}人(推移は記録不足で不明)" if hs else "不明")
-    limit = max(lo + (hi - lo) * pc["limit_position"], lo * 1.02)
+    # ② 指値はルール④に合わせる: 高値後の最安値(前の安値)から+10%以上、かつ今の値段以下
+    post_low = min(x[1] for x in after)
+    floor = post_low * (1 + pc.get("limit_above_low_pct", 10) / 100)
+    if cur[1] < floor:
+        return None, f"前の安値に近すぎる(安値から+{(cur[1] / post_low - 1) * 100:.0f}%・基準+{pc.get('limit_above_low_pct', 10)}%)"
+    limit = min(max(lo + (hi - lo) * pc["limit_position"], floor), cur[1])
+    sl = min(lo, limit) * (1 - pc["sl_below_range_pct"] / 100)
     return {
-        "peak": peak[1], "peak_ts": peak[0], "cur": cur[1], "drop": drop,
+        "peak": peak[1], "peak_ts": peak[0], "cur": cur[1], "drop": drop, "mins_to_drop": mins_to_drop,
         "lo": lo, "hi": hi, "band": band, "span": span, "n": len(win),
-        "post_low": min(x[1] for x in after), "holders_note": holders_note,
-        "limit": limit, "sl": lo * (1 - pc["sl_below_range_pct"] / 100), "tp": limit * (1 + pc["tp_pct"] / 100),
+        "post_low": post_low, "holders_note": holders_note,
+        "limit": limit, "sl": sl, "tp": limit * (1 + pc["tp_pct"] / 100),
     }, ""
+
+
+def pattern_can_notify(prev, info, pc, now=None):
+    """同じ銘柄の再通知: 間隔があいたとき、または1回目の横ばいが崩れて新しい安値で横ばいになったとき(2回目の横ばい)"""
+    now = now or now_ts()
+    if not prev:
+        return True, ""
+    if isinstance(prev, (int, float)):
+        prev = {"ts": prev}
+    if now - prev.get("ts", 0) >= pc["renotify_hours"] * 3600:
+        return True, ""
+    plo = prev.get("lo")
+    if plo and info["post_low"] < plo * (1 - pc.get("second_range_drop_pct", 5) / 100) \
+            and now - prev.get("ts", 0) >= pc.get("second_range_min_minutes", 30) * 60:
+        return True, "2回目の横ばい"
+    return False, ""
 
 
 def pattern_payload(v, info, pc):
@@ -1094,16 +1123,16 @@ def pattern_payload(v, info, pc):
     body = (
         f"*{v['name']} ({v['symbol']})*\n`{mint}`\n"
         f"高値 {fmt_usd(info['peak'])}({jst(info['peak_ts'])[11:16]}) → 今 {fmt_usd(info['cur'])}(−{info['drop']:.0f}%)\n"
-        f"横ばい: {fmt_usd(info['lo'])}〜{fmt_usd(info['hi'])}(±{info['band']:.0f}%・約{info['span']:.0f}分・記録{info['n']}回)\n"
+        f"横ばい: {fmt_usd(info['lo'])}〜{fmt_usd(info['hi'])}(±{info['band']:.0f}%・約{info['span']:.0f}分・記録{info['n']}回) ｜ 高値後の最安値: {fmt_usd(info['post_low'])}\n"
         f"流動性: {fmt_usd(v['liquidity'])} ｜ 保有者: {info['holders_note']}\n"
         f"値動き: 5分 {fmt_pct(v['pc_m5'], True)} ｜ 1時間 {fmt_pct(v['pc_h1'], True)} ｜ "
         f"上位10件: {fmt_pct(v['top10'])} ｜ 開発者: {fmt_pct(v['dev_pct'])} ｜ LP: {v.get('lp_status') or '不明'}\n\n"
-        f"*目安*({(CFG.get('paper_trading') or {}).get('amount_sol', 0.05)} SOL・期限1時間): 指値 {fmt_usd(info['limit'])} ｜ 損切り {fmt_usd(info['sl'])} ｜ 利確 {fmt_usd(info['tp'])}(+{pc['tp_pct']}%)\n"
+        f"*目安*({(CFG.get('paper_trading') or {}).get('amount_sol', 0.05)} SOL・期限1時間): 指値 {fmt_usd(info['limit'])}(最安値+{(info['limit'] / info['post_low'] - 1) * 100:.0f}%) ｜ 損切り {fmt_usd(info['sl'])} ｜ 利確 {fmt_usd(info['tp'])}(+{pc['tp_pct']}%)\n"
         f"⚠️ *発注前チェック*: GMGNの5分足で ②実体が安値を更新していない ③直前の足が−15%以上の大陰線でない "
         f"④指値が前の安値(ヒゲ)から10%以上上 ⑤滑っても損失枠に収まる を確認。記録は約15分ごとでヒゲは見えません\n\n{links}"
     )
     return {
-        "text": f"*🎯 横ばい中(勝ちパターンの形) — {v['symbol']}*",
+        "text": f"*🎯 横ばい中(勝ちパターンの形){'・' + info['label'] if info.get('label') else ''} — {v['symbol']}*",
         "attachments": [{
             "color": TIER_STYLE["🎯"]["color"],
             "blocks": [
@@ -1729,19 +1758,21 @@ def run(dry):
     # 3b) 🎯 勝ちパターン(急騰→急落→横ばい) -----------------------------------------
     if pc.get("enabled"):
         pn = state.setdefault("pattern_notified", {})
-        for k in [k for k, ts in pn.items() if now_ts() - ts > 7 * 86400]:
+        for k in [k for k, x in pn.items() if now_ts() - (x["ts"] if isinstance(x, dict) else x) > 7 * 86400]:
             pn.pop(k)
         hits, why, n_pat = [], Counter(), 0
         for mint, (src, pair, rc, st, v, res) in results.items():
             w = watch.get(mint)
             if not w or v["category"] != "A" or res["verdict"] == "除外" or len(w.get("h", [])) < 3:
                 continue
-            if now_ts() - pn.get(mint, 0) < pc["renotify_hours"] * 3600:
-                continue
             info, reason = pattern_eval(w["h"], v, pc)
             if not info:
                 why[reason.split("(")[0]] += 1
                 continue
+            ok, label = pattern_can_notify(pn.get(mint), info, pc)
+            if not ok:
+                continue
+            info["label"] = label
             hits.append([mint, info])
         # 形が合った銘柄だけ、急騰の判定(6時間+100%)を除いた C基準と安全性を最新の情報で確認
         need_st = [m for m, _ in hits if not (state["st_cache"].get(m) or {}).get("d")]
@@ -1770,7 +1801,7 @@ def run(dry):
             if slack_send(pattern_payload(v, info, pc), dry):
                 sent += 1
                 n_pat += 1
-                pn[mint] = now_ts()
+                pn[mint] = {"ts": now_ts(), "lo": info["post_low"]}
                 cand_rows.append({
                     "通知日時(JST)": jst(), "通知ts": int(now_ts()), "段階": "🎯", "合計点": "",
                     "区分": v["category"], "シンボル": v["symbol"], "名前": v["name"], "アドレス": mint,
