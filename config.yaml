@@ -36,8 +36,15 @@ sources:
     label: STトレンド24h
     path: /tokens/trending/24h
     limit: 100
-    every_n_runs: 4
+    every_n_runs: 8             # (10/7 4→8) 新しく見つかる銘柄が少ないため2時間に1回
     offset: 2
+  trending_15m:                 # 直近15分で勢いのある銘柄(10/7〜)
+    enabled: true
+    label: STトレンド15m
+    path: /tokens/trending/15m
+    limit: 100
+    every_n_runs: 4             # 1時間に1回
+    offset: 0
   volume_6h:                    # 直近6時間の出来高(売買額)が多い銘柄
     enabled: true 
     label: ST出来高6h
@@ -50,7 +57,7 @@ sources:
     min_curve: 50               # 卒業までの進み具合(%)の下限
     max_curve: 95               # 上限
     limit: 100                  # 1回で取得する最大件数(多いほど見送りの記録が増える)
-    every_n_runs: 2             # 30分に1回(無料枠の節約)
+    every_n_runs: 1             # (10/7 2→1) 15分ごと。生まれたて枠の入口を広げる
 
 # ---------------------------------------------------------------------
 # 2. 必須条件(1つでも満たさなければ「除外」)
@@ -302,7 +309,7 @@ runtime:
   recheck_minutes: 30               # 見送り・候補の銘柄を再チェックする間隔
   excluded_recheck_hours: 6         # 除外銘柄を再チェックするまでの時間
   watch_hours: 24                   # 見つけた銘柄を追いかける時間
-  max_watch: 400                    # 追いかける銘柄の上限数
+  max_watch: 1000                   # 追いかける銘柄の上限数(10/7 400→1000: 400だと約3〜6時間で追跡が切れていた)
 
 solana_tracker:
   monthly_budget: 9000              # 1か月に使ってよいリクエスト数(無料プランの上限より少し少なめに)
