@@ -21104,3 +21104,8 @@
 2026-10-10 22:16,除外,,,アドレス末尾が「pump」でなく、発行元も Pump.Fun でない(発行元: 不明),A,QOAT,Quantum Gospel,4bg1PEJwry9rrQsimGFkwdav6tCnZtNjmDd23bDHQv5n,STトレンド15m,290.34,5921009.0,,0.005921,,,65424.0,,,97.67,0.0,,,0,,,,1.23%(口座一致)
 2026-10-10 22:16,除外,,,開発者のラグ歴(Creator history of rugged tokens),B,QUBITS,Qubits,2eLqcCbG8rWMKiLwUSdoHT3kBueoFLG21FyQ8n1spump,pump.fun卒業前,305.81,6364.18,,6.364e-06,-0.79,-24.4,17.17,,,24.7,0.0,,,34,,,,61.81%(口座一致)
 2026-10-10 22:16,除外,,,開発者のラグ歴(Creator history of rugged tokens),B,Biscuit,Biscuit Johnson,5nrE1LY2ZGRu6xyCfC6gStxHgwB3tWzdzqLHsmZ3pump,pump.fun卒業前,1261.73,12212.56,,1.221e-05,0.26,-4.2,-35.02,,,23.94,0.0,,,0,,,,45.54%(口座一致)
+2026-10-10 22:31,見送り,,,pump.fun卒業前(C基準では対象外),B,PERP,Perpetua,DdZzcgG7QfRsHwaodfS8cLWNEZfxpw8PpgWsCRsrpump,DEX新着,15.61,12347.94,,1.234e-05,43.77,288.0,288.0,,,25.0,0.0,,,0,,,,48.38%(口座一致)
+2026-10-10 22:31,見送り,,,pump.fun卒業前(C基準では対象外),B,DSTR,Domain Strategy,839ktpV2KSfbkXhuuBa9zFKXxTEWX6iHMqB3f1hwDSTR,DEX新着,17.02,6788.99,,6.788e-06,-5.39,111.0,111.0,,,23.4,0.0,,,0,,,,64.47%(口座一致)
+2026-10-10 22:31,除外,,,アドレス末尾が「pump」でなく、発行元も Pump.Fun でない(発行元: 不明),A,OpenAI,OpenAI,Eiv4chziVeDJ4UFpWzE7Ce8RLahgF7nVYMbvFz46iXm8,STトレンド,103.59,0.05,,4.944e-11,,,,,,80.61,0.0,,,0,,AI,,17.32%(口座一致)
+2026-10-10 22:31,除外,,,アドレス末尾が「pump」でなく、発行元も Pump.Fun でない(発行元: 不明),A,Agency,Agency,8CeU26rG621wcxFy1F3tqHpNe7HSpigFaNSLUvxgYo9a,STトレンド15m,109.05,0.05,,4.937e-11,,,,,,80.29,0.0,,,0,,,,19.09%(口座一致)
+2026-10-10 22:31,除外,,,アドレス末尾が「pump」でなく、発行元も Pump.Fun でない(発行元: 不明),A,ABC,"Argon, Barium, Carbon",9cUqriCfct1K5orsjKFpgR4eswN5oeuFprrwsqyaiTNF,ST出来高6h,173.03,6.0,,5.658e-09,,,-99.94,,,78.95,65.23,,,0,,,,
