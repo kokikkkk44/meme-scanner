@@ -21109,3 +21109,8 @@
 2026-10-10 22:31,除外,,,アドレス末尾が「pump」でなく、発行元も Pump.Fun でない(発行元: 不明),A,OpenAI,OpenAI,Eiv4chziVeDJ4UFpWzE7Ce8RLahgF7nVYMbvFz46iXm8,STトレンド,103.59,0.05,,4.944e-11,,,,,,80.61,0.0,,,0,,AI,,17.32%(口座一致)
 2026-10-10 22:31,除外,,,アドレス末尾が「pump」でなく、発行元も Pump.Fun でない(発行元: 不明),A,Agency,Agency,8CeU26rG621wcxFy1F3tqHpNe7HSpigFaNSLUvxgYo9a,STトレンド15m,109.05,0.05,,4.937e-11,,,,,,80.29,0.0,,,0,,,,19.09%(口座一致)
 2026-10-10 22:31,除外,,,アドレス末尾が「pump」でなく、発行元も Pump.Fun でない(発行元: 不明),A,ABC,"Argon, Barium, Carbon",9cUqriCfct1K5orsjKFpgR4eswN5oeuFprrwsqyaiTNF,ST出来高6h,173.03,6.0,,5.658e-09,,,-99.94,,,78.95,65.23,,,0,,,,
+2026-10-10 22:45,除外,,,アドレス末尾が「pump」でなく、発行元も Pump.Fun でない(発行元: 不明),A,PEPPER,Pepper The Raccoon,EcHXARvDG7BAejtSScuFoFvufLvSytfpsK9uch23BAGS,DEX新着,38.13,14723.0,9997.24,1.472e-05,-4.13,-73.2,-73.2,,,26.82,0.0,,,4,,,,33.93%(口座一致)
+2026-10-10 22:45,見送り,,,"発行から30分未満 / 流動性$30,000未満 / 時価総額が$60,000〜$250,000の範囲外 / (拡張機能などの安全性は未確認)",A,patryczek,patryczek,62wTxEoELnDFTSyRSvBQzz2HhLgFrhMTUH7Wvvw8pump,DEX新着,0.46,41612.0,16001.41,4.161e-05,-4.42,-4.42,-4.42,,,,,,,0,,,,
+2026-10-10 22:45,見送り,,,pump.fun卒業前(C基準では対象外),B,RWA,RWA,8uCaNNLZcEjWmPBGW1RhcWpi8H6gs6833Pm9gGTHnrwa,DEX新着,9.99,9337.03,,9.337e-06,-15.92,62.94,62.94,,,21.83,0.11,,,0,,,,50.78%(口座一致)
+2026-10-10 22:45,見送り,,,"流動性$30,000未満 / 時価総額が$60,000〜$250,000の範囲外 / 平均取引額$20未満(Bot水増しの疑い) / (拡張機能などの安全性は未確認)",A,GTA6,GTA Online 6,DwGqUeZw7vnQwmMvogLE791QejsRrjkfr8Hyvdkwpump,ST卒業済み,477.42,190.0,20.19,9.481e-08,,-30.69,-27.17,,,,,,,0,,アニメ・ゲーム,,
+2026-10-10 22:45,見送り,,,流動性が取得できない(0表示) / 上位10件の保有30%超 / 時価総額が不明,A,PROOF,Sequents,GbNfjnmAUFGedHZsrN868f9hxb7d699aqMdzz6pPpump,STトレンド15m,789.44,,,4.967e-12,,,,,,100.0,0.0,,,0,,,,0.0%(口座一致)
