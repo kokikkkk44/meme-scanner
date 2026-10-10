@@ -21320,3 +21320,10 @@
 2026-10-11 07:01,見送り,,,"発行から30分未満 / 流動性$30,000未満",A,LARPCHECK,Larpcheck,t9bnCGiZVUYsRKvx4d5dPcoDCSyuBM9C33ZNGNULARP,DEX新着,25.74,70857.0,21861.26,7.085e-05,13.38,55.82,55.82,,,24.93,0.0,,,0,,,,16.56%(口座一致)
 2026-10-11 07:01,除外,,,アドレス末尾が「pump」でなく、発行元も Pump.Fun でない(発行元: 不明),A,QCAT,QCAT,EosbW31T1WAQSiHUErogcaNHd8FBZDbjPPgQMJzXARNV,DEX新着,176.69,116742.0,30640.41,0.0001167,18.15,-3.52,194.0,,,23.32,0.0,,,345,,猫,,13.1%(口座一致)
 2026-10-11 07:01,見送り,,,"発行から30分未満 / 流動性$30,000未満 / 時価総額が$60,000〜$250,000の範囲外",A,US,Universal Subspace,CL7kPTsf8befWJvEwY3AoGAgoDG583yBgN3fo792nGNh,DEX新着,20.72,4215.0,3788.09,4.215e-06,-29.43,-91.58,-91.58,,,15.28,0.0,,,0,,宇宙,,82.05%(口座一致)
+2026-10-11 07:15,除外,,,アドレス末尾が「pump」でなく、発行元も Pump.Fun でない(発行元: 不明),A,CEOMIND,CEOMIND,4wQmB4o5d5PP2zuHrRuCUges3UkzqKUFtCM8yHfCuqwW,DEX新着,30.92,53732.05,,5.373e-05,-7.57,966.0,966.0,,,45.98,0.0,,,0,,,,
+2026-10-11 07:15,見送り,,,pump.fun卒業前(C基準では対象外),B,dmonkey,The Depressed Monkey,GWbFeYBFVSaP7fxbPZBaXSiAeo8oXeyGhBXi1YBbpump,DEX新着,43.73,15432.63,,1.543e-05,47.08,232.0,232.0,,,23.92,0.0,,,0,,その他の動物,,38.31%(口座一致)
+2026-10-11 07:15,除外,,,アドレス末尾が「pump」でなく、発行元も Pump.Fun でない(発行元: 不明),A,LATCH,latch,5hCxfpAkXAmbiKCWp33cKp9fR4uHf1dMrStUKzQAyGkG,DEX新着,14.42,97064.45,,9.706e-05,49.64,1857.0,1857.0,,,48.45,0.0,,,0,,,,
+2026-10-11 07:15,見送り,,,"発行から30分未満 / 流動性$30,000未満 / 時価総額が$60,000〜$250,000の範囲外",A,PAYR,Payr,PAYRZRVds86giwt61cA4ZrbFYbXAmjZPMeMiuj2rhuk,DEX新着,3.67,25818.0,12398.73,2.594e-05,-43.12,-43.12,-43.12,,,19.72,0.0,,,6,,,,27.39%(口座一致)
+2026-10-11 07:15,見送り,,,"発行から30分未満 / 流動性$30,000未満 / 時価総額が$60,000〜$250,000の範囲外 / (拡張機能などの安全性は未確認)",A,MARTY,Marty Muse,EnAB91XQNTQHz8mkYYu41XCAaLw9hsTNX7ahJGUPpump,DEX新着,25.25,28816.0,13132.06,2.881e-05,2.48,-35.53,-35.53,,,,,,,0,,AI,,
+2026-10-11 07:15,除外,,,開発者のラグ歴(Creator history of rugged tokens),B,TO,Trump Ocean,BxbwxZUZh42se7gyGRU6dkqWtgbwSd7mmPNM4MGgpump,DEX新着,19.7,5705.44,,5.705e-06,3.39,53.27,53.27,,,19.22,0.24,,,0,,有名人便乗,,71.78%(口座一致)
+2026-10-11 07:15,見送り,,,"発行から30分未満 / 流動性$30,000未満 / (拡張機能などの安全性は未確認)",A,OnlyCats,OnlyCats,FGhARrWi8KxJXhpQcF99Jf9GHaxoocYSkAZjqCAqpump,DEX新着,23.51,114883.0,28533.19,0.0001148,-12.31,-18.59,-18.59,,,,,,,0,,猫,,
