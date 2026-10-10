@@ -1723,6 +1723,13 @@ def paper_update(http, rows, started, state):
                 paper_step(r, float(r["最終確認価格"]), now, sol)
                 r["決済理由"] = "価格取得不可(最終価格で決済)"
             continue
+        # (10/10) 価格の取り違え対策: 前回の確認価格から1回で max_price_jump_x 倍を超える上昇は、別ペアの価格を読んだ可能性が高いので使わない
+        # (QI: 購入価格 1.6e-06 → 44分後 0.037 で +2,277,712% と記録された)
+        last = float(r.get("最終確認価格") or r["購入価格"] or 0)
+        jump = pc.get("max_price_jump_x", 20)
+        if last and jump and price / last > jump:
+            log(f"  仮想売買: {r['シンボル']} の価格が{price / last:.0f}倍に跳ねたため異常値として無視({fmt_price(last)}→{fmt_price(price)})")
+            continue
         paper_step(r, price, now, sol)
         closed += r["状態"] == "決済済み"
     return closed
