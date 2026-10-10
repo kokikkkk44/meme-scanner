@@ -1180,6 +1180,11 @@ def pattern_eval(hist, v, pc, now=None):
         return None, "横ばいの安値を更新"
     if v.get("pc_m5") is not None and v["pc_m5"] <= -pc["max_m5_drop_pct"]:
         return None, f"直近5分が{v['pc_m5']:.0f}%の大きな下落"
+    # (10/10) 15分ごとの記録では見えない急騰・急落を、DEXの値動きで除外する
+    if pc.get("max_m5_move_pct") and v.get("pc_m5") is not None and abs(v["pc_m5"]) >= pc["max_m5_move_pct"]:
+        return None, f"直近5分が{v['pc_m5']:+.0f}%(急な値動きの最中)"
+    if pc.get("max_h1_move_pct") and v.get("pc_h1") is not None and abs(v["pc_h1"]) > pc["max_h1_move_pct"]:
+        return None, f"直近1時間が{v['pc_h1']:+.0f}%(横ばいではない)"
     hs = [x[2] for x in after if x[2]]
     if len(hs) >= 2:
         if hs[-1] < max(hs) * (1 - pc["holders_drop_tolerance_pct"] / 100):
@@ -1286,10 +1291,12 @@ def pattern_payload(v, info, pc, section="スキャナー枠"):
         f"流動性: {fmt_usd(v['liquidity'])} ｜ 保有者: {info['holders_note']}\n"
         f"値動き: 5分 {fmt_pct(v['pc_m5'], True)} ｜ 1時間 {fmt_pct(v['pc_h1'], True)} ｜ "
         f"上位10件: {fmt_pct(v['top10'])} ｜ 開発者: {fmt_pct(v['dev_pct'])} ｜ LP: {v.get('lp_status') or '不明'}\n\n"
-        f"*目安*({(CFG.get('paper_trading') or {}).get('amount_sol', 0.05)} SOL・期限1時間): 指値 {fmt_usd(info['limit'])}(最安値+{(info['limit'] / info['post_low'] - 1) * 100:.0f}%) ｜ 損切り {fmt_usd(info['sl'])} ｜ {exits}\n"
+        f"*目安*({(CFG.get('paper_trading') or {}).get('amount_sol', 0.05)} SOL・期限1時間): 買う目安 {fmt_usd(info['limit'])}(最安値+{(info['limit'] / info['post_low'] - 1) * 100:.0f}%) ｜ 損切り {fmt_usd(info['sl'])} ｜ {exits}\n"
         f"{extra}"
         f"⚠️ *発注前チェック*: GMGNの5分足で ②実体が安値を更新していない ③直前の足が−15%以上の大陰線でない "
-        f"④指値が前の安値(ヒゲ)から5%以上上 ⑤滑っても耐えられる を確認。記録は約15分ごとでヒゲは見えません\n\n{links}"
+        f"④買値が前の安値(ヒゲ)から5%以上上 ⑤滑っても耐えられる ⑥横ばいが5分足6本(30分)以上・急騰/急落の直後ではない "
+        f"⑦TOP100平均コストが−50%より上 を確認。記録は約15分ごとでヒゲは見えません\n"
+        f"🚫 *横ばいの下限に指値を置かない*: 下限から反発した陽線を5分足で確認してから中ほどで買う。指値を置いたら見張り、横ばいから外れたら取り消す\n\n{links}"
     )
     return {
         "text": f"*🎯 横ばい中【{section}】{'・' + info['label'] if info.get('label') else ''} — {v['symbol']}*",
