@@ -21084,3 +21084,23 @@
 2026-10-10 22:01,除外,,,アドレス末尾が「pump」でなく、発行元も Pump.Fun でない(発行元: 不明),A,Walmart,Walmart,J64pNxtD8bQipP3hQCmqDkSQ2xoys8yKWHxMSVAxXsLF,STトレンド1h,96.98,0.05,,4.93e-11,,,,,,80.38,0.0,,,0,,,,18.59%(口座一致)
 2026-10-10 22:01,除外,,,アドレス末尾が「pump」でなく、発行元も Pump.Fun でない(発行元: 不明),A,CNPY,Canopy,EBB35DciYHHZGUNBY17gdsQ1xhtmo5F31Snj8ATnLGgP,STトレンド15m,196.68,0.05,,4.951e-13,,,,,,89.23,0.0,,,0,,,,8.25%(口座一致)
 2026-10-10 22:01,見送り,,,審査データ待ち,A,CORINE,Corine,BDbS4nVYqHfbc3XiWbToF39fojHfKMZBVihUscqTTd6M,STトレンド15m,45785.27,124820.0,33748.74,0.0001295,-1.37,-21.83,-21.34,,,25.89,0.0,,,13,,,,12.59%(口座一致)
+2026-10-10 22:16,見送り,,,pump.fun卒業前(C基準では対象外),B,AN0N,AN0N,3Eu7jMwt5sioScQjrgesfncCEkBs5FGRo282shrEanon,DEX新着,7.28,12753.06,,1.275e-05,4.84,300.0,300.0,,,18.62,2.0,,,0,,,,46.87%(口座一致)
+2026-10-10 22:16,見送り,,,pump.fun卒業前(C基準では対象外),B,Octopus🐙,Octopus🐙,8JoYNjf4ZknGqVBwqo6QQ6MyMi7emVt4XkpP8PBdpump,DEX新着,73.54,26672.8,,2.667e-05,-18.46,392.0,763.0,,,20.49,0.0,,,0,,その他の動物,,28.79%(口座一致)
+2026-10-10 22:16,見送り,,,"流動性$30,000未満 / 時価総額が$60,000〜$250,000の範囲外 / (拡張機能などの安全性は未確認)",A,Merc Up,Mercury Rising ,5K9waoBc12BwYdTcoRexMyPqfvHE8DkxRAu4DqWtpump,DEX新着,2520.08,5607.0,4770.0,5.807e-06,,-8.67,-8.67,,,,,,,0,,宇宙,,
+2026-10-10 22:16,見送り,,,"流動性$30,000未満 / 時価総額が$60,000〜$250,000の範囲外 / (拡張機能などの安全性は未確認)",A,CAT,GAME OF CAT,6KBDqTzgRPpa6xWeS5nPCxPwZHCRu1C51mV3S9r3pump,DEXブースト,758.78,53329.0,18800.21,5.553e-05,22.01,32.69,49.17,,,,,,,0,,猫,,
+2026-10-10 22:16,除外,,,開発者のラグ歴(Creator history of rugged tokens),B,GPIG,General Pig,9N724UscNYr3Ld1VQ9RGMKmZnaTrK26r5eueTJ2Mpump,STトレンド15m,104.81,3098.92,,3.098e-06,,-0.45,-8.09,,,0.6,0.0,,,0,,,,99.4%(口座一致)
+2026-10-10 22:16,除外,,,アドレス末尾が「pump」でなく、発行元も Pump.Fun でない(発行元: 不明),A,RSGP,Cambria,6UxgefgvYf1L3EPgkNNqiurYvGbfA4HBoXuHrxkux32s,STトレンド,1383.28,,,2.412e-15,,,,,,81.91,0.03,,,0,,,,4.69%(口座一致)
+2026-10-10 22:16,除外,,,アドレス末尾が「pump」でなく、発行元も Pump.Fun でない(発行元: 不明),A,TM,TeleMoney,EB8pUQ9Z6H3wX3ebEZSnZ92soUyHwnLTrfGepj8cZ3yF,ST出来高6h,89.18,118972.0,191829.49,0.0001189,-1.74,38.63,93.41,,,4.82,0.0,,,0,,,,93.26%(口座一致)
+2026-10-10 22:16,除外,,,アドレス末尾が「pump」でなく、発行元も Pump.Fun でない(発行元: 不明),A,GTA6,GTA6 Coin,8Gf43CSLqSac3un89ThwJTngHeYyQz85nbVATbPNorHN,STトレンド15m,110.88,27258.0,,2.725e-05,,,126.0,,,83.24,0.0,,,0,,,,
+2026-10-10 22:16,除外,,,アドレス末尾が「pump」でなく、発行元も Pump.Fun でない(発行元: 不明),A,TM,TeleMoney,5w8KVvQXX8FP4tsJRqkY4UTNBAofeponetikiqc7m4Rr,STトレンド15m,98.76,54852.0,,5.485e-05,,18.65,488.0,,,62.55,45.31,,,0,,,,
+2026-10-10 22:16,除外,,,アドレス末尾が「pump」でなく、発行元も Pump.Fun でない(発行元: 不明),A,Jef,General Jef,5Yzeos5JzduFMdYtogK4N88CKHit4QKEzuuiAwp3hevr,STトレンド15m,102.84,124290.0,198609.52,0.0001242,1.24,37.09,103.0,,,10.43,0.0,,,0,,,,82.26%(口座一致)
+2026-10-10 22:16,除外,,,アドレス末尾が「pump」でなく、発行元も Pump.Fun でない(発行元: 不明),A,PAID,Paid,4o16haNCmnxNAPLyFLhi5zVfZ8EXTgZVphxVYQXR9XKN,STトレンド1h,159.93,14967644.0,,0.01496,,53.88,166294.0,,,97.78,0.0,,,0,,,,0.6%(口座一致)
+2026-10-10 22:16,除外,,,アドレス末尾が「pump」でなく、発行元も Pump.Fun でない(発行元: 不明),A,LUMPY,Lumpy The Crocodile,8w3mi8G5gyVxzq6ETagKV8oQZrHQdCXc4b8qSKaCAMix,STトレンド1h,153.32,1065906.0,0.01,0.001065,,,4933.0,,,5.93,0.0,,,0,,,,58.22%(口座一致)
+2026-10-10 22:16,除外,,,アドレス末尾が「pump」でなく、発行元も Pump.Fun でない(発行元: 不明),A,AIOT,OKZOO,AyBUvu7aREfsaFE4ZULxUERjNoEote2dq9xdqanVKevC,STトレンド1h,150.83,103626.0,,0.0001036,,39.36,792.0,,,12.18,0.0,,,60,,,,35.25%(口座一致)
+2026-10-10 22:16,除外,,,アドレス末尾が「pump」でなく、発行元も Pump.Fun でない(発行元: 不明),A,Google AI,AI Google Coi,Ftgac2uFDFGWUme568Go675aqAEKwunRbLBAZWoEt99F,STトレンド1h,118.33,59761.0,,5.976e-05,,,289.0,,,99.78,0.0,,,0,,AI,,0.0%(口座一致)
+2026-10-10 22:16,除外,,,アドレス末尾が「pump」でなく、発行元も Pump.Fun でない(発行元: 不明),A,baccoon,Block Raccoon,TESnaE8ntVSewXCjve63HaNCmDnhRnahXbKqTW275Nc,STトレンド1h,137.03,78761.0,,7.876e-05,,52.37,447.0,,,35.27,0.0,,,0,,,,32.85%(口座一致)
+2026-10-10 22:16,除外,,,アドレス末尾が「pump」でなく、発行元も Pump.Fun でない(発行元: 不明),A,PULT,Catapult Trade,E92fvVYzA4AumJnp1ZsdVN3mfnNdDFSs3rP9gsUVxmC7,ST出来高6h,145.1,,,2.413e-15,,,,,,80.74,0.0,,,0,,猫,,16.63%(口座一致)
+2026-10-10 22:16,除外,,,アドレス末尾が「pump」でなく、発行元も Pump.Fun でない(発行元: 不明),A,ALLOX,AlloX,BurqvCtRJDNAVexr8ZjXD3QifpuMxvmGsYmmM42z4oxD,STトレンド,1428.52,,,2.423e-15,,,,,,81.86,0.04,,,264,,,,4.3%(口座一致)
+2026-10-10 22:16,除外,,,アドレス末尾が「pump」でなく、発行元も Pump.Fun でない(発行元: 不明),A,QOAT,Quantum Gospel,4bg1PEJwry9rrQsimGFkwdav6tCnZtNjmDd23bDHQv5n,STトレンド15m,290.34,5921009.0,,0.005921,,,65424.0,,,97.67,0.0,,,0,,,,1.23%(口座一致)
+2026-10-10 22:16,除外,,,開発者のラグ歴(Creator history of rugged tokens),B,QUBITS,Qubits,2eLqcCbG8rWMKiLwUSdoHT3kBueoFLG21FyQ8n1spump,pump.fun卒業前,305.81,6364.18,,6.364e-06,-0.79,-24.4,17.17,,,24.7,0.0,,,34,,,,61.81%(口座一致)
+2026-10-10 22:16,除外,,,開発者のラグ歴(Creator history of rugged tokens),B,Biscuit,Biscuit Johnson,5nrE1LY2ZGRu6xyCfC6gStxHgwB3tWzdzqLHsmZ3pump,pump.fun卒業前,1261.73,12212.56,,1.221e-05,0.26,-4.2,-35.02,,,23.94,0.0,,,0,,,,45.54%(口座一致)
