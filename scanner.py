@@ -873,6 +873,16 @@ def score_token(v):
 # Slack
 # ---------------------------------------------------------------------------
 def slack_send(payload, dry):
+    payload = dict(payload)
+    ca = payload.pop("_ca", None)
+    ok = _slack_post(payload, dry)
+    # (10/10) CA だけのメッセージを続けて送る。長押し →「テキストをコピー」で CA だけがコピーできる
+    if ok and ca and (CFG.get("notify") or {}).get("ca_message", True):
+        _slack_post({"text": ca}, dry)
+    return ok
+
+
+def _slack_post(payload, dry):
     url = os.environ.get("SLACK_WEBHOOK_URL", "").strip()
     if not dry and not url:
         log("  ⚠ SLACK_WEBHOOK_URL が未設定のため通知できません")
@@ -1018,6 +1028,7 @@ def candidate_payload(v, res, prev_tier=None, paper_msg="", narr=None):
     )
     title = f"{style['emoji']} 候補(リスク{tier}) 合計{res['score']}点 — {v['symbol']} {change}"
     return {
+        "_ca": mint,   # (10/10) 本文のあとに CA だけの短いメッセージを送る(スマホで長押しコピーしやすく)
         "text": f"*{title}*",
         "attachments": [{
             "color": style["color"],
@@ -1150,6 +1161,7 @@ def dip_payload(v, info, pc, section):
         f"👀 *GMGNの5分足で2〜3本、安値を更新せず止まっていたらチャートと保有者タブ(フィッシング・バンドル)を送ってください*\n\n{links}"
     )
     return {
+        "_ca": mint,   # (10/10) 本文のあとに CA だけの短いメッセージを送る(スマホで長押しコピーしやすく)
         "text": f"*📉 急落・横ばい待ち【{section}】 — {v['symbol']}*",
         "attachments": [{
             "color": TIER_STYLE["📉"]["color"],
@@ -1331,6 +1343,7 @@ def pattern_payload(v, info, pc, section="スキャナー枠"):
         f"🚫 *横ばいの下限に指値を置かない*: 下限から反発した陽線を5分足で確認してから中ほどで買う。指値を置いたら見張り、横ばいから外れたら取り消す\n\n{links}"
     )
     return {
+        "_ca": mint,   # (10/10) 本文のあとに CA だけの短いメッセージを送る(スマホで長押しコピーしやすく)
         "text": f"*🎯 横ばい中【{section}】{'・' + info['label'] if info.get('label') else ''} — {v['symbol']}*",
         "attachments": [{
             "color": TIER_STYLE[tier]["color"],
@@ -1422,6 +1435,7 @@ def narr_payload(v, info, nc, narr=None):
         f"GMGNの保有者タブでフィッシング20%以下・TOP100平均コスト−50%より上も確認\n\n{links}"
     )
     return {
+        "_ca": mint,   # (10/10) 本文のあとに CA だけの短いメッセージを送る(スマホで長押しコピーしやすく)
         "text": f"*🧭 ナラティブ候補 — {v['symbol']}*",
         "attachments": [{
             "color": TIER_STYLE["🧭"]["color"],
