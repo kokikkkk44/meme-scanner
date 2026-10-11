@@ -23,6 +23,7 @@ import datetime as dt
 import json
 import os
 import re
+import urllib.parse
 import sys
 import time
 from collections import Counter
@@ -1084,7 +1085,23 @@ def record_hist(w, v, t, pc, mcap=None, liq=None):
     mcap = mcap or v["mcap"]
     liq = liq if liq is not None else (v.get("liquidity") or 0)
     h = w.setdefault("h", [])
+    # (10/11) 価格の取り違え(前回の20倍超に一瞬跳ねる)は記録しない。$992M などの異常値が高値扱いされていた
+    if h and h[-1][1] and mcap > h[-1][1] * 20:
+        return
     h.append([int(t), round(mcap), v.get("holders"), round(liq or 0)])
+    # (10/11) 1日の振り返り(強い5・弱い5)用に、名前と1日の最大値を残す
+    w["nm"], w["sy"] = v.get("name") or w.get("nm"), v.get("symbol") or w.get("sy")
+    if v.get("age_min") is not None:
+        w["born"] = int(t - v["age_min"] * 60)
+    if v.get("category") == "A":
+        w["grad"] = 1
+    if mcap > (w.get("pk") or [0])[0]:
+        w["pk"] = [round(mcap), int(t)]
+    w["lpk"] = max(w.get("lpk") or 0, round(liq or 0))
+    if v.get("holders"):
+        w["hpk"] = max(w.get("hpk") or 0, v["holders"])
+    if len(h) >= 2 and h[-2][1]:
+        w["stp"] = min(w.get("stp") or 0, round((h[-1][1] / h[-2][1] - 1) * 100))
     keep = (pc.get("lookback_hours", 6) + 1) * 3600
     w["h"] = [x for x in h if t - x[0] <= keep][-48:]
     # 生まれたて枠・すき間枠も含め、ある程度の規模に一度でも届いた銘柄は、しばらく短い間隔で記録する
@@ -1840,6 +1857,76 @@ def daily_summary(state, cand_rows, dry, paper_rows=()):
     ok = slack_send({"text": "1日のまとめ", "attachments": [{"color": "#6B7280", "blocks": blocks[:40]}]}, dry)
     if ok:
         state["summary"] = {"since": now_ts(), "skip": {}, "excluded": {}, "cands": {}, "last_date": today.strftime("%Y-%m-%d")}
+        st = study_text(state) if (CFG.get("daily_study") or {}).get("enabled", True) else ""
+        if st:
+            parts = [p for p in st.split("\n\n") if p.strip()]
+            slack_send({"text": "📚 今日の勉強リスト", "attachments": [{"color": "#0EA5E9", "blocks": [
+                {"type": "section", "text": {"type": "mrkdwn", "text": p[:2900]}} for p in parts]}]}, dry)
+
+
+def study_list(state, now=None):
+    """(10/11) ナラティブの勉強用: 今日見た銘柄から「卒業して強かった5つ」と「ゼロになった5つ」を選ぶ"""
+    sc = CFG.get("daily_study") or {}
+    now = now or now_ts()
+    strong, weak = [], []
+    for mint, w in (state.get("watch") or {}).items():
+        pk, h = w.get("pk"), w.get("h") or []
+        if not pk or not h or now - w.get("first", now) > 24 * 3600 + 3600:
+            continue
+        cur = h[-1][1] or 0
+        ratio = cur / pk[0] if pk[0] else 0
+        if pk[0] > sc.get("max_peak_usd", 50_000_000):
+            continue   # 異常値
+        # 今日生まれた話題だけ(何か月も前からある大型銘柄はトレンド一覧に出ても対象外)
+        if not w.get("born") or now - w["born"] > sc.get("max_age_hours", 48) * 3600:
+            continue
+        if w.get("grad") and pk[0] >= sc.get("strong_min_peak_usd", 100000) and ratio >= sc.get("strong_min_keep", 0.4):
+            strong.append((pk[0], mint, w, cur, ratio))
+        elif pk[0] >= sc.get("weak_min_peak_usd", 20000) and ratio <= sc.get("weak_max_keep", 0.15):
+            weak.append((pk[0], mint, w, cur, ratio))
+    strong.sort(key=lambda x: -x[0])
+    weak.sort(key=lambda x: -x[0])
+    return strong[: sc.get("count", 5)], weak[: sc.get("count", 5)]
+
+
+def weak_reasons(w, cur_liq, holders):
+    """ゼロになった銘柄の、数字から分かる手がかり(ナラティブの判断は本人)"""
+    r = []
+    if (w.get("stp") or 0) <= -60:
+        r.append(f"約15分で{w['stp']}%の急落(ラグ・大口の売り抜けの疑い)")
+    if w.get("lpk") and cur_liq is not None and cur_liq < w["lpk"] * 0.3:
+        r.append(f"流動性が{fmt_usd(w['lpk'])}→{fmt_usd(cur_liq)}に減少(プールが抜かれた疑い)")
+    if w.get("hpk") and holders and holders < w["hpk"] * 0.7:
+        r.append(f"保有者が{w['hpk']}→{holders}人に減少")
+    if not w.get("grad"):
+        r.append("卒業できなかった")
+    return r or ["数字だけでは不明(Xで話題が続いたか確認)"]
+
+
+def study_text(state, now=None):
+    strong, weak = study_list(state, now)
+    if not strong and not weak:
+        return ""
+    def name(w, mint):
+        return f"{w.get('nm') or '?'} ({w.get('sy') or '?'})"
+    def links(mint, w):
+        q = urllib.parse.quote(w.get("nm") or w.get("sy") or mint)
+        return f"<https://gmgn.ai/sol/token/{mint}|GMGN> ｜ <https://x.com/search?q={q}&f=live|Xで検索>"
+    lines = ["*📚 今日の勉強リスト(ナラティブ帳用)*",
+             "強い5つと弱い5つを見比べて、タイプ/きっかけ/なぜ強い(弱い)か を書いてください"]
+    lines.append("\n*💪 卒業して強かった*")
+    for pk, mint, w, cur, ratio in strong:
+        lines.append(f"• *{name(w, mint)}* 最高 {fmt_usd(pk)}({jst(w['pk'][1])[11:16]}) → 今 {fmt_usd(cur)}(最高値の{ratio * 100:.0f}%)\n  `{mint}`\n  {links(mint, w)}")
+    if not strong:
+        lines.append("• なし")
+    lines.append("\n*💀 ゼロになった(最高値から−85%以上)*")
+    for pk, mint, w, cur, ratio in weak:
+        h = w["h"][-1]
+        why = "・".join(weak_reasons(w, h[3], h[2]))
+        lines.append(f"• *{name(w, mint)}* 最高 {fmt_usd(pk)}({jst(w['pk'][1])[11:16]}) → 今 {fmt_usd(cur)}(−{(1 - ratio) * 100:.0f}%)\n  手がかり: {why}\n  `{mint}`\n  {links(mint, w)}")
+    if not weak:
+        lines.append("• なし")
+    return "\n".join(lines)
 
 
 # ---------------------------------------------------------------------------
