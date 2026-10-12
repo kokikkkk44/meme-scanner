@@ -22295,3 +22295,11 @@
 2026-10-13 06:15,見送り,,,"発行から30分未満 / 流動性$30,000未満",A,SOLARIS,SOLARIS,6z5YSQVw72pYTWTRsy9KSqweMJkVKGTKdYq2CSoLariS,DEX新着,29.14,60397.0,19640.93,6.039e-05,-19.57,34.79,34.79,,,24.4,3.14,,,0,,,,18.73%(口座一致)
 2026-10-13 06:15,除外,,,開発者のラグ歴(Creator history of rugged tokens),B,Stimmy,Stimmy,738u8mLUPn3qQzwctpPMiNNddNLPDPKwsVmTGJxopump,DEX新着,14.91,3720.84,,3.72e-06,-8.83,0.8,0.8,,,10.26,0.01,,,0,,,,89.6%(口座一致)
 2026-10-13 06:15,見送り,,,"流動性$30,000未満 / 時価総額が$60,000〜$250,000の範囲外",A,b,buckme,Cr8kuNqKwiVVuzqLYKcJhmpSHy767837BwLFr9GDYXUf,DEXブースト,6332.97,39252.0,17201.79,4.039e-05,,12.37,98.32,,,25.67,0.0,,,8,,,,24.4%(口座一致)
+2026-10-13 06:30,見送り,,,"発行から30分未満 / 流動性$30,000未満 / 時価総額が$60,000〜$250,000の範囲外 / (拡張機能などの安全性は未確認)",A,WORM,WormCoin,5JRgtF4Fwnv3eNmNPuAur6dEzh83ix6mtYP4XALupump,DEX新着,26.78,49275.0,18239.98,4.927e-05,-15.82,9.45,9.45,,,,,,,0,,AI,,
+2026-10-13 06:30,除外,,,アドレス末尾が「pump」でなく、発行元も Pump.Fun でない(発行元: 不明),A,STONKPILLS,STONK PILLS,E2gxD4k2Y4peSW4B9j8WvG1m4zwwzYvzzpjbyggVNDfC,DEX新着,48.47,32947.0,15886.56,3.294e-05,-1.61,-30.12,-30.12,,,66.76,0.0,,,0,,,,24.11%(口座一致)
+2026-10-13 06:30,見送り,,,pump.fun卒業前(C基準では対象外),B,TGCAT,Telegram Cat,EqSs7t5h6nENTXPDzDeU42Wn2rPPKPomHhcJKpJdpump,DEX新着,9.57,3041.82,,3.041e-06,-56.25,-25.76,-25.76,,,6.91,0.0,,,0,,猫,,99.7%(口座一致)
+2026-10-13 06:30,見送り,,,pump.fun卒業前(C基準では対象外),B,PONSPUMP,PonsPump,BYY9699AuAArjVfiBBUaUYtvs1Eiv8MmjUyJ1mMDpons,DEX新着,34.58,41597.73,,4.159e-05,,1176.0,1176.0,,,20.15,0.0,,,0,,,,38.52%(口座一致)
+2026-10-13 06:30,見送り,,,pump.fun卒業前(C基準では対象外),B,cade,cade,D32ETPFxRFPBxSWhjq489WrLs2n98JU3VknMVgkxpump,DEX新着,16.27,3046.09,,3.046e-06,-11.17,-50.64,-50.64,,,5.11,0.0,,,0,,,,99.56%(口座一致)
+2026-10-13 06:30,除外,,,アドレス末尾が「pump」でなく、発行元も Pump.Fun でない(発行元: 不明),A,CRYO,cryo.social,FWzfwiM8SmEKwJys6f6wSFmGwi4FsYxHZcVz8SgHcryo,DEX新着,19.99,77705.99,,7.77e-05,,1869.0,1869.0,,,27.64,0.0,,,0,,AI,,18.74%(口座一致)
+2026-10-13 06:30,見送り,,,pump.fun卒業前(C基準では対象外),B,Recode,Recode,FxoKhLeF5exeUQ5GuDybS5xZsNCZj7XrVedFMbREpump,DEX新着,16.18,41488.83,,4.148e-05,,1222.0,1222.0,,,21.43,0.0,,,0,,,,10.92%(口座一致)
+2026-10-13 06:30,見送り,,,"時価総額が$60,000〜$250,000の範囲外",A,SI276,Super Intelligence SI276,HMYd9tosnUXuNHmq7pXmoePRVBLBBjA3JBfydq6upump,DEXブースト,8765.39,954564.0,96589.38,0.0009892,-0.09,8.69,-5.04,,,23.64,0.0,,,263,,,,5.17%(口座一致)
