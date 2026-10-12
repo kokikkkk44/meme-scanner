@@ -1333,6 +1333,19 @@ def pattern_can_notify(prev, info, pc, now=None):
     return False, ""
 
 
+def size_text(v, narrative=False):
+    """(10/12〜) 金額ルール: 流動性$20K未満は0.02 / ナラティブ枠は0.05 / 普通の枠は0.05、流動性$30K以上かつ発注前チェック全部⚪なら0.1"""
+    sz = CFG.get("sizing") or {}
+    liq = v.get("liquidity") or 0
+    if liq < sz.get("thin_liquidity_usd", 20000):
+        return f"{sz.get('thin_sol', 0.02)}(流動性${sz.get('thin_liquidity_usd', 20000) // 1000}K未満)"
+    if narrative:
+        return f"{sz.get('narrative_sol', 0.05)}"
+    if liq >= sz.get("a_liquidity_usd", 30000):
+        return f"{sz.get('base_sol', 0.05)}(発注前チェックが全部⚪なら{sz.get('a_sol', 0.1)})"
+    return f"{sz.get('base_sol', 0.05)}"
+
+
 def pattern_payload(v, info, pc, section="スキャナー枠"):
     mint = v["mint"]
     tier = SECTION_TIER.get(section, "🎯")
@@ -1352,7 +1365,7 @@ def pattern_payload(v, info, pc, section="スキャナー枠"):
         f"流動性: {fmt_usd(v['liquidity'])} ｜ 保有者: {info['holders_note']} ｜ {age_line(v)}\n"
         f"値動き: 5分 {fmt_pct(v['pc_m5'], True)} ｜ 1時間 {fmt_pct(v['pc_h1'], True)} ｜ "
         f"上位10件: {fmt_pct(v['top10'])} ｜ 開発者: {fmt_pct(v['dev_pct'])} ｜ LP: {v.get('lp_status') or '不明'}\n\n"
-        f"*目安*({pc.get('size_sol') or (CFG.get('paper_trading') or {}).get('amount_sol', 0.05)} SOL・期限1時間): 買う目安 {fmt_usd(info['limit'])}(最安値+{(info['limit'] / info['post_low'] - 1) * 100:.0f}%) ｜ 損切り {fmt_usd(info['sl'])} ｜ {exits}\n"
+        f"*目安*({size_text(v)} SOL・期限1時間): 買う目安 {fmt_usd(info['limit'])}(最安値+{(info['limit'] / info['post_low'] - 1) * 100:.0f}%) ｜ 損切り {fmt_usd(info['sl'])} ｜ {exits}\n"
         f"{extra}"
         f"⚠️ *発注前チェック*: GMGNの5分足で ②実体が安値を更新していない ③直前の足が−15%以上の大陰線でない "
         f"④買値が前の安値(ヒゲ)から5%以上上 ⑤滑っても耐えられる ⑥横ばいが5分足6本(30分)以上・急騰/急落の直後ではない "
@@ -1507,7 +1520,7 @@ def narr_payload(v, info, nc, narr=None, beta=None):
         f"安全(最低ライン通過): 上位10件 {fmt_pct(v['top10'])} ｜ バンドル {fmt_pct(v['bundle'])} ｜ 開発者 {fmt_pct(v['dev_pct'])} ｜ "
         f"LP {v.get('lp_status') or '不明'}\n\n"
         f"{beta_line}*タイミング*: {info['timing']}\n"
-        f"*金額*: {nc.get('size_sol', '0.02〜0.05')} SOL ｜ 利確 +30% ｜ 損切りは買う前に決めて TP/SL を設定\n"
+        f"*金額*: {size_text(v, narrative=True)} SOL ｜ 利確 +30% ｜ 損切りは買う前に決めて TP/SL を設定\n"
         f"🧭 *選ぶのはあなた*: タイプ／きっかけ(ミームが良い・強いニュース・本当にバズっている)／なぜ強いか を言えたら候補。"
         f"GMGNの保有者タブでフィッシング20%以下・TOP100平均コスト−50%より上も確認\n\n{links}"
     )
