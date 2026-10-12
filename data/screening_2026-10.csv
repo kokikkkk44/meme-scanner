@@ -22125,3 +22125,14 @@
 2026-10-13 01:30,見送り,,,"発行から30分未満 / 流動性$30,000未満 / 時価総額が$60,000〜$250,000の範囲外 / (拡張機能などの安全性は未確認)",A,DIDDY,No Diddy,9ueMtPzyPMFakgcVQidRPgDFT2Gn9UC5rf9dSfUVpump,DEX新着,17.61,3600.0,3349.21,3.6e-06,-36.5,-92.07,-92.07,,,,,,,0,,,,
 2026-10-13 01:45,除外,,,アドレス末尾が「pump」でなく、発行元も Pump.Fun でない(発行元: 不明),A,SGORILLA,Starknet Gorilla,8ubf4S7gMNDqeb1Kef8gU2TPibRjo3zQsBF9uEYsmW4Q,DEX新着,20.09,47239.0,18894.84,4.723e-05,10.9,2.52,2.52,,,21.32,0.0,,,0,,,,20.46%(口座一致)
 2026-10-13 01:45,見送り,,,pump.fun卒業前(C基準では対象外),B,FARMCADE,Farmcade,721FbysGJdNqtihYSszawuKuPoK1K5M9oP8wdcWgpump,DEX新着,13.39,37428.9,,3.742e-05,99.21,1107.0,1107.0,,,41.46,1.0,,,0,,,,27.32%(口座一致)
+2026-10-13 02:01,見送り,,,"発行から30分未満 / 流動性$30,000未満 / 時価総額が$60,000〜$250,000の範囲外",A,CPAD,Crawlerpad,GzYmiYSgHVAC4rhP4cK1aasdD2rzvc9x48k2G9zZRoto,DEX新着,3.15,51398.0,18565.54,5.139e-05,16.9,16.9,16.9,,,26.89,0.0,,,9,,,,28.25%(口座一致)
+2026-10-13 02:01,除外,,,アドレス末尾が「pump」でなく、発行元も Pump.Fun でない(発行元: 不明),A,RETAIN,RETAIN,3MrwkHHhvZHupY31AFZq2cFtNEnGEiL9YsJ4ij6Vhpos,DEX新着,842.07,,,,,,,,,46.18,1.65,,,0,,,,26.34%(口座一致)
+2026-10-13 02:01,見送り,,,"発行から30分未満 / 流動性$30,000未満 / 6時間で+100%超の急騰中(押し目待ち) / (拡張機能などの安全性は未確認)",A,VALENTINO,Valentino Duval,5zB4xQpjynELrbpq7sL6Vp7a7nN6BoQ4PQs1kT97pump,DEX新着,6.93,113697.0,27681.28,0.0001138,94.67,149.0,149.0,,,,,,,0,,,,
+2026-10-13 02:01,見送り,,,"発行から30分未満 / 流動性$30,000未満 / 時価総額が$60,000〜$250,000の範囲外",A,CRAWL,Crawler,WgHhoaoFrsYTYRTj47GYNK5tsEWTajsaX1bomx7xyq5,DEX新着,11.02,13047.0,8260.89,1.304e-05,-74.37,-71.26,-71.26,,,19.56,0.0,,,5,,,,33.51%(口座一致) / 23.06%(口座一致)
+2026-10-13 02:01,除外,,,アドレス末尾が「pump」でなく、発行元も Pump.Fun でない(発行元: Raydium),A,HARDCAT,HARDCAT,DWotkmNR8z4RPQ1dg7oLFjCD5LmZWRzz6f8tvz2mrun,DEX新着,39.63,18028.0,389.9,1.802e-05,,-4.29,-4.29,,,27.08,0.0,,,0,,猫,,36.37%(口座一致)
+2026-10-13 02:01,見送り,,,pump.fun卒業前(C基準では対象外),B,HEIST,Quantum Heist,EVVQ8hAUjuEbLvCAvKSerDNkN43bbG9karL5fVYApump,DEX新着,11.53,3094.87,,3.094e-06,-8.32,0.13,0.13,,,70.17,0.0,,,0,,,,99.69%(口座一致)
+2026-10-13 02:01,見送り,,,pump.fun卒業前(C基準では対象外),B,Anyware,Anyware,Dvs1b7bnmNLjqCMF2UauzeFtbDWmpdaqirrmydTqpump,DEX新着,12.67,3190.82,,3.19e-06,-0.63,-0.62,-0.62,,,23.66,0.0,,,0,,,,96.9%(口座一致)
+2026-10-13 02:01,見送り,,,"発行から30分未満 / 流動性$30,000未満 / 時価総額が$60,000〜$250,000の範囲外 / (拡張機能などの安全性は未確認)",A,CASINO,no crying in the casino,5choDfhrsrfYEMn8fW51TCefwbE4EQRUba72Sngspump,DEX新着,25.14,4167.0,3814.4,4.172e-06,-17.62,-91.01,-91.01,,,,,,,0,,,,
+2026-10-13 02:01,見送り,,,pump.fun卒業前(C基準では対象外),B,LARP,Fail Larp Son,EcQApMSiGemxmiGUaYaqw6J77jjU4fhYnpCZkZ4rpump,DEX新着,20.9,5803.21,,5.803e-06,-21.71,68.23,68.23,,,36.05,0.0,,,0,,,,61.85%(口座一致)
+2026-10-13 02:01,見送り,,,流動性が取得できない(0表示) / 時価総額が不明 / 6時間で+100%超の急騰中(押し目待ち) / (拡張機能などの安全性は未確認),A,casino,no crying in the casino,7aSRFYVupn5cS5ebNSnNf9PoJY94RbXje3hV6uzppump,DEX新着,30.42,,,,-1.32,639.0,639.0,,,,,,,0,,,,
+2026-10-13 02:01,見送り,,,pump.fun卒業前(C基準では対象外),B,TUSD,Trench USD,BHTDVeRsuYBqsjDjgRHzG4mupsnpXJdejrbbtDweTUSD,DEX新着,759.57,3240.69,,3.24e-06,,,-1.27,,,1.02,0.0,,,0,,,,98.96%(口座一致)
