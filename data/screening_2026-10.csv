@@ -22345,3 +22345,9 @@
 2026-10-13 08:01,見送り,,,"流動性$30,000未満 / 時価総額が$60,000〜$250,000の範囲外",A,RMPL,Rumpelstiltskin,DdmbM4XGDaBQHttm7XTf1rLfkyLtmLix9T19Qj9qarT,DEXブースト,11851.54,37402.0,16503.65,3.889e-05,,,1.32,,,23.86,0.0,,,4,,,,23.73%(口座一致)
 2026-10-13 08:15,見送り,,,pump.fun卒業前(C基準では対象外),B,CATCHEM,CATCHEM,93VPLZbUgmue1Asky7EwYPqpTaWb1MJj8N9JWMCCatch,DEX新着,6.01,3280.37,,3.28e-06,-66.84,6.86,6.86,,,3.31,0.01,,,0,,猫,,96.46%(口座一致)
 2026-10-13 08:15,見送り,,,"発行から30分未満 / 流動性$30,000未満 / (拡張機能などの安全性は未確認)",A,Popo,Popo,CqWt6SUMJuqmt1JVTTadyEpGuvn4AzDN6QFXuZeXpump,DEX新着,4.25,75493.0,22391.3,7.563e-05,66.28,66.28,66.28,,,,,,,0,,,,
+2026-10-13 08:30,見送り,,,pump.fun卒業前(C基準では対象外),B,hi,hi,6x4Z2dr5DgHUBCKvta8T8GNsFTxJhsBZxNrycWQ8pump,DEX新着,12.87,33070.57,,3.307e-05,58.38,203.0,203.0,,,20.22,0.0,,,0,,,,23.99%(口座一致)
+2026-10-13 08:30,見送り,,,pump.fun卒業前(C基準では対象外),B,QHOST,Qhost,DC6tBQKp4KMcuott1ud3PiHR6oCiRUzuW7p1KxS7pump,DEX新着,16.16,7082.57,,7.082e-06,15.13,135.0,135.0,,,20.18,0.0,,,0,,,,61.88%(口座一致)
+2026-10-13 08:30,除外,,,アドレス末尾が「pump」でなく、発行元も Pump.Fun でない(発行元: 不明),A,Sentences,Sentences,3j2peZexu9Wu4j8QQGLNoFzFEbur58qrCsTkBPpJWF7Q,DEX新着,16.53,42349.29,,4.234e-05,,1440.0,1440.0,,,24.86,0.0,,,0,,,,26.48%(口座一致)
+2026-10-13 08:30,見送り,,,pump.fun卒業前(C基準では対象外),B,4KAT,4KAT,ESJmDiRZD6Pgk88SgVw6pKhUUC9mwsL8GGD8y9fKpump,DEX新着,40.95,22855.38,,2.285e-05,16.39,398.0,398.0,,,25.31,0.0,,,0,,猫,,30.83%(口座一致)
+2026-10-13 08:30,除外,,,開発者のラグ歴(Creator history of rugged tokens),A,DIT,Dead Internet Theory,DSdYG7MHC6WBWWquB1NYMCB8B6usxGa67LcWhNEZmexP,DEX新着,16.65,15800.0,9107.13,1.582e-05,-28.78,-63.65,-63.65,,,23.95,1.32,,,0,,,,37.22%(口座一致)
+2026-10-13 08:30,除外,,,アドレス末尾が「pump」でなく、発行元も Pump.Fun でない(発行元: 不明),A,FARMCATS,Farm Cats,9BAx22utcotoMxseF8AViAMsrWVwMz4BLs3Not7BnfJN,DEXブースト,60576.26,35067.0,23157.73,3.506e-05,,-1.19,-1.19,,,36.17,0.0,,,8,,猫,,48.41%(口座一致)
