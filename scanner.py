@@ -1373,6 +1373,59 @@ def pattern_payload(v, info, pc, section="スキャナー枠"):
 
 
 # ---------------------------------------------------------------------------
+# 🔗 ベータプレイ(10/12〜 動画「本命が走ったら同じテーマの2番手を探す」)
+# ---------------------------------------------------------------------------
+BETA_STOP = {"coin", "token", "the", "official", "solana", "meme", "community", "inu", "with", "this", "that"}
+
+
+def name_words(v):
+    return {w for w in re.findall(r"[a-z]{4,}", f"{v.get('name') or ''} {v.get('symbol') or ''}".lower()) if w not in BETA_STOP}
+
+
+def update_leaders(state, views, bc, now=None):
+    """時価総額が大きく、まだ上昇中の新しいコインを「本命」として数時間覚えておく"""
+    now = now or now_ts()
+    L = state.setdefault("beta_leaders", {})
+    for k in [k for k, d in L.items() if now - d["ts"] > bc.get("leader_keep_hours", 6) * 3600]:
+        L.pop(k)
+    for v in views:
+        mc, age, h1 = v.get("mcap") or 0, v.get("age_min"), v.get("pc_h1")
+        if mc < bc.get("leader_min_mcap_usd", 1_000_000) or v.get("rugged"):
+            continue
+        if age is None or age > bc.get("leader_max_age_hours", 48) * 60:
+            continue
+        if h1 is None or h1 < bc.get("leader_min_h1_pct", 0):
+            continue
+        L[v["mint"]] = {"ts": now, "sy": v.get("symbol") or "?", "nm": v.get("name") or "", "mc": mc, "h1": h1,
+                        "th": [t for t in detect_themes(v) if t not in bc.get("ignore_themes", [])],
+                        "w": sorted(name_words(v))}
+    return L
+
+
+def beta_match(v, leaders, bc):
+    """本命と同じテーマ・同じ単語を持つ、本命よりずっと小さいコインなら (本命dict, 共通点の文) を返す"""
+    best = None
+    sy = (v.get("symbol") or "").lower()
+    th = set(t for t in detect_themes(v) if t not in bc.get("ignore_themes", []))
+    words = name_words(v)
+    for mint, L in leaders.items():
+        if mint == v["mint"] or sy == L["sy"].lower():
+            continue   # 本命そのもの・同じシンボルの便乗コピーは除く
+        if (v.get("mcap") or 0) > L["mc"] * bc.get("max_beta_mcap_ratio", 0.3):
+            continue
+        common = [f"テーマ「{t}」" for t in th & set(L["th"])] + [f"単語「{w}」" for w in words & set(L["w"])]
+        if common and (best is None or L["mc"] > best[0]["mc"]):
+            best = (L, "・".join(common))
+    return best
+
+
+def x_links(v):
+    sy = urllib.parse.quote("$" + (v.get("symbol") or ""))
+    return (f"<https://x.com/search?q={v['mint']}&f=live|XでCA検索(最新)> ｜ "
+            f"<https://x.com/search?q={sy}&f=live|Xで{v.get('symbol')}検索(最新)>")
+
+
+# ---------------------------------------------------------------------------
 # 🧭 ナラティブ枠(10/10〜)。銘柄選びは本人。スキャナーは「最低限の安全」だけで絞り、形は見送りの理由にしない
 # ---------------------------------------------------------------------------
 def narr_eval(v, hist, nc, now=None, pre=False):
@@ -1432,10 +1485,17 @@ def narr_timing(v, H, nc, now):
     return "👀 形はまだ判断できない(記録不足)。5分足で横ばい30分以上を確認してから"
 
 
-def narr_payload(v, info, nc, narr=None):
+def narr_payload(v, info, nc, narr=None, beta=None):
     mint = v["mint"]
     links = (f"<https://gmgn.ai/sol/token/{mint}|GMGN> ｜ <https://dexscreener.com/solana/{mint}|DEX Screener> ｜ "
-             f"<https://rugcheck.xyz/tokens/{mint}|RugCheck>")
+             f"<https://rugcheck.xyz/tokens/{mint}|RugCheck>\n{x_links(v)}")
+    bc = CFG.get("beta_play") or {}
+    beta_line = ""
+    if beta:
+        L, why = beta
+        beta_line = (f"🔗 *ベータ候補*: 本命 *{L['sy']}* 時価総額 {fmt_usd(L['mc'])}(1時間 {fmt_pct(L['h1'], True)}・{jst(L['ts'])[11:16]}時点) ｜ 共通: {why}\n"
+                     f"例外ルール(ナラティブ枠のみ): ①本命がまだ上昇中 ②Xで公式・ローンチパッド・大きいアカウントの言及を確認 → "
+                     f"急騰直後でも *{bc.get('size_sol', 0.02)} SOLまで* で可。指値3条件と安全チェックはそのまま\n\n")
     stage = f"卒業前(進捗{v['curve']:.0f}%)" if v["category"] == "B" and v.get("curve") is not None else (
         "卒業前" if v["category"] == "B" else "卒業済み")
     themes = "・".join(detect_themes(v)) or "判定なし"
@@ -1446,14 +1506,14 @@ def narr_payload(v, info, nc, narr=None):
         f"値動き: 5分 {fmt_pct(v['pc_m5'], True)} ｜ 1時間 {fmt_pct(v['pc_h1'], True)} ｜ 1時間の出来高 {fmt_usd(v.get('vol_h1'))}\n"
         f"安全(最低ライン通過): 上位10件 {fmt_pct(v['top10'])} ｜ バンドル {fmt_pct(v['bundle'])} ｜ 開発者 {fmt_pct(v['dev_pct'])} ｜ "
         f"LP {v.get('lp_status') or '不明'}\n\n"
-        f"*タイミング*: {info['timing']}\n"
+        f"{beta_line}*タイミング*: {info['timing']}\n"
         f"*金額*: {nc.get('size_sol', '0.02〜0.05')} SOL ｜ 利確 +30% ｜ 損切りは買う前に決めて TP/SL を設定\n"
         f"🧭 *選ぶのはあなた*: タイプ／きっかけ(ミームが良い・強いニュース・本当にバズっている)／なぜ強いか を言えたら候補。"
         f"GMGNの保有者タブでフィッシング20%以下・TOP100平均コスト−50%より上も確認\n\n{links}"
     )
     return {
         "_ca": mint,   # (10/10) 本文のあとに CA だけの短いメッセージを送る(スマホで長押しコピーしやすく)
-        "text": f"*🧭 ナラティブ候補 — {v['symbol']}*",
+        "text": f"*🧭{'🔗' if beta else ''} ナラティブ候補{'(ベータ)' if beta else ''} — {v['symbol']}*",
         "attachments": [{
             "color": TIER_STYLE["🧭"]["color"],
             "blocks": [
@@ -2294,7 +2354,16 @@ def run(dry):
                 why_n[reason.split("(")[0]] += 1
                 continue
             pool.append(mint)
-        pool.sort(key=lambda m: -(results[m][4].get("vol_h1") or 0))
+        bc = CFG.get("beta_play") or {}
+        betas = {}
+        if bc.get("enabled"):
+            leaders = update_leaders(state, [r[4] for r in results.values()], bc)
+            for mint in pool:
+                b = beta_match(results[mint][4], leaders, bc)
+                if b:
+                    betas[mint] = b
+            log(f"🔗 ベータ: 本命 {len(leaders)} 件(" + ", ".join(d["sy"] for d in leaders.values())[:120] + f") ｜ 候補 {len(betas)} 件")
+        pool.sort(key=lambda m: (m not in betas, -(results[m][4].get("vol_h1") or 0)))
         n_narr = 0
         for mint in pool[: nc.get("max_checks_per_run", 10)]:
             if n_narr >= nc.get("max_per_run", 5) or time_left() < 15:
@@ -2312,13 +2381,13 @@ def run(dry):
                 why_n[reason.split("(")[0]] += 1
                 continue
             narr = narrative(v, state)
-            if slack_send(narr_payload(v, info, nc, narr), dry):
+            if slack_send(narr_payload(v, info, nc, narr, betas.get(mint)), dry):
                 sent += 1
                 n_narr += 1
                 nn[mint] = now_ts()
                 cand_rows.append({
                     "通知日時(JST)": jst(), "通知ts": int(now_ts()), "段階": "🧭", "合計点": "",
-                    "区分": f"{v['category']}・ナラティブ枠", "シンボル": v["symbol"], "名前": v["name"], "アドレス": mint,
+                    "区分": f"{v['category']}・ナラティブ枠" + ("・ベータ" if mint in betas else ""), "シンボル": v["symbol"], "名前": v["name"], "アドレス": mint,
                     "通知時価格": fmt_price(v["price"]), "通知時時価総額": r1(v["mcap"]),
                     "通知時流動性": r1(v["liquidity"]), "テーマ": "・".join(detect_themes(v)),
                     "ナラティブ": narr[2] if narr else "",
