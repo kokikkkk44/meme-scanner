@@ -1072,6 +1072,9 @@ def dip_reject(v, info, dc):
     """(10/10) 📉 急落通知を出さない条件。ANTIRUG: 高値から-67%・1時間-62%・発行648日"""
     if dc.get("max_drop_pct") and info["drop"] > dc["max_drop_pct"]:
         return f"買い場の目安を割り込んだ(高値から-{info['drop']:.0f}%)"
+    m5 = dc.get("max_m5_move_pct")
+    if m5 and v.get("pc_m5") is not None and abs(v["pc_m5"]) >= m5:
+        return f"直近5分が{v['pc_m5']:+.0f}%(急な値動きの最中)"
     lim = dc.get("max_h1_move_pct")
     if lim and v.get("pc_h1") is not None and abs(v["pc_h1"]) > lim:
         return f"直近1時間が{v['pc_h1']:+.0f}%"
@@ -1256,15 +1259,21 @@ def pattern_eval(hist, v, pc, now=None):
     # ② 指値はルール④に合わせる: 高値後の最安値(前の安値)から+10%以上、かつ今の値段以下
     post_low = min(x[1] for x in after)
     floor = post_low * (1 + pc.get("limit_above_low_pct", 10) / 100)
+    breakout = False
     if cur[1] < floor:
-        return None, f"前の安値に近すぎる(安値から+{(cur[1] / post_low - 1) * 100:.0f}%・基準+{pc.get('limit_above_low_pct', 10)}%)"
-    limit = min(max(lo + (hi - lo) * pc["limit_position"], floor), cur[1])
+        # (10/14) 今が「安値+10%」より下なら、指値は置かず「安値+10%を陽線で上抜けたら成行」の通知にする(レンジの底に指値を置かない)
+        if not pc.get("breakout_wait", True):
+            return None, f"前の安値に近すぎる(安値から+{(cur[1] / post_low - 1) * 100:.0f}%・基準+{pc.get('limit_above_low_pct', 10)}%)"
+        breakout = True
+        limit = floor
+    else:
+        limit = min(max(lo + (hi - lo) * pc["limit_position"], floor), cur[1])
     sl = min(lo, limit) * (1 - pc["sl_below_range_pct"] / 100)
     return {
         "peak": peak[1], "peak_ts": peak[0], "cur": cur[1], "drop": drop, "mins_to_drop": mins_to_drop,
         "lo": lo, "hi": hi, "band": band, "span": span, "n": len(win),
         "post_low": post_low, "holders_note": holders_note,
-        "limit": limit, "sl": sl, "tp": limit * (1 + pc["tp_pct"] / 100),
+        "limit": limit, "sl": sl, "tp": limit * (1 + pc["tp_pct"] / 100), "breakout": breakout,
     }, ""
 
 
@@ -1356,6 +1365,14 @@ def pattern_payload(v, info, pc, section="スキャナー枠"):
     if pc.get("sl_from_entry_pct"):
         info["sl"] = info["limit"] * (1 - pc["sl_from_entry_pct"] / 100)
     extra = pc.get("note") or ""
+    rise = (info['limit'] / info['post_low'] - 1) * 100
+    if info.get("breakout"):
+        # (10/14) 今が安値に近いときは指値を置かず、上抜けを待つ(レンジの底に指値を置かない)
+        target_line = (f"*目安*({size_text(v)} SOL・期限1時間): ⏳ 上抜け待ち(指値は置かない) — 5分足の陽線が "
+                       f"{fmt_usd(info['limit'])}(最安値+{rise:.0f}%)より上で確定したら成行 ｜ 損切り {fmt_usd(info['sl'])} ｜ {exits}\n")
+    else:
+        target_line = (f"*目安*({size_text(v)} SOL・期限1時間): 買う目安 {fmt_usd(info['limit'])}(最安値+{rise:.0f}%) ｜ "
+                       f"損切り {fmt_usd(info['sl'])} ｜ {exits}\n")
     links = (f"<https://gmgn.ai/sol/token/{mint}|GMGN> ｜ <https://dexscreener.com/solana/{mint}|DEX Screener> ｜ "
              f"<https://rugcheck.xyz/tokens/{mint}|RugCheck>")
     body = (
@@ -1365,7 +1382,7 @@ def pattern_payload(v, info, pc, section="スキャナー枠"):
         f"流動性: {fmt_usd(v['liquidity'])} ｜ 保有者: {info['holders_note']} ｜ {age_line(v)}\n"
         f"値動き: 5分 {fmt_pct(v['pc_m5'], True)} ｜ 1時間 {fmt_pct(v['pc_h1'], True)} ｜ "
         f"上位10件: {fmt_pct(v['top10'])} ｜ 開発者: {fmt_pct(v['dev_pct'])} ｜ LP: {v.get('lp_status') or '不明'}\n\n"
-        f"*目安*({size_text(v)} SOL・期限1時間): 買う目安 {fmt_usd(info['limit'])}(最安値+{(info['limit'] / info['post_low'] - 1) * 100:.0f}%) ｜ 損切り {fmt_usd(info['sl'])} ｜ {exits}\n"
+        f"{target_line}"
         f"{extra}"
         f"⚠️ *発注前チェック*: GMGNの5分足で ②実体が安値を更新していない ③直前の足が−15%以上の大陰線でない "
         f"④買値が前の安値(ヒゲ)から5%以上上 ⑤滑っても耐えられる ⑥横ばいが5分足6本(30分)以上・急騰/急落の直後ではない "
