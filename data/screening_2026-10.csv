@@ -22491,3 +22491,6 @@
 2026-10-13 17:15,見送り,,,"発行から30分未満 / 流動性$30,000未満 / 時価総額が$60,000〜$250,000の範囲外 / (拡張機能などの安全性は未確認)",A,Artemi,Artemi,CMoNpYocyGLWWRZxHuZcjPh8FuxpGhMhvTsSrYUEpump,DEX新着,7.66,14662.0,8696.03,1.466e-05,4.69,-67.16,-67.16,,,,,,,0,,,,
 2026-10-13 17:30,除外,,,アドレス末尾が「pump」でなく、発行元も Pump.Fun でない(発行元: 不明),A,YURU,YURU COIN,83xGH23oFrEFsovtpnEYPHc4iYvtyVpquwV91A8bYuRu,DEX新着,61.9,2886881.0,43211.3,0.3071,0.38,2.29,2.35,,,99.25,89.36,,,0,,,,0.75%(口座一致)
 2026-10-13 17:30,見送り,,,pump.fun卒業前(C基準では対象外),B,FRITZFROG,Fritzfrog,8RGgZEQ2Yz82Qw1jCWnZ8NCgM584pFuCynP4rjMhpump,DEX新着,9.21,20494.01,,2.049e-05,-43.21,371.0,371.0,,,22.83,0.0,,,6,,カエル,,33.32%(口座一致)
+2026-10-13 17:45,見送り,,,pump.fun卒業前(C基準では対象外),B,FERMI,Fermi Labs,83x4mb4j2BoktxKk9pPYY31j8TarMKzGDzpjRQM9pump,DEX新着,32.3,9935.94,,9.935e-06,-7.18,197.0,197.0,,,27.96,0.0,,,0,,,,51.69%(口座一致)
+2026-10-13 17:45,見送り,,,6時間で+100%超の急騰中(押し目待ち),A,DADDY,TOKEN DADDY,hnMDBVtBoFuoE4fq3FU3d1d4MTgXdLayE3wQhRUpump,DEX新着,259.79,199444.0,38652.64,0.0002027,-17.97,-21.2,202.0,,,6.28,0.0,,,0,,,,10.12%(口座一致)
+2026-10-13 17:45,除外,,,開発者のラグ歴(Creator history of rugged tokens),A,SAX,SAXQUITO,Gs7kJBNMDNYLtLESH1jjtC9rQkvTQQE3MLtFhaFvpump,DEX新着,255.93,21161.0,11203.88,2.228e-05,-9.22,-20.19,-50.6,,,25.3,0.3,,,4,,,,30.51%(口座一致)
