@@ -22660,3 +22660,10 @@
 2026-10-14 02:30,見送り,,,pump.fun卒業前(C基準では対象外),B,TACTICS,Pump TACTICS,5sTxhZbnBvTMnXNrqHTEe1qXZnhEiCnRnj9JDkgJpump,DEX新着,31.74,25749.44,,2.574e-05,-13.1,742.0,742.0,,,21.62,1.0,,,0,,,,29.34%(口座一致)
 2026-10-14 02:30,見送り,,,"流動性$30,000未満 / (拡張機能などの安全性は未確認)",A,Bumo,Bumo-chan,7yg2UT3Ksh7wwmAPAasaKU6SBbakRtzf2eYqjZZzpump,DEXブースト,1452.97,78147.0,23610.99,8.02e-05,-2.72,-24.31,-35.33,,,,,,,0,,,,
 2026-10-14 02:30,見送り,,,"時価総額が$60,000〜$250,000の範囲外",A,BATONA,Baton Agency,4hsJNmPComjTsbrDtoLjDMmsyZ1g2T1xy1xHnEE2pump,DEXブースト,1559.5,1077712.0,94416.45,0.001095,-1.37,-70.74,-73.05,,,2.42,0.0,,,0,,AI,,4.45%(口座一致)
+2026-10-14 02:45,見送り,,,pump.fun卒業前(C基準では対象外),B,TICKS,Grok Ticks,AchfwCbRKQV2KvL3pnLyaEpZA8J1AXNbQWjHmQUWpump,DEX新着,39.18,17977.08,,1.797e-05,54.28,213.0,213.0,,,26.09,0.0,,,0,,AI,,43.29%(口座一致)
+2026-10-14 02:45,見送り,,,pump.fun卒業前(C基準では対象外),B,ROXY,The Ugly Cat,BrX3dd8imnjW9YwCR6nfJJGG6Edz2CaBr74pVmYRpump,DEX新着,6.04,12531.87,,1.253e-05,77.27,83.56,83.56,,,12.72,0.0,,,23,,猫,,74.12%(口座一致)
+2026-10-14 02:45,除外,,,アドレス末尾が「pump」でなく、発行元も Pump.Fun でない(発行元: 不明),A,NEXUS,Nexus,NEXkZVeYWcNqA7eR5pSPMRieTT6HrTEKdpFoXtCuPAD,DEX新着,24.71,37632.48,,3.763e-05,,892.0,892.0,,,19.49,0.0,,,8,,,,42.75%(口座一致)
+2026-10-14 02:45,見送り,,,"流動性$30,000未満 / 時価総額が$60,000〜$250,000の範囲外 / (拡張機能などの安全性は未確認)",A,THISONE,THiS ONE,GRjrHWVLWcnW91PiVdxhgKaG4RnMPwQrDyqVLk7Lpump,DEX新着,8525.56,17028.0,9726.97,1.785e-05,5.88,32.33,32.33,,,,,,,0,,,,
+2026-10-14 02:45,見送り,,,"発行から30分未満 / 流動性$30,000未満 / 時価総額が$60,000〜$250,000の範囲外",A,CHARITABLE,Charitable,E6vCQrwgEQxe12L8BhvYQLZ6ydqwcGqrfVk9iqrzbRLT,DEX新着,4.87,4238.0,3800.71,4.237e-06,-88.69,-90.21,-90.21,,,20.58,0.0,,,0,,,,73.17%(口座一致)
+2026-10-14 02:45,除外,,,アドレス末尾が「pump」でなく、発行元も Pump.Fun でない(発行元: 不明),A,FARMSEM,THE BLACK FARM BULL,6K8mmm6J3ciDdEhtQa1bJeeJdFEaR1VQ7UD6Eqbvc6KH,DEX新着,241.2,,,,,,,,,57.86,0.22,,,0,,その他の動物,,
+2026-10-14 02:45,除外,,,アドレス末尾が「pump」でなく、発行元も Pump.Fun でない(発行元: 不明),A,MATRIX,Matrixinfinite,EAWQonhk4Sm1LkEWT8Z1whVmEKLNHdtPUncbcuroKdhF,DEXブースト,719.46,4050.0,396.7,4.049e-06,-11.78,7.63,73.96,,,87.92,59.32,,,0,,,,4.9%(口座一致)
