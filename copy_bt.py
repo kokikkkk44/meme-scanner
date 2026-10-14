@@ -32,6 +32,8 @@ def get(path, u, params=None):
                 time.sleep(5); continue
             if r.status_code != 200:
                 print(f"  {path}: HTTP {r.status_code} {r.text[:120]}")
+                u.setdefault("errors", []).append(f"{path[:40]} HTTP {r.status_code} {r.text[:160]}")
+                u["errors"] = u["errors"][-10:]
                 return None
             return r.json()
         except requests.RequestException as e:
@@ -76,6 +78,8 @@ def main():
             d = get(f"/first-buyers/{m}", u)
             if d is None:
                 continue
+            if not as_list(d):
+                u.setdefault("errors", []).append(f"empty {m[:8]} {json.dumps(d)[:200]}")
             json.dump([slim(x) for x in as_list(d) if isinstance(x, dict)], open(p, "w"), separators=(",", ":"))
             time.sleep(1.1)
     elif mode == "chart":
