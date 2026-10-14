@@ -18,46 +18,51 @@ sources:
     enabled: true
     path: /tokens/trending/6h   # 期間: 5m 15m 30m 1h 2h 3h 4h 5h 6h 12h 24h
     limit: 100
-    every_n_runs: 1             # 毎回(15分おき)取得。無料枠(月10,000回)に収まるよう monthly_budget で上限管理
+    every_n_runs: 8             # (10/14) 無料枠の残りに合わせて間隔を広げた
   graduated:                    # pump.fun を卒業したばかりの銘柄一覧
     enabled: true
     path: /tokens/multi/graduated
     limit: 100
-    every_n_runs: 1
+    every_n_runs: 4             # (10/14) 無料枠の残りに合わせて間隔を広げた
   trending_1h:                  # 直近1時間で勢いのある銘柄
     enabled: true 
     label: STトレンド1h
     path: /tokens/trending/1h
     limit: 100
-    every_n_runs: 4             # 4 = 1時間に1回
+    every_n_runs: 3             # (10/14) 無料枠の残りに合わせて間隔を広げた
     offset: 1                   # 他の一覧と同じ回に重ならないようにずらす
   trending_24h:                 # 1日を通して注目されている銘柄(数日たった銘柄も拾う)
     enabled: true 
     label: STトレンド24h
     path: /tokens/trending/24h
     limit: 100
-    every_n_runs: 8             # (10/7 4→8) 新しく見つかる銘柄が少ないため2時間に1回
+    every_n_runs: 16             # (10/14) 無料枠の残りに合わせて間隔を広げた
     offset: 2
   trending_15m:                 # 直近15分で勢いのある銘柄(10/7〜)
     enabled: true
     label: STトレンド15m
     path: /tokens/trending/15m
     limit: 100
-    every_n_runs: 4             # 1時間に1回
-    offset: 0
+    every_n_runs: 3             # (10/14) 無料枠の残りに合わせて間隔を広げた
+    offset: 2
   volume_6h:                    # 直近6時間の出来高(売買額)が多い銘柄
     enabled: true 
     label: ST出来高6h
     path: /tokens/volume/6h
     limit: 100
-    every_n_runs: 4
+    every_n_runs: 16             # (10/14) 無料枠の残りに合わせて間隔を広げた
     offset: 3
+  geckoterminal:                # (10/14) GeckoTerminal(無料・キー不要)。Solana Tracker の無料枠が尽きても候補を集められるように
+    enabled: true
+    trending_durations: [5m, 1h]  # トレンド一覧の期間
+    trending_pages: 2             # 1ページ20件
+    new_pools_pages: 3            # 新着プール(1ページ20件)
   pumpfun:
     enabled: true               # pump.fun「完成中」(卒業前)の銘柄を早めに見張り対象に入れる。卒業後にC基準で判定(10/6〜)
     min_curve: 50               # 卒業までの進み具合(%)の下限
     max_curve: 95               # 上限
     limit: 100                  # 1回で取得する最大件数(多いほど見送りの記録が増える)
-    every_n_runs: 1             # (10/7 2→1) 15分ごと。生まれたて枠の入口を広げる
+    every_n_runs: 4             # (10/14) 無料枠の残りに合わせて間隔を広げた
 
 # ---------------------------------------------------------------------
 # 2. 必須条件(1つでも満たさなければ「除外」)
@@ -285,6 +290,31 @@ sections:
       min_holders: 150
 
 # ---------------------------------------------------------------------
+# 5f. 🚀 若いモメンタム枠(10/14〜)。上がっている若い銘柄に乗り、1時間以内に出る(順張り)
+#     根拠: 10/6〜10/10 の紙トレードで、発行1時間以内は勝率68%・平均+13%、1時間+30%以上は勝率61%・平均+10%
+# ---------------------------------------------------------------------
+momentum_tier:
+  enabled: true
+  min_age_minutes: 10               # 発行直後の大混乱(PvP)は避ける
+  max_age_minutes: 120              # 発行から2時間以内
+  min_h1_pct: 30                    # 直近1時間で+30%以上
+  max_m5_pct: 30                    # 直近5分が+30%超の大陽線なら飛びつかない
+  max_m5_drop_pct: 15               # 直近5分が-15%以下(急落中)なら見送り
+  min_liquidity_usd: 30000
+  min_mcap_usd: 20000
+  max_mcap_usd: 250000
+  max_top10_pct: 40
+  max_dev_pct: 5
+  max_bundle_pct: 20
+  stop_loss_pct: -20                # 0.05 SOLで損失約0.01 SOL
+  take_profit_pct: 50               # ここで半分利確 → 残りは損切りを建値へ
+  time_exit_minutes: 60
+  size_sol: 0.05
+  renotify_hours: 6
+  max_per_run: 3
+  max_checks_per_run: 8             # RugCheck で確認する最大件数
+
+# ---------------------------------------------------------------------
 # 5e. 🧭 ナラティブ枠(10/10〜)。銘柄を選ぶのは本人。スキャナーは「最低限の安全」と規模だけで絞り、
 #     チャートの形では見送らない(形はタイミングの助言として通知に書く)
 # ---------------------------------------------------------------------
@@ -360,6 +390,12 @@ paper_trading:
   max_price_jump_x: 20             # (10/10) 1回の確認で前回価格のこの倍数を超えて上がったら価格の取り違えとして無視(QI +2,277,712%)
   fee_pct: 1.0                     # 1回の売買ごとの手数料・スリッページ(価格のずれ)の見込み。0 にすると無視
   tiers: [小, 中, 大]              # 仮想売買の対象にする段階
+  tier_rules:                      # (10/14) 段階ごとのルール(上の基本設定に上書き)。🎯は通知の指値/上抜けが約定したときだけ買う(期限1時間)
+    "🚀": {stop_loss_pct: -20, take_profit: [{pct: 50, sell_ratio: 0.5}], breakeven_after_tp: true, time_exit_minutes: 60}
+    "🎯": {stop_loss_pct: -12, take_profit: [{pct: 30, sell_ratio: 1.0}], time_exit_minutes: 360}
+    "🎯生": {stop_loss_pct: -12, take_profit: [{pct: 30, sell_ratio: 1.0}], time_exit_minutes: 360}
+    "🎯隙": {stop_loss_pct: -12, take_profit: [{pct: 30, sell_ratio: 1.0}], time_exit_minutes: 360}
+    "📉": {stop_loss_pct: -12, take_profit: [{pct: 30, sell_ratio: 1.0}], time_exit_minutes: 360}
   max_entries_per_day:             # 1日(日本時間 0時〜24時)の仮想購入の上限回数
     weekday: 99                    # 月〜金(10/6〜 回数上限なし。損失上限と2連敗で止める)
     weekend: 99                    # 土・日(10/6〜 回数上限なし)
@@ -382,6 +418,7 @@ runtime:
   max_watch: 1000                   # 追いかける銘柄の上限数(10/7 400→1000: 400だと約3〜6時間で追跡が切れていた)
 
 solana_tracker:
+  max_calls_per_run: 4            # (10/14) 1回の実行で使う上限。10/1〜10日で4,400回使い切りかけたため
   monthly_budget: 9000              # 1か月に使ってよいリクエスト数(無料プランの上限より少し少なめに)
   daily_pacing: true                # 月の上限を日割りして、月初に使い切らないようにする
 

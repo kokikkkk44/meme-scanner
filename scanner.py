@@ -41,6 +41,7 @@ CANDIDATES_CSV = os.path.join(DATA, "candidates.csv")
 JST = ZoneInfo("Asia/Tokyo")
 
 DS = "https://api.dexscreener.com"
+GT = "https://api.geckoterminal.com/api/v2"   # (10/14) 無料・キー不要(1分30回まで)
 RC = "https://api.rugcheck.xyz/v1"
 ST = "https://data.solanatracker.io"
 
@@ -51,13 +52,14 @@ TIER_STYLE = {
     "🎯": {"emoji": "🎯", "color": "#7C3AED"},   # 勝ちパターン(急騰→急落→横ばい)の通知・スキャナー枠
     "🎯生": {"emoji": "🎯", "color": "#0EA5E9"},  # 生まれたて枠
     "🎯隙": {"emoji": "🎯", "color": "#F97316"},  # すき間枠
-    "📉": {"emoji": "📉", "color": "#64748B"},    # 高値から-40%以上の急落(5分足で横ばいを確認する候補)
+    "📉": {"emoji": "📉", "color": "#64748B"},
+    "🚀": {"emoji": "🚀", "color": "#DC2626"},   # (10/14) 若いモメンタム枠(発行2時間以内・1時間+30%以上)    # 高値から-40%以上の急落(5分足で横ばいを確認する候補)
     "🧭": {"emoji": "🧭", "color": "#14B8A6"},    # ナラティブ枠(安全の最低ラインだけ確認。形は見ない)
 }
 SOL_MINT = "So11111111111111111111111111111111111111112"
 PUMPFUN_MARKETS = {"pumpfun", "pump-fun", "pumpfun-bonding", "pump.fun"}
 NO_LP_MINTS = {None, "", "11111111111111111111111111111111"}
-API_NAMES = {"api.dexscreener.com": "DEX Screener", "api.rugcheck.xyz": "RugCheck", "data.solanatracker.io": "Solana Tracker"}
+API_NAMES = {"api.geckoterminal.com": "GeckoTerminal", "api.dexscreener.com": "DEX Screener", "api.rugcheck.xyz": "RugCheck", "data.solanatracker.io": "Solana Tracker"}
 
 START = time.time()
 
@@ -224,6 +226,29 @@ def ds_collect(http):
                 if addr:
                     found.setdefault(addr, f"DEX検索:{q}")
     return found, descs
+
+
+def gt_collect(http):
+    """(10/14) GeckoTerminal のトレンド・新着プールから Solana の銘柄を集める(無料・キー不要)。戻り値: mint -> 検出元"""
+    c = (CFG.get("sources") or {}).get("geckoterminal") or {}
+    found = {}
+    if not c.get("enabled"):
+        return found
+    eps = [(f"/networks/solana/trending_pools", {"duration": d, "page": pg}, f"GTトレンド{d}")
+           for d in c.get("trending_durations", ["5m", "1h"]) for pg in range(1, c.get("trending_pages", 2) + 1)]
+    eps += [("/networks/solana/new_pools", {"page": pg}, "GT新着") for pg in range(1, c.get("new_pools_pages", 3) + 1)]
+    for ep, params, label in eps:
+        if time_left() < 60:
+            break
+        data = http.call(GT + ep, params=params, headers={"Accept": "application/json"}, min_interval=2.1)
+        for p in as_list(data):
+            if not isinstance(p, dict):
+                continue
+            bid = (((p.get("relationships") or {}).get("base_token") or {}).get("data") or {}).get("id") or ""
+            mint = bid.split("_", 1)[1] if bid.startswith("solana_") else ""
+            if mint and mint != SOL_MINT:
+                found.setdefault(mint, label)
+    return found
 
 
 def ds_pairs(http, mints):
@@ -481,6 +506,8 @@ class SolanaTracker:
             u.update({"month": month, "count": 0})
         self.usage = u
         self.budget = CFG["solana_tracker"]["monthly_budget"]
+        self.run_calls = 0
+        self.run_cap = CFG["solana_tracker"].get("max_calls_per_run")   # (10/14) 1回の実行で使う上限(日割りの枠を一覧取得に回す)
 
     def limit_now(self):
         """月の上限を日割りして、月初に使い切らないようにする(1日分の余裕つき)"""
@@ -491,12 +518,15 @@ class SolanaTracker:
         return min(self.budget, self.budget * (now.day + now.hour / 24) / days + self.budget / days)
 
     def can(self, n=1):
+        if self.run_cap is not None and self.run_calls + n > self.run_cap:
+            return False
         return bool(self.key) and self.usage["count"] + n <= self.limit_now()
 
     def _call(self, path, **kw):
         if not self.can():
             return None
         self.usage["count"] += 1
+        self.run_calls += 1
         return self.http.call(ST + path, headers={"x-api-key": self.key}, min_interval=0.4, **kw)
 
     def graduating(self):
@@ -1555,6 +1585,69 @@ def narr_payload(v, info, nc, narr=None, beta=None):
 
 
 # ---------------------------------------------------------------------------
+# 🚀 若いモメンタム枠(10/14〜)。紙トレードの記録(10/6〜10/10・旧「大」枠)で、発行1時間以内・1時間+30%以上が
+#    勝率61〜68%・平均+10〜13%(手数料込み)。急落後の横ばい(🎯📉)は平均−6%だったため、順張りを試す
+# ---------------------------------------------------------------------------
+def mom_eval(v, mc):
+    """戻り値: (info, 外れた理由)。RugCheck 前の値でも判定できる項目だけを見る"""
+    age, h1, m5 = v.get("age_min"), v.get("pc_h1"), v.get("pc_m5")
+    if age is None or age > mc.get("max_age_minutes", 120):
+        return None, "発行から時間がたっている"
+    if age < mc.get("min_age_minutes", 10):
+        return None, "発行直後"
+    if h1 is None or h1 < mc.get("min_h1_pct", 30):
+        return None, "1時間の上昇が足りない"
+    if (v.get("liquidity") or 0) < mc.get("min_liquidity_usd", 30000):
+        return None, "流動性が足りない"
+    mcap = v.get("mcap") or 0
+    if mcap > mc.get("max_mcap_usd", 250000) or mcap < mc.get("min_mcap_usd", 20000):
+        return None, "時価総額が範囲外"
+    if m5 is not None and m5 > mc.get("max_m5_pct", 30):
+        return None, "直近5分が大陽線(飛びつき)"
+    if m5 is not None and m5 < -mc.get("max_m5_drop_pct", 15):
+        return None, "直近5分が急落中"
+    for key, lim, label in (("top10", "max_top10_pct", "上位10件"), ("dev_pct", "max_dev_pct", "開発者"),
+                            ("bundle", "max_bundle_pct", "バンドル")):
+        if v.get(key) is not None and v[key] > mc.get(lim, 999):
+            return None, f"{label}{v[key]:.0f}%"
+    if lp_unsafe(v):
+        return None, "流動性>時価総額でLP未ロック"
+    p = v.get("price")
+    return {"price": p, "sl": p * (1 + mc.get("stop_loss_pct", -20) / 100) if p else None,
+            "tp": p * (1 + mc.get("take_profit_pct", 50) / 100) if p else None}, ""
+
+
+def mom_payload(v, info, mc):
+    mint = v["mint"]
+    links = (f"<https://gmgn.ai/sol/token/{mint}|GMGN> ｜ <https://dexscreener.com/solana/{mint}|DEX Screener> ｜ "
+             f"<https://rugcheck.xyz/tokens/{mint}|RugCheck>")
+    stage = "卒業前" if v["category"] == "B" else "卒業済み"
+    body = (
+        f"*{v['name']} ({v['symbol']})* ｜ {stage}\n`{mint}`\n"
+        f"時価総額: {fmt_usd(v['mcap'])} ｜ 流動性: {fmt_usd(v['liquidity'])} ｜ {age_line(v)}\n"
+        f"値動き: 5分 {fmt_pct(v['pc_m5'], True)} ｜ 1時間 {fmt_pct(v['pc_h1'], True)} ｜ 1時間の出来高 {fmt_usd(v.get('vol_h1'))}\n"
+        f"安全: 上位10件 {fmt_pct(v['top10'])} ｜ バンドル {fmt_pct(v['bundle'])} ｜ 開発者 {fmt_pct(v['dev_pct'])} ｜ LP {v.get('lp_status') or '不明'}\n\n"
+        f"*目安*({mc.get('size_sol', 0.05)} SOL・通知時 {fmt_price(info['price'])}): "
+        f"損切り {fmt_price(info['sl'])}({mc.get('stop_loss_pct', -20)}%) ｜ "
+        f"+{mc.get('take_profit_pct', 50)}% {fmt_price(info['tp'])} で半分 → 残りは損切りを建値へ ｜ "
+        f"買ってから{mc.get('time_exit_minutes', 60)}分で残りを全部売る\n"
+        f"入り方: 直前の5分足が+30%超の大陽線なら見送り。押してから陽線が出たら入る。1日3回まで・2敗で終了\n"
+        f"⚠️ GMGNでフィッシング20%以下・ミント/凍結権限なしを確認。TP/SLは買う前に設定\n\n{links}"
+    )
+    return {
+        "_ca": mint,
+        "text": f"*🚀 若いモメンタム — {v['symbol']}*",
+        "attachments": [{
+            "color": TIER_STYLE["🚀"]["color"],
+            "blocks": [
+                {"type": "section", "text": {"type": "mrkdwn", "text": body}},
+                {"type": "context", "elements": [{"type": "mrkdwn", "text": f"{jst()} JST ｜ 検証中の枠(10回で見直し) ｜ 投資判断はご自身で"}]},
+            ],
+        }],
+    }
+
+
+# ---------------------------------------------------------------------------
 # 記録(CSV)
 # ---------------------------------------------------------------------------
 LOG_FIELDS = ["日時(JST)", "判定", "合計点", "点数の内訳", "理由", "区分", "シンボル", "名前", "アドレス", "検出元",
@@ -1566,7 +1659,8 @@ CAND_FIELDS = ["通知日時(JST)", "通知ts", "段階", "合計点", "区分",
 PAPER_CSV = os.path.join(DATA, "paper_trades.csv")
 PAPER_FIELDS = ["購入日時(JST)", "購入ts", "段階", "合計点", "区分", "シンボル", "名前", "アドレス", "テーマ",
                 "購入価格", "購入額USD", "状態", "残り割合", "利確済み段階", "売却済みUSD", "最終確認価格",
-                "最高騰落%", "最低騰落%", "売却履歴", "決済日時(JST)", "決済ts", "決済理由", "損益USD", "損益%", "損益SOL"]
+                "最高騰落%", "最低騰落%", "売却履歴", "決済日時(JST)", "決済ts", "決済理由", "損益USD", "損益%", "損益SOL",
+                "注文", "注文価格", "注文期限ts"]   # (10/14) 🎯の指値・上抜け待ちを紙トレードで再現する
 CHECKPOINTS = [("1時間後", 3600), ("6時間後", 6 * 3600), ("24時間後", 24 * 3600)]
 
 
@@ -1766,9 +1860,36 @@ def paper_open(rows, v, res):
     return True
 
 
+def paper_rules(tier):
+    """(10/14) 段階ごとの仮想売買ルール(基本設定に tier_rules を上書き)"""
+    pc = CFG.get("paper_trading") or {}
+    return dict(pc, **((pc.get("tier_rules") or {}).get(tier) or {}))
+
+
+def paper_open_tier(rows, v, tier, order=None, order_price=None):
+    """(10/14) 🚀・🎯・📉の通知時に仮想購入。order="指値"/"上抜け" なら約定を待つ(期限1時間)"""
+    pc = CFG.get("paper_trading") or {}
+    if not pc.get("enabled") or tier not in (pc.get("tier_rules") or {}) or not v.get("price"):
+        return False
+    if any(r["アドレス"] == v["mint"] and r["状態"] in ("保有中", "待機中") for r in rows):
+        return False
+    amt = paper_amount_usd((CFG.get("_sol_usd") or 0)) if pc.get("amount_sol") else pc.get("amount_usd", 20)
+    price = order_price if order else v["price"]
+    rows.append({
+        "購入日時(JST)": jst(), "購入ts": int(now_ts()), "段階": tier, "合計点": "",
+        "区分": v["category"], "シンボル": v["symbol"], "名前": v["name"], "アドレス": v["mint"],
+        "テーマ": "・".join(detect_themes(v)), "購入価格": fmt_price(price), "購入額USD": amt,
+        "状態": "待機中" if order else "保有中", "残り割合": 1, "利確済み段階": 0, "売却済みUSD": 0,
+        "最終確認価格": fmt_price(v["price"]), "最高騰落%": 0, "最低騰落%": 0, "売却履歴": "",
+        "注文": order or "", "注文価格": fmt_price(order_price) if order else "",
+        "注文期限ts": int(now_ts() + 3600) if order else "",
+    })
+    return True
+
+
 def paper_step(r, price, now, sol_usd=None):
     """1件の仮想ポジションを、今の価格でルールどおりに処理する"""
-    pc = CFG["paper_trading"]
+    pc = paper_rules(r.get("段階"))
     fee = pc.get("fee_pct", 0) / 100
     entry, amount = float(r["購入価格"]), float(r["購入額USD"])
     rest, stage = float(r["残り割合"]), int(float(r["利確済み段階"] or 0))
@@ -1793,6 +1914,8 @@ def paper_step(r, price, now, sol_usd=None):
 
     if chg <= pc["stop_loss_pct"]:
         sell(rest, "損切り")
+    elif pc.get("breakeven_after_tp") and stage >= 1 and chg <= 0:
+        sell(rest, "建値撤退")
     else:
         for i, tp in enumerate(pc["take_profit"]):
             if stage <= i and chg >= tp["pct"]:
@@ -1814,7 +1937,7 @@ def paper_update(http, rows, started, state):
     pc = CFG.get("paper_trading") or {}
     if not pc.get("enabled"):
         return 0
-    open_rows = [r for r in rows if r["状態"] == "保有中" and float(r["購入ts"]) < started]
+    open_rows = [r for r in rows if r["状態"] in ("保有中", "待機中") and float(r["購入ts"]) < started]
     if not open_rows:
         return 0
     pairs = ds_pairs(http, {r["アドレス"] for r in open_rows})
@@ -1826,7 +1949,11 @@ def paper_update(http, rows, started, state):
             price = ((state.get("st_cache", {}).get(r["アドレス"]) or {}).get("d") or {}).get("price")
         if price is None:
             # 価格が取れないまま期限を大きく過ぎたら、最後に確認できた価格で決済
-            if (now - float(r["購入ts"])) / 60 >= pc["time_exit_minutes"] + 60:
+            if r["状態"] == "待機中":
+                if now >= float(r.get("注文期限ts") or 0):
+                    r.update({"状態": "未約定", "決済日時(JST)": jst(now), "決済ts": int(now), "決済理由": "期限切れ(約定せず)"})
+                continue
+            if (now - float(r["購入ts"])) / 60 >= paper_rules(r.get("段階"))["time_exit_minutes"] + 60:
                 paper_step(r, float(r["最終確認価格"]), now, sol)
                 r["決済理由"] = "価格取得不可(最終価格で決済)"
             continue
@@ -1836,6 +1963,18 @@ def paper_update(http, rows, started, state):
         jump = pc.get("max_price_jump_x", 20)
         if last and jump and price / last > jump:
             log(f"  仮想売買: {r['シンボル']} の価格が{price / last:.0f}倍に跳ねたため異常値として無視({fmt_price(last)}→{fmt_price(price)})")
+            continue
+        if r["状態"] == "待機中":
+            # 指値: 注文価格まで下がったら約定 / 上抜け: 注文価格を上回ったら約定(15分ごとの確認なので近似)
+            op = float(r["注文価格"] or 0)
+            hit = (price <= op) if r.get("注文") == "指値" else (price >= op)
+            if hit:
+                r.update({"状態": "保有中", "購入ts": int(now), "購入日時(JST)": jst(now),
+                          "購入価格": fmt_price(price if r.get("注文") == "上抜け" else op), "最終確認価格": fmt_price(price)})
+            elif now >= float(r.get("注文期限ts") or 0):
+                r.update({"状態": "未約定", "決済日時(JST)": jst(now), "決済ts": int(now), "決済理由": "期限切れ(約定せず)"})
+            else:
+                r["最終確認価格"] = fmt_price(price)
             continue
         paper_step(r, price, now, sol)
         closed += r["状態"] == "決済済み"
@@ -1848,7 +1987,7 @@ def paper_text(rows, since):
         return ""
     done = [r for r in rows if r["状態"] == "決済済み"]
     recent = [r for r in done if float(r.get("決済ts") or 0) >= since]
-    opened = sum(1 for r in rows if r["状態"] == "保有中")
+    opened = sum(1 for r in rows if r["状態"] in ("保有中", "待機中"))
 
     def stat(rs):
         if not rs:
@@ -1859,10 +1998,12 @@ def paper_text(rows, since):
                 f"損益合計 ${sum(pnl):+.2f} ｜ 1件平均 {sum(float(r['損益%']) for r in rs) / len(rs):+.1f}%")
 
     lines = [f"今回の期間: {stat(recent)}", f"累計: {stat(done)}"]
-    for tier in ("小", "中", "大"):
+    for tier in ("🚀", "🎯", "🎯生", "🎯隙", "📉", "小", "中", "大"):
         rs = [r for r in done if r["段階"] == tier]
         if rs:
-            lines.append(f"  {TIER_STYLE[tier]['emoji']} リスク{tier}: {stat(rs)}")
+            name = {"🚀": "若いモメンタム", "🎯": "横ばい・スキャナー枠", "🎯生": "横ばい・生まれたて枠",
+                    "🎯隙": "横ばい・すき間枠", "📉": "急落"}.get(tier, f"リスク{tier}")
+            lines.append(f"  {TIER_STYLE[tier]['emoji']} {name}: {stat(rs)}")
     reasons = Counter(r["決済理由"] for r in done)
     if reasons:
         lines.append("決済理由(累計): " + "、".join(f"{k} {n}件" for k, n in reasons.most_common()))
@@ -2035,10 +2176,16 @@ def run(dry):
     rt = CFG["runtime"]
     pc = CFG.get("pattern") or {}
     watch = state["watch"]
+    CFG["_sol_usd"] = sol_price(http, state)   # (10/14) 🚀・🎯・📉の仮想購入額(SOL→USD)に使う
 
     # 1) 候補を集める ------------------------------------------------------
     new, descs = ds_collect(http)
     log(f"DEX Screener から {len(new)} 銘柄")
+    gt = gt_collect(http)
+    for mint, lab in gt.items():
+        new.setdefault(mint, lab)
+    if gt:
+        log(f"GeckoTerminal から {len(gt)} 銘柄(うち新規 {sum(1 for m in gt if new.get(m) == gt[m])})")
     st_raw = {}
     grad_complete = False
     pf = CFG["sources"]["pumpfun"]
@@ -2342,6 +2489,7 @@ def run(dry):
                 if slack_send(dip_payload(v, info, spc, sec), dry):
                     sent += 1
                     dn[mint] = now_ts()
+                    paper_open_tier(paper_rows, v, "📉")
                     cand_rows.append({
                         "通知日時(JST)": jst(), "通知ts": int(now_ts()), "段階": "📉", "合計点": "",
                         "区分": f"{v['category']}・{sec}", "シンボル": v["symbol"], "名前": v["name"], "アドレス": mint,
@@ -2354,6 +2502,8 @@ def run(dry):
                 sent += 1
                 n_pat += 1
                 pn[mint] = {"ts": now_ts(), "lo": info["post_low"]}
+                paper_open_tier(paper_rows, v, SECTION_TIER.get(sec, "🎯"),
+                                "上抜け" if info.get("breakout") else "指値", info["limit"])
                 cand_rows.append({
                     "通知日時(JST)": jst(), "通知ts": int(now_ts()), "段階": SECTION_TIER.get(sec, "🎯"), "合計点": "",
                     "区分": f"{v['category']}・{sec}", "シンボル": v["symbol"], "名前": v["name"], "アドレス": mint,
@@ -2425,6 +2575,56 @@ def run(dry):
                 })
         log(f"🧭 ナラティブ枠: 通知 {n_narr} 件(候補 {len(pool)}) ｜ 外れた理由 "
             + (", ".join(f"{k} {n}" for k, n in why_n.most_common(5)) or "なし"))
+
+    # 3d) 🚀 若いモメンタム枠(10/14〜) -------------------------------------------------
+    mc = CFG.get("momentum_tier") or {}
+    if mc.get("enabled"):
+        mn = state.setdefault("mom_notified", {})
+        for k in [k for k, ts in mn.items() if now_ts() - ts > 7 * 86400]:
+            mn.pop(k)
+        why_m, pool = Counter(), []
+        for mint, (src, pair, rc, st, v, res) in results.items():
+            if res["verdict"] == "除外" or now_ts() - mn.get(mint, 0) < mc.get("renotify_hours", 6) * 3600:
+                continue
+            info, reason = mom_eval(v, mc)
+            if not info:
+                why_m[reason] += 1
+                continue
+            pool.append(mint)
+        pool.sort(key=lambda m: -(results[m][4].get("pc_h1") or 0))
+        n_mom = 0
+        for mint in pool[: mc.get("max_checks_per_run", 8)]:
+            if n_mom >= mc.get("max_per_run", 3) or time_left() < 15:
+                break
+            src, pair, _, _, _, _ = results[mint]
+            rc = get_rc(mint, fresh=True)
+            if rc is None:
+                why_m["RugCheck未取得"] += 1
+                continue
+            st = (state["st_cache"].get(mint) or {}).get("d")
+            v = view(mint, src, pair, rc, st)
+            if classify(v)["verdict"] == "除外":
+                why_m["除外(権限など)"] += 1
+                continue
+            score_token(v)
+            info, reason = mom_eval(v, mc)
+            if not info:
+                why_m[reason] += 1
+                continue
+            if slack_send(mom_payload(v, info, mc), dry):
+                sent += 1
+                n_mom += 1
+                mn[mint] = now_ts()
+                paper_open_tier(paper_rows, v, "🚀")
+                cand_rows.append({
+                    "通知日時(JST)": jst(), "通知ts": int(now_ts()), "段階": "🚀", "合計点": "",
+                    "区分": f"{v['category']}・若いモメンタム", "シンボル": v["symbol"], "名前": v["name"], "アドレス": mint,
+                    "通知時価格": fmt_price(v["price"]), "通知時時価総額": r1(v["mcap"]),
+                    "通知時流動性": r1(v["liquidity"]), "テーマ": "・".join(detect_themes(v)), "ナラティブ": "",
+                    "DEX Screener": f"https://dexscreener.com/solana/{mint}",
+                })
+        log(f"🚀 若いモメンタム: 通知 {n_mom} 件(候補 {len(pool)}) ｜ 外れた理由 "
+            + (", ".join(f"{k} {n}" for k, n in why_m.most_common(5)) or "なし"))
 
     counts = Counter(r[5]["verdict"] for r in results.values())
     log("判定結果: " + (", ".join(f"{k} {n}" for k, n in counts.items()) or "なし") + f" ｜ 通知 {sent} 件")
