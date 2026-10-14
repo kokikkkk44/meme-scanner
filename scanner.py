@@ -56,7 +56,8 @@ TIER_STYLE = {
     "🚀": {"emoji": "🚀", "color": "#DC2626"},   # (10/14) 若いモメンタム枠(発行2時間以内・1時間+30%以上)    # 高値から-40%以上の急落(5分足で横ばいを確認する候補)
     "🧭": {"emoji": "🧭", "color": "#14B8A6"},
     "🌱": {"emoji": "🌱", "color": "#16A34A"},
-    "🐣": {"emoji": "🐣", "color": "#FBBF24"},    # (10/14夜) 生まれたて枠(記録のみ・通知なし)    # (10/14夜) 初動枠(値段より先に出来高・買いが増えた銘柄)
+    "🐣": {"emoji": "🐣", "color": "#FBBF24"},
+    "🐣早": {"emoji": "🐣", "color": "#FDE68A"},  # (10/14夜) 生まれたて・発行1〜10分(記録のみ・通知なし)    # (10/14夜) 生まれたて枠(記録のみ・通知なし)    # (10/14夜) 初動枠(値段より先に出来高・買いが増えた銘柄)
     "🚀旧": {"emoji": "🚀", "color": "#9CA3AF"},  # (10/14夜) 旧🚀条件の比較用(通知なし・仮想売買だけ)    # ナラティブ枠(安全の最低ラインだけ確認。形は見ない)
 }
 SOL_MINT = "So11111111111111111111111111111111111111112"
@@ -2107,10 +2108,10 @@ def paper_text(rows, since):
                 f"損益合計 ${sum(pnl):+.2f} ｜ 1件平均 {sum(float(r['損益%']) for r in rs) / len(rs):+.1f}%")
 
     lines = [f"今回の期間: {stat(recent)}", f"累計: {stat(done)}"]
-    for tier in ("🐣", "🌱", "🚀", "🚀旧", "🎯", "🎯生", "🎯隙", "📉", "小", "中", "大"):
+    for tier in ("🐣早", "🐣", "🌱", "🚀", "🚀旧", "🎯", "🎯生", "🎯隙", "📉", "小", "中", "大"):
         rs = [r for r in done if r["段階"] == tier]
         if rs:
-            name = {"🐣": "生まれたて(記録のみ)", "🌱": "初動", "🚀旧": "若いモメンタム(旧条件・比較用)", "🚀": "若いモメンタム", "🎯": "横ばい・スキャナー枠", "🎯生": "横ばい・生まれたて枠",
+            name = {"🐣早": "生まれたて・発行1〜10分(記録のみ)", "🐣": "生まれたて・発行10〜60分(記録のみ)", "🌱": "初動", "🚀旧": "若いモメンタム(旧条件・比較用)", "🚀": "若いモメンタム", "🎯": "横ばい・スキャナー枠", "🎯生": "横ばい・生まれたて枠",
                     "🎯隙": "横ばい・すき間枠", "📉": "急落"}.get(tier, f"リスク{tier}")
             lines.append(f"  {TIER_STYLE[tier]['emoji']} {name}: {stat(rs)}")
     reasons = Counter(r["決済理由"] for r in done)
@@ -2800,40 +2801,40 @@ def run(dry):
             + (", ".join(f"{k} {n}" for k, n in why_s.most_common(5)) or "なし"))
 
     # 3f) 🐣 生まれたて枠(10/14夜〜・記録のみ)。発行10〜60分・流動性$5K以上の小さい銘柄を紙トレードだけで検証 ----------
-    hc = CFG.get("hatch_tier") or {}
-    if hc.get("enabled"):
-        why_h, pool = Counter(), []
-        held = {r["アドレス"] for r in paper_rows if r["状態"] in ("保有中", "待機中")}
-        for mint, (src, pair, rc, st, v, res) in results.items():
-            if res["verdict"] == "除外" or mint in held:
-                continue
-            info, reason = mom_eval(v, hc)
-            if not info:
-                why_h[reason] += 1
-                continue
-            pool.append(mint)
-        pool.sort(key=lambda m: -(results[m][4].get("pc_h1") or 0))
-        n_h = 0
-        for mint in pool[: hc.get("max_checks_per_run", 6)]:
-            if time_left() < 15:
-                break
-            src, pair, _, _, _, _ = results[mint]
-            rc = get_rc(mint, fresh=True)
-            if rc is None:
-                why_h["RugCheck未取得"] += 1
-                continue
-            v = view(mint, src, pair, rc, (state["st_cache"].get(mint) or {}).get("d"))
-            if classify(v)["verdict"] == "除外":
-                why_h["除外(権限など)"] += 1
-                continue
-            info, reason = mom_eval(v, hc)
-            if not info:
-                why_h[reason] += 1
-                continue
-            if paper_open_tier(paper_rows, v, "🐣"):
-                n_h += 1
-        log(f"🐣 生まれたて(記録のみ): 仮想購入 {n_h} 件(候補 {len(pool)}) ｜ 外れた理由 "
-            + (", ".join(f"{k} {n}" for k, n in why_h.most_common(5)) or "なし"))
+    for htier, hc in (("🐣", CFG.get("hatch_tier") or {}), ("🐣早", CFG.get("hatch_early_tier") or {})):
+      if hc.get("enabled"):
+          why_h, pool = Counter(), []
+          held = {r["アドレス"] for r in paper_rows if r["状態"] in ("保有中", "待機中")}
+          for mint, (src, pair, rc, st, v, res) in results.items():
+              if res["verdict"] == "除外" or mint in held:
+                  continue
+              info, reason = mom_eval(v, hc)
+              if not info:
+                  why_h[reason] += 1
+                  continue
+              pool.append(mint)
+          pool.sort(key=lambda m: -(results[m][4].get("pc_h1") or 0))
+          n_h = 0
+          for mint in pool[: hc.get("max_checks_per_run", 6)]:
+              if time_left() < 15:
+                  break
+              src, pair, _, _, _, _ = results[mint]
+              rc = get_rc(mint, fresh=True)
+              if rc is None:
+                  why_h["RugCheck未取得"] += 1
+                  continue
+              v = view(mint, src, pair, rc, (state["st_cache"].get(mint) or {}).get("d"))
+              if classify(v)["verdict"] == "除外":
+                  why_h["除外(権限など)"] += 1
+                  continue
+              info, reason = mom_eval(v, hc)
+              if not info:
+                  why_h[reason] += 1
+                  continue
+              if paper_open_tier(paper_rows, v, htier):
+                  n_h += 1
+          log(f"{htier} 生まれたて(記録のみ): 仮想購入 {n_h} 件(候補 {len(pool)}) ｜ 外れた理由 "
+              + (", ".join(f"{k} {n}" for k, n in why_h.most_common(5)) or "なし"))
 
     counts = Counter(r[5]["verdict"] for r in results.values())
     log("判定結果: " + (", ".join(f"{k} {n}" for k, n in counts.items()) or "なし") + f" ｜ 通知 {sent} 件")
