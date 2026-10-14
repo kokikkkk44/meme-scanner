@@ -346,6 +346,26 @@ sprout_tier:
   max_checks_per_run: 8
 
 # ---------------------------------------------------------------------
+# 5h. 🐣 生まれたて枠(10/14夜〜・記録のみ。Slack通知なし)。発行直後の小さい銘柄が勝てるかを紙トレードで検証
+#     1週間の成績を21時のまとめで見て、通知するか決める
+# ---------------------------------------------------------------------
+hatch_tier:
+  enabled: true
+  min_age_minutes: 10
+  max_age_minutes: 60
+  min_h1_pct: 30
+  max_h1_pct: 100
+  max_m5_pct: 15
+  max_m5_drop_pct: 15
+  min_liquidity_usd: 5000
+  min_mcap_usd: 5000
+  max_mcap_usd: 100000
+  max_top10_pct: 40
+  max_dev_pct: 5
+  max_bundle_pct: 20
+  max_checks_per_run: 6             # RugCheck で確認する最大件数
+
+# ---------------------------------------------------------------------
 # 5e. 🧭 ナラティブ枠(10/10〜)。銘柄を選ぶのは本人。スキャナーは「最低限の安全」と規模だけで絞り、
 #     チャートの形では見送らない(形はタイミングの助言として通知に書く)
 # ---------------------------------------------------------------------
@@ -425,6 +445,7 @@ paper_trading:
   tier_rules:                      # (10/14) 段階ごとのルール(上の基本設定に上書き)。🎯は通知の指値/上抜けが約定したときだけ買う(期限1時間)
     "🚀": {stop_loss_pct: -20, take_profit: [{pct: 50, sell_ratio: 0.5}], breakeven_after_tp: true, time_exit_minutes: 60}
     "🚀旧": {stop_loss_pct: -20, take_profit: [{pct: 50, sell_ratio: 0.5}], breakeven_after_tp: true, time_exit_minutes: 60}   # (10/14夜) 比較用・通知なし
+    "🐣": {stop_loss_pct: -25, take_profit: [{pct: 50, sell_ratio: 0.5}], breakeven_after_tp: true, time_exit_minutes: 30, amount_sol: 0.02}   # (10/14夜) 記録のみ
     "🌱": {stop_loss_pct: -20, take_profit: [{pct: 50, sell_ratio: 0.5}], breakeven_after_tp: true, time_exit_minutes: 60}
     "🎯": {stop_loss_pct: -12, take_profit: [{pct: 30, sell_ratio: 1.0}], time_exit_minutes: 360}
     "🎯生": {stop_loss_pct: -12, take_profit: [{pct: 30, sell_ratio: 1.0}], time_exit_minutes: 360}
