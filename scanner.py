@@ -2502,8 +2502,10 @@ def run(dry):
                 sent += 1
                 n_pat += 1
                 pn[mint] = {"ts": now_ts(), "lo": info["post_low"]}
-                paper_open_tier(paper_rows, v, SECTION_TIER.get(sec, "🎯"),
-                                "上抜け" if info.get("breakout") else "指値", info["limit"])
+                # info["limit"] は時価総額の単位なので、今の価格との比率で1枚あたりの価格に直す
+                if v.get("price") and info.get("cur"):
+                    paper_open_tier(paper_rows, v, SECTION_TIER.get(sec, "🎯"),
+                                    "上抜け" if info.get("breakout") else "指値", v["price"] * info["limit"] / info["cur"])
                 cand_rows.append({
                     "通知日時(JST)": jst(), "通知ts": int(now_ts()), "段階": SECTION_TIER.get(sec, "🎯"), "合計点": "",
                     "区分": f"{v['category']}・{sec}", "シンボル": v["symbol"], "名前": v["name"], "アドレス": mint,
