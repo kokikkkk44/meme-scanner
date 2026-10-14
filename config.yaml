@@ -298,7 +298,10 @@ momentum_tier:
   min_age_minutes: 10               # 発行直後の大混乱(PvP)は避ける
   max_age_minutes: 120              # 発行から2時間以内
   min_h1_pct: 30                    # 直近1時間で+30%以上
-  max_m5_pct: 30                    # 直近5分が+30%超の大陽線なら飛びつかない
+  max_h1_pct: 100                   # (10/14夜) 1時間+100%超は高値づかみとして通知しない(過去の通知で1時間後の中央値-10〜-20%)
+  max_m5_pct: 15                    # (10/14夜 30→15) 直近5分が+15%超なら飛びつかない(+15〜30%は1時間後の中央値-12%)
+  legacy_max_m5_pct: 30             # 比較用「🚀旧」(旧条件)の5分の上限
+  record_legacy: true               # 旧条件なら通知していた銘柄を、通知せず仮想売買だけ記録して成績を比べる
   max_m5_drop_pct: 15               # 直近5分が-15%以下(急落中)なら見送り
   min_liquidity_usd: 30000
   min_mcap_usd: 20000
@@ -313,6 +316,34 @@ momentum_tier:
   renotify_hours: 6
   max_per_run: 3
   max_checks_per_run: 8             # RugCheck で確認する最大件数
+
+# ---------------------------------------------------------------------
+# 5g. 🌱 初動枠(10/14夜〜)。値段がまだ動き出す前に、出来高・買い・保有者が先に増えた銘柄
+#     根拠: 過去の通知で1時間+0〜100%・5分+0〜15%が1時間後の中央値・勝率とも最良
+# ---------------------------------------------------------------------
+sprout_tier:
+  enabled: true
+  min_age_minutes: 10
+  max_age_minutes: 360              # 発行から6時間以内
+  min_h1_pct: -10                   # 1時間で-10%より下げていない
+  max_h1_pct: 100                   # 1時間+100%超は上がりすぎ
+  min_m5_pct: 0                     # 直近5分は0〜+15%(まだ跳ねていない)
+  max_m5_pct: 15
+  min_vol_ratio: 2.0                # 5分の出来高が、1時間の5分平均の2倍以上
+  min_buy_sell_ratio: 1.3           # 1時間の買い件数が売り件数の1.3倍以上
+  holders_window_minutes: 50        # この間に記録した保有者数が減っていたら見送り(記録がなければ「未確認」で通知)
+  min_liquidity_usd: 20000
+  min_mcap_usd: 20000
+  max_mcap_usd: 250000
+  max_top10_pct: 40
+  max_dev_pct: 5
+  max_bundle_pct: 20
+  stop_loss_pct: -20
+  take_profit_pct: 50               # ここで半分利確 → 残りは損切りを建値へ
+  time_exit_minutes: 60
+  renotify_hours: 6
+  max_per_run: 3
+  max_checks_per_run: 8
 
 # ---------------------------------------------------------------------
 # 5e. 🧭 ナラティブ枠(10/10〜)。銘柄を選ぶのは本人。スキャナーは「最低限の安全」と規模だけで絞り、
@@ -392,12 +423,14 @@ paper_trading:
   tiers: [小, 中, 大]              # 仮想売買の対象にする段階
   tier_rules:                      # (10/14) 段階ごとのルール(上の基本設定に上書き)。🎯は通知の指値/上抜けが約定したときだけ買う(期限1時間)
     "🚀": {stop_loss_pct: -20, take_profit: [{pct: 50, sell_ratio: 0.5}], breakeven_after_tp: true, time_exit_minutes: 60}
+    "🚀旧": {stop_loss_pct: -20, take_profit: [{pct: 50, sell_ratio: 0.5}], breakeven_after_tp: true, time_exit_minutes: 60}   # (10/14夜) 比較用・通知なし
+    "🌱": {stop_loss_pct: -20, take_profit: [{pct: 50, sell_ratio: 0.5}], breakeven_after_tp: true, time_exit_minutes: 60}
     "🎯": {stop_loss_pct: -12, take_profit: [{pct: 30, sell_ratio: 1.0}], time_exit_minutes: 360}
     "🎯生": {stop_loss_pct: -12, take_profit: [{pct: 30, sell_ratio: 1.0}], time_exit_minutes: 360}
     "🎯隙": {stop_loss_pct: -12, take_profit: [{pct: 30, sell_ratio: 1.0}], time_exit_minutes: 360}
     "📉": {stop_loss_pct: -12, take_profit: [{pct: 30, sell_ratio: 1.0}], time_exit_minutes: 360}
   max_entries_per_day:             # 1日(日本時間 0時〜24時)の仮想購入の上限回数
-    weekday: 99                    # 月〜金(10/6〜 回数上限なし。損失上限と2連敗で止める)
+    weekday: 99                    # 月〜金(10/6〜 回数上限なし)
     weekend: 99                    # 土・日(10/6〜 回数上限なし)
   daily_loss_limit_sol: 99         # (10/6夜〜 損失上限なし・連敗終了なし。発注前チェックで絞る)
 

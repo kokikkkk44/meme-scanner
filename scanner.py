@@ -54,7 +54,9 @@ TIER_STYLE = {
     "🎯隙": {"emoji": "🎯", "color": "#F97316"},  # すき間枠
     "📉": {"emoji": "📉", "color": "#64748B"},
     "🚀": {"emoji": "🚀", "color": "#DC2626"},   # (10/14) 若いモメンタム枠(発行2時間以内・1時間+30%以上)    # 高値から-40%以上の急落(5分足で横ばいを確認する候補)
-    "🧭": {"emoji": "🧭", "color": "#14B8A6"},    # ナラティブ枠(安全の最低ラインだけ確認。形は見ない)
+    "🧭": {"emoji": "🧭", "color": "#14B8A6"},
+    "🌱": {"emoji": "🌱", "color": "#16A34A"},    # (10/14夜) 初動枠(値段より先に出来高・買いが増えた銘柄)
+    "🚀旧": {"emoji": "🚀", "color": "#9CA3AF"},  # (10/14夜) 旧🚀条件の比較用(通知なし・仮想売買だけ)    # ナラティブ枠(安全の最低ラインだけ確認。形は見ない)
 }
 SOL_MINT = "So11111111111111111111111111111111111111112"
 PUMPFUN_MARKETS = {"pumpfun", "pump-fun", "pumpfun-bonding", "pump.fun"}
@@ -289,8 +291,12 @@ def summarize_pair(p):
         "pc_h1": fnum(pc.get("h1")),
         "pc_h6": fnum(pc.get("h6")),
         "pc_h24": fnum(pc.get("h24")),
+        "vol_m5": fnum(vol.get("m5")),
         "vol_h1": fnum(vol.get("h1")),
         "vol_h6": fnum(vol.get("h6")),
+        # (10/14) 🌱初動枠: 直近1時間の買い・売りの件数
+        "buys_h1": int(((p.get("txns") or {}).get("h1") or {}).get("buys") or 0) or None,
+        "sells_h1": int(((p.get("txns") or {}).get("h1") or {}).get("sells") or 0) or None,
         "vol_h24": fnum(vol.get("h24")),
         "txns_h6": sum(int(((p.get("txns") or {}).get("h6") or {}).get(k) or 0) for k in ("buys", "sells")) or None,
         "boosts": int((p.get("boosts") or {}).get("active") or 0),
@@ -640,6 +646,8 @@ def build_view(mint, source, pair, rc, st, ad_types, st_unavailable=False, out_o
         "price": pick("price"),
         "pc_m5": pick("pc_m5"), "pc_h1": pick("pc_h1"), "pc_h6": pick("pc_h6"), "pc_h24": ps.get("pc_h24"),
         "vol_h1": ps.get("vol_h1"),
+        "vol_m5": ps.get("vol_m5"),
+        "buys_h1": ps.get("buys_h1"), "sells_h1": ps.get("sells_h1"),
         "avg_trade_h6": (ps["vol_h6"] / ps["txns_h6"]) if ps.get("vol_h6") and ps.get("txns_h6") else None,
         "vol_h24": first(ps.get("vol_h24"), st.get("vol_h24")),
         "rc_checked": bool(rc),
@@ -1597,6 +1605,9 @@ def mom_eval(v, mc):
         return None, "発行直後"
     if h1 is None or h1 < mc.get("min_h1_pct", 30):
         return None, "1時間の上昇が足りない"
+    # (10/14夜) 高値づかみ対策。過去の通知では1時間+100%以上は1時間後の中央値-10〜-20%・勝率28〜36%
+    if h1 > mc.get("max_h1_pct", 1e9):
+        return None, "1時間で上がりすぎ(高値づかみ)"
     if (v.get("liquidity") or 0) < mc.get("min_liquidity_usd", 30000):
         return None, "流動性が足りない"
     mcap = v.get("mcap") or 0
@@ -1631,7 +1642,7 @@ def mom_payload(v, info, mc):
         f"損切り {fmt_price(info['sl'])}({mc.get('stop_loss_pct', -20)}%) ｜ "
         f"+{mc.get('take_profit_pct', 50)}% {fmt_price(info['tp'])} で半分 → 残りは損切りを建値へ ｜ "
         f"買ってから{mc.get('time_exit_minutes', 60)}分で残りを全部売る\n"
-        f"入り方: 直前の5分足が+30%超の大陽線なら見送り。押してから陽線が出たら入る。1日3回まで・2敗で終了\n"
+        f"入り方: 直前の5分足が+{mc.get('max_m5_pct', 30)}%超なら見送り。押してから陽線が出たら入る\n"
         f"⚠️ GMGNでフィッシング20%以下・ミント/凍結権限なしを確認。TP/SLは買う前に設定\n\n{links}"
     )
     return {
@@ -1642,6 +1653,102 @@ def mom_payload(v, info, mc):
             "blocks": [
                 {"type": "section", "text": {"type": "mrkdwn", "text": body}},
                 {"type": "context", "elements": [{"type": "mrkdwn", "text": f"{jst()} JST ｜ 検証中の枠(10回で見直し) ｜ 投資判断はご自身で"}]},
+            ],
+        }],
+    }
+
+
+# ---------------------------------------------------------------------------
+# 🌱 初動枠(10/14夜〜)。値段がまだ大きく動いていないのに、出来高と買いが先に増え始めた銘柄
+#    根拠: 過去の通知(1時間後の値動き)で、1時間+0〜100%・5分+0〜15%の組み合わせが中央値・勝率とも最良。
+#    5分+15%超・1時間+100%超は1時間後の中央値がマイナス10%以上だった
+# ---------------------------------------------------------------------------
+def holders_trend(hist, now=None, window_min=50):
+    """記録から、直近 window_min 分の保有者数の増減を返す。(増えたか, 古い値, 新しい値)。分からなければ (None, None, None)"""
+    now = now or now_ts()
+    pts = [(h[0], h[2]) for h in (hist or []) if len(h) > 2 and h[2] and now - h[0] <= window_min * 60]
+    if len(pts) < 2:
+        return None, None, None
+    return pts[-1][1] > pts[0][1], pts[0][1], pts[-1][1]
+
+
+def sprout_eval(v, hist, sc):
+    """戻り値: (info, 外れた理由)"""
+    age, h1, m5 = v.get("age_min"), v.get("pc_h1"), v.get("pc_m5")
+    if age is None or age > sc.get("max_age_minutes", 360):
+        return None, "発行から時間がたっている"
+    if age < sc.get("min_age_minutes", 10):
+        return None, "発行直後"
+    if h1 is None or m5 is None:
+        return None, "値動き不明"
+    if h1 > sc.get("max_h1_pct", 100):
+        return None, "1時間で上がりすぎ(高値づかみ)"
+    if h1 < sc.get("min_h1_pct", -10):
+        return None, "1時間で下げている"
+    if m5 > sc.get("max_m5_pct", 15):
+        return None, "直近5分がもう上がっている"
+    if m5 < sc.get("min_m5_pct", 0):
+        return None, "直近5分が下げている"
+    if (v.get("liquidity") or 0) < sc.get("min_liquidity_usd", 20000):
+        return None, "流動性が足りない"
+    mcap = v.get("mcap") or 0
+    if mcap > sc.get("max_mcap_usd", 250000) or mcap < sc.get("min_mcap_usd", 20000):
+        return None, "時価総額が範囲外"
+    vm5, vh1 = v.get("vol_m5"), v.get("vol_h1")
+    if not vm5 or not vh1:
+        return None, "出来高不明"
+    vol_x = vm5 / (vh1 / 12)
+    if vol_x < sc.get("min_vol_ratio", 2.0):
+        return None, "出来高が増えていない"
+    b, s_ = v.get("buys_h1"), v.get("sells_h1")
+    if not b or not s_:
+        return None, "買い・売り件数不明"
+    bs = b / s_
+    if bs < sc.get("min_buy_sell_ratio", 1.3):
+        return None, "買いが多くない"
+    for key, lim, label in (("top10", "max_top10_pct", "上位10件"), ("dev_pct", "max_dev_pct", "開発者"),
+                            ("bundle", "max_bundle_pct", "バンドル")):
+        if v.get(key) is not None and v[key] > sc.get(lim, 999):
+            return None, f"{label}{v[key]:.0f}%"
+    if lp_unsafe(v):
+        return None, "流動性>時価総額でLP未ロック"
+    up, h_old, h_new = holders_trend(hist, window_min=sc.get("holders_window_minutes", 50))
+    if up is False:
+        return None, "保有者数が増えていない"
+    p = v.get("price")
+    return {"price": p, "vol_x": vol_x, "bs": bs, "h_old": h_old, "h_new": h_new,
+            "sl": p * (1 + sc.get("stop_loss_pct", -20) / 100) if p else None,
+            "tp": p * (1 + sc.get("take_profit_pct", 50) / 100) if p else None}, ""
+
+
+def sprout_payload(v, info, sc):
+    mint = v["mint"]
+    links = (f"<https://gmgn.ai/sol/token/{mint}|GMGN> ｜ <https://dexscreener.com/solana/{mint}|DEX Screener> ｜ "
+             f"<https://rugcheck.xyz/tokens/{mint}|RugCheck>")
+    stage = "卒業前" if v["category"] == "B" else "卒業済み"
+    holders = (f"{info['h_old']}→{info['h_new']}人" if info.get("h_new") else "未確認(データなし)")
+    body = (
+        f"*{v['name']} ({v['symbol']})* ｜ {stage}\n`{mint}`\n"
+        f"時価総額: {fmt_usd(v['mcap'])} ｜ 流動性: {fmt_usd(v['liquidity'])} ｜ {age_line(v)}\n"
+        f"値動き: 5分 {fmt_pct(v['pc_m5'], True)} ｜ 1時間 {fmt_pct(v['pc_h1'], True)}\n"
+        f"初動のサイン: 5分の出来高 {fmt_usd(v.get('vol_m5'))}(1時間平均の{info['vol_x']:.1f}倍) ｜ "
+        f"買い/売り {info['bs']:.2f}倍(1時間) ｜ 保有者 {holders}\n"
+        f"安全: 上位10件 {fmt_pct(v['top10'])} ｜ バンドル {fmt_pct(v['bundle'])} ｜ 開発者 {fmt_pct(v['dev_pct'])} ｜ LP {v.get('lp_status') or '不明'}\n\n"
+        f"*目安*({size_text(v)} SOL・通知時 {fmt_price(info['price'])}): "
+        f"損切り {fmt_price(info['sl'])}({sc.get('stop_loss_pct', -20)}%) ｜ "
+        f"+{sc.get('take_profit_pct', 50)}% {fmt_price(info['tp'])} で半分 → 残りは損切りを建値へ ｜ "
+        f"買ってから{sc.get('time_exit_minutes', 60)}分で残りを全部売る\n"
+        f"入り方: まだ値段が動き出す前の段階。通知後に5分足が+{sc.get('max_m5_pct', 15)}%を超えて跳ねていたら見送り\n"
+        f"⚠️ GMGNでフィッシング20%以下・ミント/凍結権限なしを確認。TP/SLは買う前に設定\n\n{links}"
+    )
+    return {
+        "_ca": mint,
+        "text": f"*🌱 初動 — {v['symbol']}*",
+        "attachments": [{
+            "color": TIER_STYLE["🌱"]["color"],
+            "blocks": [
+                {"type": "section", "text": {"type": "mrkdwn", "text": body}},
+                {"type": "context", "elements": [{"type": "mrkdwn", "text": f"{jst()} JST ｜ 検証中の枠(仮想売買で🚀・🚀旧と比較) ｜ 投資判断はご自身で"}]},
             ],
         }],
     }
@@ -1998,10 +2105,10 @@ def paper_text(rows, since):
                 f"損益合計 ${sum(pnl):+.2f} ｜ 1件平均 {sum(float(r['損益%']) for r in rs) / len(rs):+.1f}%")
 
     lines = [f"今回の期間: {stat(recent)}", f"累計: {stat(done)}"]
-    for tier in ("🚀", "🎯", "🎯生", "🎯隙", "📉", "小", "中", "大"):
+    for tier in ("🌱", "🚀", "🚀旧", "🎯", "🎯生", "🎯隙", "📉", "小", "中", "大"):
         rs = [r for r in done if r["段階"] == tier]
         if rs:
-            name = {"🚀": "若いモメンタム", "🎯": "横ばい・スキャナー枠", "🎯生": "横ばい・生まれたて枠",
+            name = {"🌱": "初動", "🚀旧": "若いモメンタム(旧条件・比較用)", "🚀": "若いモメンタム", "🎯": "横ばい・スキャナー枠", "🎯生": "横ばい・生まれたて枠",
                     "🎯隙": "横ばい・すき間枠", "📉": "急落"}.get(tier, f"リスク{tier}")
             lines.append(f"  {TIER_STYLE[tier]['emoji']} {name}: {stat(rs)}")
     reasons = Counter(r["決済理由"] for r in done)
@@ -2582,8 +2689,9 @@ def run(dry):
     mc = CFG.get("momentum_tier") or {}
     if mc.get("enabled"):
         mn = state.setdefault("mom_notified", {})
-        for k in [k for k, ts in mn.items() if now_ts() - ts > 7 * 86400]:
-            mn.pop(k)
+        for d in (mn, state.setdefault("mom_legacy", {})):
+            for k in [k for k, ts in d.items() if now_ts() - ts > 7 * 86400]:
+                d.pop(k)
         why_m, pool = Counter(), []
         for mint, (src, pair, rc, st, v, res) in results.items():
             if res["verdict"] == "除外" or now_ts() - mn.get(mint, 0) < mc.get("renotify_hours", 6) * 3600:
@@ -2591,6 +2699,13 @@ def run(dry):
             info, reason = mom_eval(v, mc)
             if not info:
                 why_m[reason] += 1
+                # (10/14夜) 比較用: 旧条件(1時間の上限なし・5分+30%まで)なら通知していた銘柄は、通知せず仮想売買だけ記録
+                legacy = dict(mc, max_h1_pct=1e9, max_m5_pct=mc.get("legacy_max_m5_pct", 30))
+                ml = state.setdefault("mom_legacy", {})
+                if (mc.get("record_legacy", True) and mom_eval(v, legacy)[0]
+                        and now_ts() - ml.get(mint, 0) >= mc.get("renotify_hours", 6) * 3600):
+                    if paper_open_tier(paper_rows, v, "🚀旧"):
+                        ml[mint] = now_ts()
                 continue
             pool.append(mint)
         pool.sort(key=lambda m: -(results[m][4].get("pc_h1") or 0))
@@ -2627,6 +2742,56 @@ def run(dry):
                 })
         log(f"🚀 若いモメンタム: 通知 {n_mom} 件(候補 {len(pool)}) ｜ 外れた理由 "
             + (", ".join(f"{k} {n}" for k, n in why_m.most_common(5)) or "なし"))
+
+    # 3e) 🌱 初動枠(10/14夜〜) ---------------------------------------------------------
+    sc = CFG.get("sprout_tier") or {}
+    if sc.get("enabled"):
+        sn = state.setdefault("sprout_notified", {})
+        for k in [k for k, ts in sn.items() if now_ts() - ts > 7 * 86400]:
+            sn.pop(k)
+        why_s, pool = Counter(), []
+        for mint, (src, pair, rc, st, v, res) in results.items():
+            if res["verdict"] == "除外" or now_ts() - sn.get(mint, 0) < sc.get("renotify_hours", 6) * 3600:
+                continue
+            info, reason = sprout_eval(v, (watch.get(mint) or {}).get("h", []), sc)
+            if not info:
+                why_s[reason] += 1
+                continue
+            pool.append((mint, info["vol_x"]))
+        pool.sort(key=lambda x: -x[1])
+        n_sp = 0
+        for mint, _ in pool[: sc.get("max_checks_per_run", 8)]:
+            if n_sp >= sc.get("max_per_run", 3) or time_left() < 15:
+                break
+            src, pair, _, _, _, _ = results[mint]
+            rc = get_rc(mint, fresh=True)
+            if rc is None:
+                why_s["RugCheck未取得"] += 1
+                continue
+            st = (state["st_cache"].get(mint) or {}).get("d")
+            v = view(mint, src, pair, rc, st)
+            if classify(v)["verdict"] == "除外":
+                why_s["除外(権限など)"] += 1
+                continue
+            score_token(v)
+            info, reason = sprout_eval(v, (watch.get(mint) or {}).get("h", []), sc)
+            if not info:
+                why_s[reason] += 1
+                continue
+            if slack_send(sprout_payload(v, info, sc), dry):
+                sent += 1
+                n_sp += 1
+                sn[mint] = now_ts()
+                paper_open_tier(paper_rows, v, "🌱")
+                cand_rows.append({
+                    "通知日時(JST)": jst(), "通知ts": int(now_ts()), "段階": "🌱", "合計点": "",
+                    "区分": f"{v['category']}・初動", "シンボル": v["symbol"], "名前": v["name"], "アドレス": mint,
+                    "通知時価格": fmt_price(v["price"]), "通知時時価総額": r1(v["mcap"]),
+                    "通知時流動性": r1(v["liquidity"]), "テーマ": "・".join(detect_themes(v)), "ナラティブ": "",
+                    "DEX Screener": f"https://dexscreener.com/solana/{mint}",
+                })
+        log(f"🌱 初動: 通知 {n_sp} 件(候補 {len(pool)}) ｜ 外れた理由 "
+            + (", ".join(f"{k} {n}" for k, n in why_s.most_common(5)) or "なし"))
 
     counts = Counter(r[5]["verdict"] for r in results.values())
     log("判定結果: " + (", ".join(f"{k} {n}" for k, n in counts.items()) or "なし") + f" ｜ 通知 {sent} 件")
