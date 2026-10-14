@@ -516,6 +516,14 @@ class SolanaTracker:
         self.budget = CFG["solana_tracker"]["monthly_budget"]
         self.run_calls = 0
         self.run_cap = CFG["solana_tracker"].get("max_calls_per_run")   # (10/14) 1回の実行で使う上限(日割りの枠を一覧取得に回す)
+        # (10/14深夜) コピートレード検証(copy_bt.py)で使った回数も月の上限に含める
+        self.extra = 0
+        try:
+            cu = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "copy_bt", "usage.json")))
+            if cu.get("month") == month:
+                self.extra = int(cu.get("count") or 0)
+        except (OSError, ValueError):
+            pass
 
     def limit_now(self):
         """月の上限を日割りして、月初に使い切らないようにする(1日分の余裕つき)"""
@@ -528,7 +536,7 @@ class SolanaTracker:
     def can(self, n=1):
         if self.run_cap is not None and self.run_calls + n > self.run_cap:
             return False
-        return bool(self.key) and self.usage["count"] + n <= self.limit_now()
+        return bool(self.key) and self.usage["count"] + self.extra + n <= self.limit_now()
 
     def _call(self, path, **kw):
         if not self.can():
@@ -2735,8 +2743,11 @@ def run(dry):
             if not info:
                 why_m[reason] += 1
                 continue
-            if slack_send(mom_payload(v, info, mc), dry):
-                sent += 1
+            # (10/14深夜) notify: false なら Slack に送らず仮想売買の記録だけ(当日の🚀通知4件がすべてラグ、過去検証も全期間マイナスのため)
+            notify = mc.get("notify", True)
+            if (not notify) or slack_send(mom_payload(v, info, mc), dry):
+                if notify:
+                    sent += 1
                 n_mom += 1
                 mn[mint] = now_ts()
                 paper_open_tier(paper_rows, v, "🚀")
@@ -2747,7 +2758,7 @@ def run(dry):
                     "通知時流動性": r1(v["liquidity"]), "テーマ": "・".join(detect_themes(v)), "ナラティブ": "",
                     "DEX Screener": f"https://dexscreener.com/solana/{mint}",
                 })
-        log(f"🚀 若いモメンタム: 通知 {n_mom} 件(候補 {len(pool)}) ｜ 外れた理由 "
+        log(f"🚀 若いモメンタム: {'通知' if mc.get('notify', True) else '記録のみ'} {n_mom} 件(候補 {len(pool)}) ｜ 外れた理由 "
             + (", ".join(f"{k} {n}" for k, n in why_m.most_common(5)) or "なし"))
 
     # 3e) 🌱 初動枠(10/14夜〜) ---------------------------------------------------------
