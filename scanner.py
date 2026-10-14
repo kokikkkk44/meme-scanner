@@ -2346,6 +2346,10 @@ def run(dry):
             # 高値をつけた銘柄は短い間隔で記録(🎯検出用)。実行間隔のずれを見込んで2分早めに
             if pc.get("enabled") and w.get("pw", 0) > t and t - last >= pc["recheck_minutes"] * 60 - 120:
                 due = True
+            # (10/14夜) 発行2時間以内の若い銘柄は毎回(15分ごと)見直す。🚀の+30%を30分間隔だと取り逃がすため
+            young = rt.get("young_recheck_hours", 2)
+            if young and w.get("born") and t - w["born"] <= young * 3600 and t - last >= 13 * 60:
+                due = True
         if due:
             todo.append(mint)
     todo.sort(key=lambda m: (watch[m].get("checked", 0), -watch[m]["first"]))
@@ -2795,6 +2799,25 @@ def run(dry):
 
     counts = Counter(r[5]["verdict"] for r in results.values())
     log("判定結果: " + (", ".join(f"{k} {n}" for k, n in counts.items()) or "なし") + f" ｜ 通知 {sent} 件")
+    # (10/14夜) 💤 稼働中のお知らせ: 1時間通知がなければ、止まっていないことと理由を1行で知らせる
+    hb = (CFG.get("notify") or {}).get("heartbeat_minutes", 60)
+    hs = state.setdefault("heartbeat", {"last_alert": now_ts(), "last_beat": 0, "checked": 0, "why": {}})
+    hs["checked"] = hs.get("checked", 0) + len(results)
+    for r in results.values():
+        if r[5]["verdict"] == "除外":
+            k = str((r[5].get("reasons") or ["除外"])[0])
+            k = "pump.fun以外の発行元(偽物・コピーの疑い)" if "でなく" in k else k.split("(")[0][:24]
+            hs["why"][k] = hs["why"].get(k, 0) + 1
+    if sent:
+        hs.update({"last_alert": now_ts(), "checked": 0, "why": {}})
+    elif hb and now_ts() - hs["last_alert"] >= hb * 60 and now_ts() - hs.get("last_beat", 0) >= hb * 60:
+        top = sorted(hs["why"].items(), key=lambda x: -x[1])[:3]
+        mom = (", ".join(f"{k} {n}" for k, n in why_m.most_common(3)) if mc.get("enabled") else "") or "—"
+        text = (f"💤 *スキャナー稼働中*({jst()[11:16]}) ｜ 直近{(now_ts() - hs['last_alert']) / 60:.0f}分の通知 0件 ｜ "
+                f"調べた銘柄 延べ{hs['checked']}件\n"
+                f"除外の主な理由: " + (", ".join(f"{k} {n}" for k, n in top) or "—") + f"\n🚀が外れた主な理由(今回): {mom}")
+        if _slack_post({"text": text}, dry):
+            hs.update({"last_beat": now_ts(), "checked": 0, "why": {}})
 
     # 4) 記録・価格の追跡・1日のまとめ ------------------------------------------
     n = update_followups(http, cand_rows)
