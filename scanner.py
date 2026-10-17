@@ -2720,8 +2720,10 @@ def run(dry):
                         "DEX Screener": f"https://dexscreener.com/solana/{mint}",
                     })
                 continue
-            if slack_send(pattern_payload(v, info, spc, sec), dry):
-                sent += 1
+            # (10/18) pattern.notify: false なら🎯横ばいは通知せず、仮想売買の記録だけ続ける
+            notify_pat = pc.get("notify", True)
+            if (not notify_pat) or slack_send(pattern_payload(v, info, spc, sec), dry):
+                sent += 1 if notify_pat else 0
                 n_pat += 1
                 pn[mint] = {"ts": now_ts(), "lo": info["post_low"]}
                 # info["limit"] は時価総額の単位なので、今の価格との比率で1枚あたりの価格に直す
@@ -2735,7 +2737,7 @@ def run(dry):
                     "通知時流動性": r1(v["liquidity"]), "テーマ": "・".join(detect_themes(v)), "ナラティブ": "",
                     "DEX Screener": f"https://dexscreener.com/solana/{mint}",
                 })
-        log(f"🎯 勝ちパターン: 通知 {n_pat} 件 ｜ 📉 候補 {len(dips)} 件 ｜ 形が合わなかった理由 "
+        log(f"🎯 勝ちパターン: {'通知' if pc.get('notify', True) else '記録のみ'} {n_pat} 件 ｜ 📉 候補 {len(dips)} 件 ｜ 形が合わなかった理由 "
             + (", ".join(f"{k} {n}" for k, n in why.most_common(5)) or "なし"))
 
     # 3c) 🧭 ナラティブ枠: 安全の最低ラインと規模だけで絞り、形は見ない(10/10〜) ----------------
