@@ -319,6 +319,42 @@ momentum_tier:
   max_checks_per_run: 8             # RugCheck で確認する最大件数
 
 # ---------------------------------------------------------------------
+# 5h. 🔁 押し目枠(10/17〜・SEXCOIN型)。時間が経って流動性のある銘柄が、直近の高値から押したところ
+#     根拠: 10/17 SEXCOIN(発行1時間48分・流動性$40K・$17万〜$30万の上下の下側$19万で買い +26%)。
+#     負けの多くは「発行30分未満・一直線の急騰」だったので、その逆の形。10月の記録(約30分ごと)での粗い検証では
+#     21件・勝率38%・平均-4%と未確認のため、仮想売買で成績を測りながら 0.05 SOL で試す
+# ---------------------------------------------------------------------
+pullback_tier:
+  enabled: true
+  notify: true
+  min_age_minutes: 60               # 発行から1時間以上
+  max_age_hours: 24
+  min_liquidity_usd: 30000
+  min_mcap_usd: 50000
+  max_mcap_usd: 300000
+  lookback_hours: 3                 # 直近の高値を探す期間
+  min_drop_pct: 25                  # 高値から-25%〜-50%の押し目
+  max_drop_pct: 50
+  rug_step_drop_pct: 50             # 1回の記録(約15分)で-50%以上の暴落があれば対象外
+  max_m5_pct: 10                    # 直近5分が±10%を超えて動いていたら見送り(跳ねた後・落ちている最中)
+  max_m5_drop_pct: 10
+  max_h1_move_pct: 60
+  max_top10_pct: 30
+  max_dev_pct: 5
+  max_bundle_pct: 20
+  max_insider_pct: 10
+  min_avg_trade_usd: 20             # 平均取引額$20未満はBotの水増しの疑い
+  holders_window_minutes: 60
+  holders_drop_tolerance_pct: 3
+  skip_old_coins: true
+  stop_loss_pct: -20
+  take_profit_pct: 30
+  size_sol: 0.05
+  renotify_hours: 6
+  max_per_run: 3
+  max_checks_per_run: 6
+
+# ---------------------------------------------------------------------
 # 5g. 🌱 初動枠(10/14夜〜)。値段がまだ動き出す前に、出来高・買い・保有者が先に増えた銘柄
 #     根拠: 過去の通知で1時間+0〜100%・5分+0〜15%が1時間後の中央値・勝率とも最良
 # ---------------------------------------------------------------------
@@ -466,6 +502,7 @@ paper_trading:
     "🐣早": {stop_loss_pct: -25, take_profit: [{pct: 50, sell_ratio: 0.5}], breakeven_after_tp: true, time_exit_minutes: 30, amount_sol: 0.02}   # (10/14夜) 記録のみ・発行1〜10分
     "🐣": {stop_loss_pct: -25, take_profit: [{pct: 50, sell_ratio: 0.5}], breakeven_after_tp: true, time_exit_minutes: 30, amount_sol: 0.02}   # (10/14夜) 記録のみ
     "🌱": {stop_loss_pct: -20, take_profit: [{pct: 50, sell_ratio: 0.5}], breakeven_after_tp: true, time_exit_minutes: 60}
+    "🔁": {stop_loss_pct: -20, take_profit: [{pct: 30, sell_ratio: 0.5}, {pct: 50, sell_ratio: 1.0}], breakeven_after_tp: true, time_exit_minutes: 120}   # (10/17) 押し目枠
     "🎯": {stop_loss_pct: -12, take_profit: [{pct: 30, sell_ratio: 1.0}], time_exit_minutes: 360}
     "🎯生": {stop_loss_pct: -12, take_profit: [{pct: 30, sell_ratio: 1.0}], time_exit_minutes: 360}
     "🎯隙": {stop_loss_pct: -12, take_profit: [{pct: 30, sell_ratio: 1.0}], time_exit_minutes: 360}

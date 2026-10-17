@@ -56,6 +56,7 @@ TIER_STYLE = {
     "🚀": {"emoji": "🚀", "color": "#DC2626"},   # (10/14) 若いモメンタム枠(発行2時間以内・1時間+30%以上)    # 高値から-40%以上の急落(5分足で横ばいを確認する候補)
     "🧭": {"emoji": "🧭", "color": "#14B8A6"},
     "🌱": {"emoji": "🌱", "color": "#16A34A"},
+    "🔁": {"emoji": "🔁", "color": "#2563EB"},   # (10/17) 押し目枠(SEXCOIN型): 時間が経って流動性のある銘柄が、高値から押したところ
     "🐣": {"emoji": "🐣", "color": "#FBBF24"},
     "🐣早": {"emoji": "🐣", "color": "#FDE68A"},  # (10/14夜) 生まれたて・発行1〜10分(記録のみ・通知なし)    # (10/14夜) 生まれたて枠(記録のみ・通知なし)    # (10/14夜) 初動枠(値段より先に出来高・買いが増えた銘柄)
     "🚀旧": {"emoji": "🚀", "color": "#9CA3AF"},  # (10/14夜) 旧🚀条件の比較用(通知なし・仮想売買だけ)    # ナラティブ枠(安全の最低ラインだけ確認。形は見ない)
@@ -1764,6 +1765,96 @@ def sprout_payload(v, info, sc):
     }
 
 
+def pullback_eval(v, hist, pc, now=None):
+    """(10/17) 🔁 押し目枠(SEXCOIN型)。戻り値: (info, 外れた理由)
+    発行から時間が経ち、流動性もある銘柄が、直近の高値から押して下げ止まりかけたところ"""
+    now = now or now_ts()
+    age = v.get("age_min")
+    if age is None or age < pc.get("min_age_minutes", 60):
+        return None, "発行から時間が経っていない"
+    if age > pc.get("max_age_hours", 24) * 60:
+        return None, "古い銘柄"
+    if (v.get("liquidity") or 0) < pc.get("min_liquidity_usd", 30000):
+        return None, "流動性が足りない"
+    mcap = v.get("mcap") or 0
+    if not pc.get("min_mcap_usd", 50000) <= mcap <= pc.get("max_mcap_usd", 300000):
+        return None, "時価総額が範囲外"
+    m5, h1 = v.get("pc_m5"), v.get("pc_h1")
+    if m5 is None or h1 is None:
+        return None, "値動き不明"
+    if m5 < -pc.get("max_m5_drop_pct", 10):
+        return None, "直近5分が下落中"
+    if m5 > pc.get("max_m5_pct", 10):
+        return None, "直近5分がもう跳ねている"
+    if abs(h1) > pc.get("max_h1_move_pct", 60):
+        return None, "直近1時間の値動きが大きすぎる"
+    H = [x for x in (hist or []) if now - x[0] <= pc.get("lookback_hours", 3) * 3600 and x[1]]
+    if len(H) < 3:
+        return None, "記録が少ない"
+    # 上下をくり返す銘柄では高値が1回の記録だけのことが多いので、確認済み高値ではなく単純な最高値を使う(下げすぎは max_drop_pct で除外)
+    pi = max(range(len(H)), key=lambda i: H[i][1])
+    if pi == len(H) - 1:
+        return None, "高値を更新中"
+    peak = H[pi][1]
+    drop = (1 - mcap / peak) * 100
+    if drop < pc.get("min_drop_pct", 25):
+        return None, f"高値からの押しが浅い(-{max(drop, 0):.0f}%)"
+    if drop > pc.get("max_drop_pct", 50):
+        return None, f"高値から下げすぎ(-{drop:.0f}%)"
+    steps = [H[i][1] / H[i - 1][1] - 1 for i in range(1, len(H)) if H[i - 1][1]]
+    if steps and min(steps) * 100 <= -pc.get("rug_step_drop_pct", 50):
+        return None, "1回で大きく暴落した記録がある(ラグの疑い)"
+    for key, lim, label in (("top10", "max_top10_pct", "上位10件"), ("dev_pct", "max_dev_pct", "開発者"),
+                            ("bundle", "max_bundle_pct", "バンドル"), ("insider_pct", "max_insider_pct", "インサイダー")):
+        if v.get(key) is not None and v[key] > pc.get(lim, 999):
+            return None, f"{label}{v[key]:.0f}%"
+    at = v.get("avg_trade_h6")
+    if at is not None and at < pc.get("min_avg_trade_usd", 20):
+        return None, "平均取引額が小さい(Bot水増しの疑い)"
+    if lp_unsafe(v):
+        return None, "流動性>時価総額でLP未ロック"
+    if pc.get("skip_old_coins", True) and old_coin_days(v):
+        return None, "古い銘柄"
+    up, h_old, h_new = holders_trend(hist, now, pc.get("holders_window_minutes", 60))
+    if up is False and h_old and h_new < h_old * (1 - pc.get("holders_drop_tolerance_pct", 3) / 100):
+        return None, "保有者が減っている"
+    p = v.get("price")
+    return {"price": p, "peak": peak, "peak_ts": H[pi][0], "drop": drop, "h_old": h_old, "h_new": h_new,
+            "low": min(x[1] for x in H[pi:]),
+            "sl": p * (1 + pc.get("stop_loss_pct", -20) / 100) if p else None,
+            "tp": p * (1 + pc.get("take_profit_pct", 30) / 100) if p else None}, ""
+
+
+def pullback_payload(v, info, pc):
+    mint = v["mint"]
+    links = (f"<https://gmgn.ai/sol/token/{mint}|GMGN> ｜ <https://dexscreener.com/solana/{mint}|DEX Screener> ｜ "
+             f"<https://rugcheck.xyz/tokens/{mint}|RugCheck>")
+    holders = (f"{info['h_old']}→{info['h_new']}人" if info.get("h_new") else "未確認")
+    body = (
+        f"*{v['name']} ({v['symbol']})*\n`{mint}`\n"
+        f"時価総額: {fmt_usd(v['mcap'])}(直近の高値 {fmt_usd(info['peak'])} {jst(info['peak_ts'])[11:16]} から −{info['drop']:.0f}%) ｜ "
+        f"高値後の安値 {fmt_usd(info['low'])}\n"
+        f"流動性: {fmt_usd(v['liquidity'])} ｜ 保有者: {holders} ｜ {age_line(v)}\n"
+        f"値動き: 5分 {fmt_pct(v['pc_m5'], True)} ｜ 1時間 {fmt_pct(v['pc_h1'], True)}\n"
+        f"安全: 上位10件 {fmt_pct(v['top10'])} ｜ 開発者 {fmt_pct(v['dev_pct'])} ｜ インサイダー {fmt_pct(v['insider_pct'])} ｜ "
+        f"バンドル {fmt_pct(v['bundle'])} ｜ LP {v.get('lp_status') or '不明'}\n\n"
+        f"*目安*({pc.get('size_sol', 0.05)} SOL・通知時 {fmt_price(info['price'])}): 損切り {pc.get('stop_loss_pct', -20)}% ｜ "
+        f"+{pc.get('take_profit_pct', 30)}%で半分 → 残りは+50%か建値で売る\n"
+        f"👀 GMGNで: ①5分足が安値を割らず止まっている ②フィッシング20%以下 ③0.00…の取引が並んでいない を確認してから\n\n{links}"
+    )
+    return {
+        "_ca": mint,
+        "text": f"*🔁 押し目(SEXCOIN型) — {v['symbol']}*",
+        "attachments": [{
+            "color": TIER_STYLE["🔁"]["color"],
+            "blocks": [
+                {"type": "section", "text": {"type": "mrkdwn", "text": body}},
+                {"type": "context", "elements": [{"type": "mrkdwn", "text": f"{jst()} JST ｜ 検証中の枠(仮想売買で成績を記録) ｜ 投資判断はご自身で"}]},
+            ],
+        }],
+    }
+
+
 # ---------------------------------------------------------------------------
 # 記録(CSV)
 # ---------------------------------------------------------------------------
@@ -2116,10 +2207,10 @@ def paper_text(rows, since):
                 f"損益合計 ${sum(pnl):+.2f} ｜ 1件平均 {sum(float(r['損益%']) for r in rs) / len(rs):+.1f}%")
 
     lines = [f"今回の期間: {stat(recent)}", f"累計: {stat(done)}"]
-    for tier in ("🐣早", "🐣", "🌱", "🚀", "🚀旧", "🎯", "🎯生", "🎯隙", "📉", "小", "中", "大"):
+    for tier in ("🐣早", "🐣", "🌱", "🔁", "🚀", "🚀旧", "🎯", "🎯生", "🎯隙", "📉", "小", "中", "大"):
         rs = [r for r in done if r["段階"] == tier]
         if rs:
-            name = {"🐣早": "生まれたて・発行1〜10分(記録のみ)", "🐣": "生まれたて・発行10〜60分(記録のみ)", "🌱": "初動", "🚀旧": "若いモメンタム(旧条件・比較用)", "🚀": "若いモメンタム", "🎯": "横ばい・スキャナー枠", "🎯生": "横ばい・生まれたて枠",
+            name = {"🐣早": "生まれたて・発行1〜10分(記録のみ)", "🐣": "生まれたて・発行10〜60分(記録のみ)", "🌱": "初動", "🔁": "押し目(SEXCOIN型)", "🚀旧": "若いモメンタム(旧条件・比較用)", "🚀": "若いモメンタム", "🎯": "横ばい・スキャナー枠", "🎯生": "横ばい・生まれたて枠",
                     "🎯隙": "横ばい・すき間枠", "📉": "急落"}.get(tier, f"リスク{tier}")
             lines.append(f"  {TIER_STYLE[tier]['emoji']} {name}: {stat(rs)}")
     reasons = Counter(r["決済理由"] for r in done)
@@ -2810,6 +2901,56 @@ def run(dry):
                 })
         log(f"🌱 初動: 通知 {n_sp} 件(候補 {len(pool)}) ｜ 外れた理由 "
             + (", ".join(f"{k} {n}" for k, n in why_s.most_common(5)) or "なし"))
+
+    # 3e2) 🔁 押し目枠(10/17〜 SEXCOIN型) --------------------------------------------------
+    pbc = CFG.get("pullback_tier") or {}
+    if pbc.get("enabled"):
+        pn = state.setdefault("pullback_notified", {})
+        for k in [k for k, ts in pn.items() if now_ts() - ts > 7 * 86400]:
+            pn.pop(k)
+        why_p, pool = Counter(), []
+        for mint, (src, pair, rc, st, v, res) in results.items():
+            if res["verdict"] == "除外" or now_ts() - pn.get(mint, 0) < pbc.get("renotify_hours", 6) * 3600:
+                continue
+            info, reason = pullback_eval(v, (watch.get(mint) or {}).get("h", []), pbc)
+            if not info:
+                why_p[reason] += 1
+                continue
+            pool.append((mint, -info["drop"]))
+        pool.sort(key=lambda x: x[1])
+        n_pb = 0
+        for mint, _ in pool[: pbc.get("max_checks_per_run", 6)]:
+            if n_pb >= pbc.get("max_per_run", 3) or time_left() < 15:
+                break
+            src, pair, _, _, _, _ = results[mint]
+            rc = get_rc(mint, fresh=True)
+            if rc is None:
+                why_p["RugCheck未取得"] += 1
+                continue
+            st = (state["st_cache"].get(mint) or {}).get("d")
+            v = view(mint, src, pair, rc, st)
+            if classify(v)["verdict"] == "除外":
+                why_p["除外(権限など)"] += 1
+                continue
+            score_token(v)
+            info, reason = pullback_eval(v, (watch.get(mint) or {}).get("h", []), pbc)
+            if not info:
+                why_p[reason] += 1
+                continue
+            if not pbc.get("notify", True) or slack_send(pullback_payload(v, info, pbc), dry):
+                sent += 1 if pbc.get("notify", True) else 0
+                n_pb += 1
+                pn[mint] = now_ts()
+                paper_open_tier(paper_rows, v, "🔁")
+                cand_rows.append({
+                    "通知日時(JST)": jst(), "通知ts": int(now_ts()), "段階": "🔁", "合計点": "",
+                    "区分": f"{v['category']}・押し目", "シンボル": v["symbol"], "名前": v["name"], "アドレス": mint,
+                    "通知時価格": fmt_price(v["price"]), "通知時時価総額": r1(v["mcap"]),
+                    "通知時流動性": r1(v["liquidity"]), "テーマ": "・".join(detect_themes(v)), "ナラティブ": "",
+                    "DEX Screener": f"https://dexscreener.com/solana/{mint}",
+                })
+        log(f"🔁 押し目: 通知 {n_pb} 件(候補 {len(pool)}) ｜ 外れた理由 "
+            + (", ".join(f"{k} {n}" for k, n in why_p.most_common(5)) or "なし"))
 
     # 3f) 🐣 生まれたて枠(10/14夜〜・記録のみ)。発行10〜60分・流動性$5K以上の小さい銘柄を紙トレードだけで検証 ----------
     for htier, hc in (("🐣", CFG.get("hatch_tier") or {}), ("🐣早", CFG.get("hatch_early_tier") or {})):
