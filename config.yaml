@@ -327,15 +327,18 @@ momentum_tier:
 pullback_tier:
   enabled: true
   notify: true
-  min_age_minutes: 60               # 発行から1時間以上
+  min_age_minutes: 30               # (10/17夜 60→30) ルール①: 発行から30分以上
   max_age_hours: 24
   min_liquidity_usd: 30000
-  min_mcap_usd: 50000
+  min_mcap_usd: 30000               # (10/17夜 5万→3万) ルール④: 時価総額$3万〜$30万
   max_mcap_usd: 300000
   lookback_hours: 3                 # 直近の高値を探す期間
   min_drop_pct: 25                  # 高値から-25%〜-50%の押し目
   max_drop_pct: 50
   rug_step_drop_pct: 50             # 1回の記録(約15分)で-50%以上の暴落があれば対象外
+  max_surge_30m_x: 3                # (10/17夜) ルール②: 直近30分で3倍以上に上がっている最中は対象外
+  skip_famous: true                 # (10/17夜) ルール⑤: 有名人・企業名の便乗は対象外
+  max_same_name: 3                  # (10/17夜) ルール⑤: 24時間以内に同じシンボルが3つ以上あれば対象外
   max_m5_pct: 10                    # 直近5分が±10%を超えて動いていたら見送り(跳ねた後・落ちている最中)
   max_m5_drop_pct: 10
   max_h1_move_pct: 60
@@ -349,7 +352,7 @@ pullback_tier:
   skip_old_coins: true
   stop_loss_pct: -20
   take_profit_pct: 30
-  size_sol: 0.1                     # ルールブックの金額(条件が1つでも欠けたら0.02)
+  size_sol: 0.05                    # (10/17夜) 残高が少ない間は0.05 SOL
   renotify_hours: 6
   max_per_run: 3
   max_checks_per_run: 6

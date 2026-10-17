@@ -1765,7 +1765,7 @@ def sprout_payload(v, info, sc):
     }
 
 
-def pullback_eval(v, hist, pc, now=None):
+def pullback_eval(v, hist, pc, now=None, same_name_count=None):
     """(10/17) 🔁 押し目枠(SEXCOIN型)。戻り値: (info, 外れた理由)
     発行から時間が経ち、流動性もある銘柄が、直近の高値から押して下げ止まりかけたところ"""
     now = now or now_ts()
@@ -1804,10 +1804,19 @@ def pullback_eval(v, hist, pc, now=None):
     steps = [H[i][1] / H[i - 1][1] - 1 for i in range(1, len(H)) if H[i - 1][1]]
     if steps and min(steps) * 100 <= -pc.get("rug_step_drop_pct", 50):
         return None, "1回で大きく暴落した記録がある(ラグの疑い)"
+    # (10/17夜) ルール②: 直近30分で3倍以上に上がっている最中は買わない(Gigabite・索拉纳)
+    recent = [x[1] for x in H if now - x[0] <= 30 * 60]
+    if recent and min(recent) and mcap / min(recent) >= pc.get("max_surge_30m_x", 3):
+        return None, "直近30分で3倍以上の急騰中"
     for key, lim, label in (("top10", "max_top10_pct", "上位10件"), ("dev_pct", "max_dev_pct", "開発者"),
                             ("bundle", "max_bundle_pct", "バンドル"), ("insider_pct", "max_insider_pct", "インサイダー")):
         if v.get(key) is not None and v[key] > pc.get(lim, 999):
             return None, f"{label}{v[key]:.0f}%"
+    # (10/17夜) ルール⑤: 有名人・企業名の便乗、同じ名前の乱立は見送り(PRIME・Gemma・ELON)
+    if pc.get("skip_famous", True) and (is_copycat(v) or "有名人便乗" in detect_themes(v)):
+        return None, "有名人・有名な名前の便乗"
+    if same_name_count is not None and same_name_count >= pc.get("max_same_name", 3):
+        return None, f"同じ名前の銘柄が{same_name_count}つ"
     at = v.get("avg_trade_h6")
     if at is not None and at < pc.get("min_avg_trade_usd", 20):
         return None, "平均取引額が小さい(Bot水増しの疑い)"
@@ -2909,10 +2918,15 @@ def run(dry):
         for k in [k for k, ts in pn.items() if now_ts() - ts > 7 * 86400]:
             pn.pop(k)
         why_p, pool = Counter(), []
+        # (10/17夜) 24時間以内に見つけた同じシンボルの数(同名の乱立=コピー銘柄の目印)
+        sy_count = Counter((w.get("sy") or "").strip().lower() for w in watch.values()
+                           if w.get("sy") and now_ts() - (w.get("born") or w.get("first") or 0) <= 86400)
+        def same_n(v):
+            return sy_count.get((v.get("symbol") or "").strip().lower(), 0)
         for mint, (src, pair, rc, st, v, res) in results.items():
             if res["verdict"] == "除外" or now_ts() - pn.get(mint, 0) < pbc.get("renotify_hours", 6) * 3600:
                 continue
-            info, reason = pullback_eval(v, (watch.get(mint) or {}).get("h", []), pbc)
+            info, reason = pullback_eval(v, (watch.get(mint) or {}).get("h", []), pbc, same_name_count=same_n(v))
             if not info:
                 why_p[reason] += 1
                 continue
@@ -2933,7 +2947,7 @@ def run(dry):
                 why_p["除外(権限など)"] += 1
                 continue
             score_token(v)
-            info, reason = pullback_eval(v, (watch.get(mint) or {}).get("h", []), pbc)
+            info, reason = pullback_eval(v, (watch.get(mint) or {}).get("h", []), pbc, same_name_count=same_n(v))
             if not info:
                 why_p[reason] += 1
                 continue
