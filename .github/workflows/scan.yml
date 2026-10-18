@@ -25,16 +25,33 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 8
     steps:
+      # (10/19) 実行回数を半分に(15分ごと→30分ごと)。cron-job.org は15分ごとのまま、
+      # 毎時 :00前後 と :30前後 の起動だけ実行し、:15前後 と :45前後 は何もせず終わる。
+      # 手動で起動したとき(mode を変えたとき)は常に実行。元に戻すときはこのステップを消す
+      - name: Half-rate gate
+        id: gate
+        run: |
+          m=$(date -u +%-M)
+          if [ "${{ inputs.mode }}" != "normal" ] || [ $(( ((m + 5) / 15) % 2 )) -eq 0 ]; then
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "run=false" >> "$GITHUB_OUTPUT"; echo "30分ごとに間引き中のため今回は実行しません(${m}分)"
+          fi
+
       - uses: actions/checkout@v5
+        if: steps.gate.outputs.run == 'true'
 
       - uses: actions/setup-python@v6
+        if: steps.gate.outputs.run == 'true'
         with:
           python-version: "3.12"
           cache: pip
 
       - run: pip install -r requirements.txt
+        if: steps.gate.outputs.run == 'true'
 
       - name: Run scanner
+        if: steps.gate.outputs.run == 'true'
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
           SOLANATRACKER_API_KEY: ${{ secrets.SOLANATRACKER_API_KEY }}
@@ -43,7 +60,7 @@ jobs:
         run: python scanner.py
 
       - name: Save records
-        if: ${{ inputs.mode != 'dry_run' && inputs.mode != 'test_slack' }}
+        if: ${{ steps.gate.outputs.run == 'true' && inputs.mode != 'dry_run' && inputs.mode != 'test_slack' }}
         run: |
           git config user.name "meme-scanner-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
