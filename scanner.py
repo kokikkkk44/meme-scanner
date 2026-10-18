@@ -933,6 +933,11 @@ def slack_send(payload, dry):
 
 
 def _slack_post(payload, dry):
+    # (10/19) Slack通知を全部止める(判定・記録・仮想売買はそのまま続ける)。
+    # 送ったことにして True を返すので、再通知の間隔などの記録は今まで通り進む。
+    if not dry and not (CFG.get("notify") or {}).get("slack_enabled", True):
+        log("  (Slack通知は停止中のため送信しません)")
+        return True
     url = os.environ.get("SLACK_WEBHOOK_URL", "").strip()
     if not dry and not url:
         log("  ⚠ SLACK_WEBHOOK_URL が未設定のため通知できません")
