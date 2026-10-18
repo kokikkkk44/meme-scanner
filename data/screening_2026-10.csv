@@ -35338,3 +35338,48 @@
 2026-10-18 10:46,見送り,,,pump.fun卒業前(C基準では対象外),B,HOOKS,pickhooks,tESg1QRmWzNwSRivkJYbKKq1pKMgnnCgMPCTp3Upump,GT新着,6.14,2900.74,,2.9e-06,-6.56,-6.56,-6.56,,,0.04,0.0,,,0,,,,99.96%(口座一致)
 2026-10-18 10:46,見送り,,,pump.fun卒業前(C基準では対象外),B,BUCKS,Big Bucks Hunters Club,GwRXA2zktJrvTFYpdti3DpoRcmwpPXeEnDn49Jripump,GT新着,6.26,3102.18,,3.102e-06,5.29,5.29,5.29,,,3.45,0.98,,,0,,,,96.55%(口座一致)
 2026-10-18 10:46,見送り,,,"発行から30分未満 / 流動性$30,000未満 / 時価総額が$60,000〜$250,000の範囲外 / (拡張機能などの安全性は未確認)",A,Sevda,Sevda,2bi83CCb7szVSNb9FbwytU6QZuLSpbLu9giaC4YTpump,GT新着,6.28,527.0,1018.84,2.633e-07,-97.93,-98.85,-98.85,,,,,,,0,,,,
+2026-10-18 11:01,見送り,,,流動性が取得できない(0表示) / 時価総額が不明 / (拡張機能などの安全性は未確認),A,PUMPONB,PumpOnboard,Gr3cKLxXjrAnKfcxgQXip5dciCM5Bi3GXfGaD7cPpump,DEX新着,129.11,,,,,19.09,-24.4,,,,,,,0,,犬,,
+2026-10-18 11:01,見送り,,,pump.fun卒業前(C基準では対象外),B,BROADCAST,Broadcast,9CKHhm5XkYg4eqPXQkiPcvhDao5yTdyqwsA9x9wwpump,DEXブースト,351.4,2971.31,,2.971e-06,,,-4.28,,,1.58,0.0,,,0,,,,98.36%(口座一致)
+2026-10-18 11:01,見送り,,,"流動性$30,000未満 / 時価総額が$60,000〜$250,000の範囲外 / (拡張機能などの安全性は未確認)",A,PnkRonnies,Pink Ronnies,BJeUC1CcGhtuk6tjyiiQnqU4ZudLaTZbUofsihphpump,DEXブースト,1016668.68,57584.0,21512.56,5.761e-05,0.01,0.79,-1.41,,,,,,,0,,,,
+2026-10-18 11:01,見送り,,,"上位10件の保有30%超 / 時価総額が$60,000〜$250,000の範囲外",A,Kimchi,Aura Final Boss,Am8iBffqgaedfdK5XhtorbcRrKzwH9nyL3ySikQfpump,GTトレンド5m,119564.58,1458355.0,144141.05,0.001472,-0.11,-6.67,52.03,,,80.76,0.0,,,21,,,,4.96%(口座一致)
+2026-10-18 11:01,除外,,,アドレス末尾が「pump」でなく、発行元も Pump.Fun でない(発行元: 不明),A,TSI,Tetsuo Super Intelligence,973DJCLMFfRoz135KMy1jsXfws6qGLgD9ZKLtPZtQTBT,GTトレンド5m,17.67,0.26,,2.602e-10,,,,,,84.1,0.0,,,0,,,,6.0%(口座一致)
+2026-10-18 11:01,除外,,,アドレス末尾が「pump」でなく、発行元も Pump.Fun でない(発行元: 不明),A,TSI,Tetsuo Super Intelligence,2cKGBVa5L5FMnsFumc6UNc4myGNqXrRHV5yj6DsfTL1P,GTトレンド5m,10.83,0.26,,2.599e-10,,,,,,82.17,0.0,,,0,,,,12.18%(口座一致)
+2026-10-18 11:01,見送り,,,"発行から30分未満 / 時価総額が$60,000〜$250,000の範囲外 / 平均取引額$20未満(Bot水増しの疑い) / 6時間で+100%超の急騰中(押し目待ち)",A,Speed,IShowSpeed,CHooppPzXRv4uBrvQowx75JGRTJ7KY8vRuZNdD4pump,GTトレンド5m,18.16,575610.0,63020.26,0.0005756,14.34,1236.0,1236.0,,,14.76,0.0,,,0,,,,5.64%(口座一致)
+2026-10-18 11:01,見送り,,,"時価総額が$60,000〜$250,000の範囲外 / 平均取引額$20未満(Bot水増しの疑い) / 6時間で+100%超の急騰中(押し目待ち)",A,Gemini,Google Gemini,7Vmv2vsdrPhiiS6YkfMgrNsHwnkdVA7KErpt5nVppump,GTトレンド5m,32.19,908219.0,79723.31,0.0009084,14.74,2011.0,2011.0,,,13.92,0.0,,,0,,,,4.51%(口座一致)
+2026-10-18 11:01,除外,,,アドレス末尾が「pump」でなく、発行元も Pump.Fun でない(発行元: 不明),A,TETSUO,Tetsuo Coin,8i51XNNpGaKaj4G4nDdmQh95v4FKAxw8mhtaRoKd9tE8,GTトレンド5m,986216.35,259801.0,177280.44,0.0002598,19.88,46.2,45.8,,,11.63,0.0,,,0,,,,34.18%(口座一致)
+2026-10-18 11:01,除外,,,アドレス末尾が「pump」でなく、発行元も Pump.Fun でない(発行元: 不明),A,TSI,Tetsuo Super Intelligence,5fEkBayuP4B8Q7hrL1Cw8eVrTMA69QfCDKbmPrYWYuCQ,GTトレンド5m,11.13,51638.95,,5.163e-05,,35.43,35.43,,,96.07,0.0,,,0,,,,0.5%(口座一致)
+2026-10-18 11:01,除外,,,アドレス末尾が「pump」でなく、発行元も Pump.Fun でない(発行元: 不明),A,TSI,Tetsuo Super Intelligence,8vhS38NGnt1noKMqYHAUecwpZoFzrLQ3BZ4SLW2JbD3,GTトレンド5m,25.02,80493.0,130108.46,8.049e-07,6.45,61.25,61.25,,,12.43,0.12,,,0,,,,80.95%(口座一致)
+2026-10-18 11:01,除外,,,アドレス末尾が「pump」でなく、発行元も Pump.Fun でない(発行元: 不明),A,onboard,catonboard,F987yytzR3f4Xvx8ghZH7aXKANnHGvv4ug4kkkGj2aZP,GTトレンド5m,36.3,83966.0,150813.6,8.396e-05,-1.4,44.45,44.45,,,6.45,0.0,,,0,,猫,,90.42%(口座一致)
+2026-10-18 11:01,見送り,,,流動性が取得できない(0表示) / 時価総額が不明 / (拡張機能などの安全性は未確認),A,TSI,Tetsuo Super Intelligence,Hj66ckdTBH6VGhjVxspCsqRRqncFVpgahxgiuMdEpump,GTトレンド5m,37.32,,,4.717e-12,,,,,,,,,,0,,,,
+2026-10-18 11:01,除外,,,開発者のラグ歴(Creator history of rugged tokens),B,GoldKek,Gold Kek,FMqBz3WRAjHAUeYMxWy6yzqeX5VPNbYCRmiM2uvqpump,GT新着,1.53,7.33,,7.325e-09,-99.75,-99.75,-99.75,,,46.6,0.28,,,0,,,,53.4%(口座一致)
+2026-10-18 11:01,見送り,,,pump.fun卒業前(C基準では対象外),B,SFI,super fart intelegent,3Mn3rwmCh2i2SUQ2XTwieULUfsWSXzebFvKWY9Yxpump,GT新着,1.59,2916.18,,2.916e-06,,,,,,0.35,0.35,,,0,,,,99.65%(口座一致)
+2026-10-18 11:01,見送り,,,pump.fun卒業前(C基準では対象外),B,SUPERCORE,SUPERCORE,BSWsnJng7HUR4LASNDCGyes1raxAja3hK69oBNq5pump,GT新着,1.67,3037.6,,3.037e-06,-22.97,-22.97,-22.97,,,2.51,0.0,,,0,,,,97.49%(口座一致)
+2026-10-18 11:01,見送り,,,pump.fun卒業前(C基準では対象外),B,SUPERCORE,SUPERCORE,CCiQSHPANkk8FCFZxGxAC6umDRzituP1LK9oabGxpump,GT新着,1.7,2897.11,,2.897e-06,-22.15,-22.15,-22.15,,,0,0.0,,,0,,,,100.0%(口座一致)
+2026-10-18 11:01,見送り,,,pump.fun卒業前(C基準では対象外),B,SUPERCORE,SUPERCORE,J3Z2xwdsuxcTiFNi2JTLQZsw9ZKDwEgnSM8gqQpPpump,GT新着,1.73,3814.85,,3.814e-06,2.52,2.52,2.52,,,20.45,0.0,,,0,,,,78.07%(口座一致)
+2026-10-18 11:01,見送り,,,pump.fun卒業前(C基準では対象外),B,SUPERCORE,SUPERCORE,3sj1WeW98fBACEfzksFJB3MX6mUFqtjTzfdL9Gbtpump,GT新着,1.81,2993.27,,2.993e-06,-9.19,-9.19,-9.19,,,0,0.0,,,0,,,,100.0%(口座一致)
+2026-10-18 11:01,見送り,,,pump.fun卒業前(C基準では対象外),B,SUPERCORE,SUPERCORE,4j8kNZhGdpzVM7JsQSRc6tE9sXqwBiBycR8fy3iSpump,GT新着,1.83,2897.11,,2.897e-06,-26.53,-26.53,-26.53,,,0,0.0,,,0,,,,100.0%(口座一致)
+2026-10-18 11:01,除外,,,アドレス末尾が「pump」でなく、発行元も Pump.Fun でない(発行元: 不明),A,CONTROL,Control Deploy,DxsD8xD1bSagL27K3GJH8ekdH3sX5XXYxm8snLZgi1RG,GT新着,1.86,4019.22,,4.019e-06,,,,,,100.0,2.53,,,0,,,,
+2026-10-18 11:01,見送り,,,pump.fun卒業前(C基準では対象外),B,STACKS,Stacks on Stacks,24B6UsV93gf4yDSxjdp7bQnqQX7fq1jtvsT93PnKpump,GT新着,1.89,2949.43,,2.949e-06,0.46,0.46,0.46,,,0.21,0.0,,,0,,,,99.79%(口座一致)
+2026-10-18 11:01,見送り,,,pump.fun卒業前(C基準では対象外),B,TSI,Trump Super Intelligence,2EUPK8EaTszaf17guB75xfgiHcHZWrseyR12D79dpump,GT新着,1.9,,,,,,,,,24.56,0.0,,,0,,有名人便乗,,73.79%(口座一致)
+2026-10-18 11:01,見送り,,,pump.fun卒業前(C基準では対象外),B,TSI,Tetsuo Super Intelligence,ApVF4pj2dtoyZ9tovProDqibWG3bbSNVqgiM54KUpump,GT新着,1.93,132.7,,1.327e-07,-95.46,-95.46,-95.46,,,56.46,0.0,,,0,,,,43.54%(口座一致)
+2026-10-18 11:01,見送り,,,pump.fun卒業前(C基準では対象外),B,PAIR,PAIR,4QvnJwjcJH2xjfEy289xPQ1YmUXy56B1y6WYVyeQpump,GT新着,1.98,4915.61,,4.915e-06,-36.34,-36.34,-36.34,,,16.46,0.0,,,0,,,,69.93%(口座一致)
+2026-10-18 11:01,見送り,,,pump.fun卒業前(C基準では対象外),B,V,Agent V∞,3sc2hStWmMPzYRiDpSDaTih8aWTjxqRpgVHyzxxHWfK7,GT新着,40.02,3373.2,,3.373e-06,2.65,2.65,2.65,,,4.47,0.0,,,0,,AI,あり,95.53%(口座一致)
+2026-10-18 11:01,見送り,,,pump.fun卒業前(C基準では対象外),B,SUPERCORE,SUPERCORE,Ebr79nKazt9CzcSK8TQK8iRazP3u655NFRsoU1tQtF3b,GT新着,2.02,3283.15,,3.283e-06,-20.98,-20.98,-20.98,,,6.35,0.0,,,0,,,,93.65%(口座一致)
+2026-10-18 11:01,除外,,,アドレス末尾が「pump」でなく、発行元も Pump.Fun でない(発行元: 不明),A,TSI,Tetsuo Super Intelligence,EQpSirAPCe3Z3zEqHuxiDB1EjZKZJHmAGrhJtwLYZ9gZ,GT新着,2.05,40106.39,,4.01e-05,97.45,97.45,97.45,,,94.69,0.05,,,102,,,,
+2026-10-18 11:01,見送り,,,pump.fun卒業前(C基準では対象外),B,SUPERCORE,SUPERCORE,HhQHSvH41ERmmLP7CDAXHYUrtqtSHP7mm1HjTNSHpump,GT新着,2.07,3044.25,,3.044e-06,-18.19,-18.19,-18.19,,,2.63,0.0,,,0,,,,97.37%(口座一致)
+2026-10-18 11:01,見送り,,,pump.fun卒業前(C基準では対象外),B,TSI,TRUMP SUPER INTELLIGENCE ,GHEA6bvqZ9yfnvFA9RNbQT7ZRL2TWegoDbiCa5DUpump,GT新着,2.12,23.02,,2.302e-08,-99.21,-99.21,-99.21,,,11.89,0.0,,,0,,有名人便乗,,88.11%(口座一致)
+2026-10-18 11:01,見送り,,,pump.fun卒業前(C基準では対象外),B,DERP,DERPCAT,5uQVbLJxeFfBEZLmTcuvEKhkjU7E9ax8sCuoE2B7pump,GT新着,2.15,183.24,,1.832e-07,-93.88,-93.88,-93.88,,,47.32,0.0,,,0,,猫,,52.68%(口座一致)
+2026-10-18 11:01,除外,,,開発者のラグ歴(Creator history of rugged tokens),B,BPCATE,Looksmax CATE,6NofZYxbqTXpLypjNrGcBtj7iu8PK1XuRhZiWuQTpump,GT新着,2.21,327.23,,3.272e-07,-88.78,-88.78,-88.78,,,62.53,0.86,,,0,,猫,,37.47%(口座一致)
+2026-10-18 11:01,見送り,,,pump.fun卒業前(C基準では対象外),B,XELLA,XELLA REY,4EGaBWwsa3HS2AjFfZwzkCGrGcWxaJo9cXs1kr5mFotV,GT新着,2.31,20027.43,,2.002e-05,357.0,357.0,357.0,,,16.6,0.0,,,0,,,,38.74%(口座一致)
+2026-10-18 11:01,除外,,,アドレス末尾が「pump」でなく、発行元も Pump.Fun でない(発行元: 不明),A,TSI,Tetsuo Super Intelligence,DxHR9SNkqQayeg9Edvo1RVKsbgcb52KuUnRRnG2LUmkq,GT新着,1.97,9705.0,18512.44,9.705e-06,9.87,9.87,9.87,,,4.81,0.0,,,0,,,,94.21%(口座一致)
+2026-10-18 11:01,除外,,,開発者のラグ歴(Creator history of rugged tokens),B,tot,Trick or treat,D5bco2fanyYmpyvKYt1WYd9xoVoCQjmj3kKZmmYcpump,GT新着,1.7,2962.2,,2.962e-06,-26.15,-26.15,-26.15,,,50.16,0.09,,,0,,,,49.84%(口座一致)
+2026-10-18 11:01,見送り,,,pump.fun卒業前(C基準では対象外),B,34%,34percent,3rWNHynq4ENavkLyVTWfhYn4im8rgydr5KWEW3jCpump,GT新着,1.72,824.92,,8.249e-07,-72.43,-72.43,-72.43,,,53.35,0.0,,,0,,,,46.65%(口座一致)
+2026-10-18 11:01,除外,,,開発者のラグ歴(Creator history of rugged tokens),B,test,test,5PyB33RCDBM9WqDHqpSRdmkYh2LiDr75R35hbSALG5ym,GT新着,2.14,2955.96,,2.955e-06,1.96,1.96,1.96,,,1.07,0.03,,,0,,,,98.93%(口座一致)
+2026-10-18 11:01,見送り,,,pump.fun卒業前(C基準では対象外),B,THISMAN,THIS MAN,GQAm9DbxXoG1Zv47WD3GjAcvTUMPRreAf7Y5Qshfpump,GT新着,3.32,2900.98,,2.9e-06,,,,,,0.04,0.04,,,0,,,,99.96%(口座一致)
+2026-10-18 11:01,見送り,,,pump.fun卒業前(C基準では対象外),B,Elon,Franken-Musk,9M8VJbgTVr6hEWU1d99XMYHBT4Yz4prTnfbiyQQKpump,GT新着,3.37,2925.44,,2.925e-06,0.25,0.25,0.25,,,0.52,0.52,,,0,,有名人便乗,,99.48%(口座一致)
+2026-10-18 11:01,見送り,,,pump.fun卒業前(C基準では対象外),B,duluth,beatles,HxAHPy7nkdmjhppJsk7Sdrfi5zdPf4y1uU8r32ngpump,GT新着,3.43,539.22,,5.392e-07,-81.52,-81.52,-81.52,,,50.9,0.0,,,0,,,,49.1%(口座一致)
+2026-10-18 11:01,見送り,,,pump.fun卒業前(C基準では対象外),B,SYNTH,Synthia,AxwrNE4dNTNJnAZ493cb8Xykp84mqZxaAszoFYudpump,GT新着,3.44,35.12,,3.512e-08,-98.82,-98.82,-98.82,,,50.0,0.7,,,0,,,,50.0%(口座一致)
+2026-10-18 11:01,見送り,,,pump.fun卒業前(C基準では対象外),B,IRA,JUSTICE FOR IRA,3nVcUhqF21Tbz5jz21wawoTBjCR3qmLYRLeGJqtqpump,GT新着,3.49,2906.71,,2.906e-06,,,,,,0,0.0,,,0,,,,100.0%(口座一致)
+2026-10-18 11:01,除外,,,開発者のラグ歴(Creator history of rugged tokens),B,TAYLOR,Taylor Swift,CPBB2oHikN2ymL2zDsX8bJiYbouqFh1LBCapycgGeF6E,GT新着,3.76,2922.76,,2.922e-06,0.8,0.8,0.8,,,0.44,0.01,,,0,,有名人便乗,,99.56%(口座一致)
+2026-10-18 11:01,見送り,,,発行から30分未満 / 流動性が取得できない(0表示) / 時価総額が不明 / (拡張機能などの安全性は未確認),A,TSI,Tetsuo Super Intelligence,4WQkSHke4bPaa5seUdofd8JjQw8Gwd9ntF7rYCxFpump,GT新着,4.2,,,4.719e-12,,,,,,,,,,0,,,,
+2026-10-18 11:01,見送り,,,発行から30分未満 / 流動性が取得できない(0表示) / 時価総額が不明 / (拡張機能などの安全性は未確認),A,AgenC,AgenC,E7sRTHuTDyKKKhatM6wYQCwdDs7wt7YoX94o7eSJpump,GT新着,4.55,,,4.719e-12,,,,,,,,,,0,,,,
