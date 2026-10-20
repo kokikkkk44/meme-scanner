@@ -25,7 +25,7 @@ REPORT = os.path.join(DATA, "tracking_report.md")
 
 CHECKPOINTS_H = [1, 4, 24]
 REQ_INTERVAL = 2.3          # 無料枠は1分30回まで
-MAX_TRADES_PER_RUN = 8      # 1回の実行で処理する取引の上限
+MAX_TRADES_PER_RUN = 30     # 1回の実行で処理する取引の上限
 DRY_RUN = os.environ.get("DRY_RUN", "").lower() == "true"
 
 _last_req = [0.0]
@@ -121,17 +121,23 @@ def process(tr, res, pools, now):
     supply = pools[addr].get("supply")
     mc = (lambda p: round(p * supply / 1000, 1) if p and supply else None)
 
-    # 買う前(1回だけ)
-    if "pre" not in res:
-        cs = candles(pool, addr, 5, buy_t + 300, 40)
+    # 基準の値段: 日誌の時価総額(GMGNの画面の値)があればそれを使う。
+    # 15分足の終値だと、急落した足では実際の売値とずれるため。
+    def ref(mc_k):
+        return mc_k * 1000 / supply if mc_k and supply else None
+
+    # 買う前(1回だけ)。5分足が取れなければ15分足で代用
+    if "pre" not in res or res["pre"].get("note"):
+        cs = candles(pool, addr, 5, buy_t + 300, 40) or candles(pool, addr, 15, buy_t + 900, 12)
         if cs:
-            pb = price_at(cs, buy_t)
+            pb_c = price_at(cs, buy_t)
+            pb0 = ref(tr.get("mcIn")) or pb_c
             p30, p60 = price_at(cs, buy_t - 1800), price_at(cs, buy_t - 3600)
             hi60 = max([c[2] for c in cs if buy_t - 3600 <= c[0] <= buy_t] or [0]) or None
-            res["pre"] = {"buyPrice": pb, "chg30m": pct(pb, p30), "chg60m": pct(pb, p60),
-                          "fromHigh60m": pct(pb, hi60), "mcBuyEst": mc(pb)}
+            res["pre"] = {"buyPrice": pb0, "chg30m": pct(pb_c, p30), "chg60m": pct(pb_c, p60),
+                          "fromHigh60m": pct(pb_c, hi60), "mcBuyEst": mc(pb_c)}
         else:
-            res["pre"] = {"note": "買う前のデータなし"}
+            res["pre"] = {"buyPrice": ref(tr.get("mcIn")), "note": "買う前のデータなし"}
 
     # 売った後
     end = min(now, sell_t + 24 * 3600)
@@ -143,8 +149,11 @@ def process(tr, res, pools, now):
         if now > sell_t + 26 * 3600:
             res["done"] = True
         return
-    ps = price_at(cs, sell_t) or (res.get("pre") or {}).get("buyPrice")
-    pb = (res.get("pre") or {}).get("buyPrice")
+    pb = (res.get("pre") or {}).get("buyPrice") or ref(tr.get("mcIn"))
+    ps = ref(tr.get("mcOut"))
+    if not ps and pb and tr.get("pnlPct") is not None:
+        ps = pb * (1 + tr["pnlPct"] / 100)
+    ps = ps or price_at(cs, sell_t)
     post = res.setdefault("post", {})
     post["sellPrice"] = ps
     for h in CHECKPOINTS_H:
