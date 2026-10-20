@@ -50,14 +50,11 @@ jobs:
       - run: pip install -r requirements.txt
         if: steps.gate.outputs.run == 'true'
 
-      - name: Run scanner
+      - name: Track traded tokens (銘柄探しは10/20で停止)
         if: steps.gate.outputs.run == 'true'
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-          SOLANATRACKER_API_KEY: ${{ secrets.SOLANATRACKER_API_KEY }}
           DRY_RUN: ${{ inputs.mode == 'dry_run' }}
-          TEST_SLACK: ${{ inputs.mode == 'test_slack' }}
-        run: python scanner.py
+        run: python tracker.py
 
       - name: Save records
         if: ${{ steps.gate.outputs.run == 'true' && inputs.mode != 'dry_run' && inputs.mode != 'test_slack' }}

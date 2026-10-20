@@ -1,0 +1,291 @@
+{
+ "_説明": "追跡する取引の一覧(Claudeが日誌から追加)",
+ "trades": [
+  {
+   "id": "t-20261017-ae",
+   "token": "AE",
+   "address": "AeLonprCt3y4dZEWEeRTkPqnUPW2FngSD2YeUmPP6GDk",
+   "buy": "2026-10-17T19:18:00+09:00",
+   "sell": "2026-10-17T19:25:00+09:00",
+   "mcIn": 88.17,
+   "mcOut": 111,
+   "pnlPct": 26,
+   "pnlSol": 0.0254
+  },
+  {
+   "id": "t-20261017-elon",
+   "token": "ELON",
+   "address": "B2GESkSErPjuCq6n4LcaJP5v2z1kJnw3xHVZnop2sZx",
+   "buy": "2026-10-17T22:52:00+09:00",
+   "sell": "2026-10-17T23:30:00+09:00",
+   "mcIn": 821.83,
+   "mcOut": 1000,
+   "pnlPct": 21,
+   "pnlSol": 0.0107
+  },
+  {
+   "id": "t-20261017-gato",
+   "token": "Gato",
+   "address": "55A3VxMBfzw6uSe64zms5iMPw9k6kx9WzzusbCU6pump",
+   "buy": "2026-10-17T10:41:00+09:00",
+   "sell": "2026-10-17T11:07:00+09:00",
+   "mcIn": 161.12,
+   "mcOut": 120.63,
+   "pnlPct": -25,
+   "pnlSol": -0.025
+  },
+  {
+   "id": "t-20261017-gigabite",
+   "token": "Gigabite",
+   "address": "6tsykNmR3WDqouj9uVUFZRgR2Kpai4F1Qm1gAcirpump",
+   "buy": "2026-10-17T20:13:00+09:00",
+   "sell": "2026-10-17T20:19:00+09:00",
+   "mcIn": 133.42,
+   "mcOut": 89.91,
+   "pnlPct": -33,
+   "pnlSol": -0.0323
+  },
+  {
+   "id": "t-20261017-hallowin",
+   "token": "HALLOWIN",
+   "address": "87dKDvvNuWjKEETGeyi7QzztUNZ5nYfJ1goRT6VGpump",
+   "buy": "2026-10-17T11:28:00+09:00",
+   "sell": "2026-10-17T11:30:00+09:00",
+   "mcIn": 640.09,
+   "mcOut": 51.73,
+   "pnlPct": -92,
+   "pnlSol": -0.0914
+  },
+  {
+   "id": "t-20261017-mozuku",
+   "token": "Mozuku",
+   "address": "ctjRnP3N77utKsjNNYbNZjytacvSVp3gmghYYGWpump",
+   "buy": "2026-10-17T21:17:00+09:00",
+   "sell": "2026-10-17T21:31:00+09:00",
+   "mcIn": 30.66,
+   "mcOut": 36.3,
+   "pnlPct": 18,
+   "pnlSol": 0.0181
+  },
+  {
+   "id": "t-20261017-pepwg",
+   "token": "PEPWG",
+   "address": "Be5qxfXUoJhgXZENGVf7B578S4zLapyMbTGGNiRjpump",
+   "buy": "2026-10-17T09:15:00+09:00",
+   "sell": "2026-10-17T09:17:00+09:00",
+   "mcIn": 70.18,
+   "mcOut": 48.86,
+   "pnlPct": -30.5,
+   "pnlSol": -0.0151
+  },
+  {
+   "id": "t-20261017-pnus",
+   "token": "Pnus",
+   "address": "Hn89zqQfRaajZDXRck5B6YSdx3XyroYC4xyqgEcFpump",
+   "buy": "2026-10-17T14:02:00+09:00",
+   "sell": "2026-10-17T14:05:00+09:00",
+   "mcIn": 44.12,
+   "mcOut": 35.16,
+   "pnlPct": -20,
+   "pnlSol": -0.0202
+  },
+  {
+   "id": "t-20261017-prime",
+   "token": "PRIME",
+   "address": "rVWG97Yj6ZbuF9zeQo8TosQG6mUcUeL8BocfHu3pump",
+   "buy": "2026-10-17T14:37:00+09:00",
+   "sell": "2026-10-17T14:38:00+09:00",
+   "mcIn": 74.71,
+   "mcOut": 59.04,
+   "pnlPct": -21,
+   "pnlSol": -0.0208
+  },
+  {
+   "id": "t-20261017-sexcoin",
+   "token": "SEXCOIN",
+   "address": "HmqnR7WAWeZgGNF5QbcF74aTfzCAtxcgtsjTEbLHfart",
+   "buy": "2026-10-17T14:15:00+09:00",
+   "sell": "2026-10-17T14:16:00+09:00",
+   "mcIn": 192.93,
+   "mcOut": 243,
+   "pnlPct": 25.6,
+   "pnlSol": 0.0254
+  },
+  {
+   "id": "t-20261017-solana-cn",
+   "token": "索拉纳",
+   "address": "FeSqDFg1vMsB7dsWXE3UWURwUVksJArWWWynnhgiaaQ6",
+   "buy": "2026-10-17T22:14:00+09:00",
+   "sell": "2026-10-17T22:29:00+09:00",
+   "mcIn": 564.96,
+   "mcOut": 402.79,
+   "pnlPct": -28,
+   "pnlSol": -0.0274
+  },
+  {
+   "id": "t-20261017-sprout",
+   "token": "SPROUT",
+   "address": "ESkuk2fbS2tP1NpEANio2MvJbVCftkeZYDxTLkUvpump",
+   "buy": "2026-10-17T14:43:00+09:00",
+   "sell": "2026-10-17T14:50:00+09:00",
+   "mcIn": 147.06,
+   "mcOut": 165,
+   "pnlPct": 12,
+   "pnlSol": 0.012
+  },
+  {
+   "id": "t-20261018-afc",
+   "token": "AFC",
+   "address": "3t4BsgLNAQ1bHbP7CEFtvZeDrWMYJtuvC3Ucter7pump",
+   "buy": "2026-10-18T12:18:42+09:00",
+   "sell": "2026-10-18T12:19:39+09:00",
+   "mcIn": 169.8,
+   "mcOut": 214,
+   "pnlPct": 25.8,
+   "pnlSol": 0.0256
+  },
+  {
+   "id": "t-20261018-gta6",
+   "token": "GTA6",
+   "address": "2gVNeu8dP7XiLoaWfUvUJXUM5AdXY8418aft8xhUpump",
+   "buy": "2026-10-18T07:36:25+09:00",
+   "sell": "2026-10-18T07:47:35+09:00",
+   "mcIn": 228.4,
+   "mcOut": 171.3,
+   "pnlPct": -25,
+   "pnlSol": -0.0123
+  },
+  {
+   "id": "t-20261018-marketcat",
+   "token": "MC",
+   "address": "HZLEZULB1bV6rgxm6dWMdPnftPw42KG72bwvPeEipump",
+   "buy": "2026-10-18T19:29:02+09:00",
+   "sell": "2026-10-18T19:30:16+09:00",
+   "mcIn": 323.8,
+   "mcOut": 219,
+   "pnlPct": -32.5,
+   "pnlSol": -0.0322
+  },
+  {
+   "id": "t-20261018-mega",
+   "token": "MEGA",
+   "address": "8dATxRTextAcaGxtWWUoTVApruNXtNS3Y74uD4Jzpump",
+   "buy": "2026-10-18T22:35:19+09:00",
+   "sell": "2026-10-18T22:39:58+09:00",
+   "mcIn": 91.3,
+   "mcOut": 125.1,
+   "pnlPct": 36.8,
+   "pnlSol": 0.0363
+  },
+  {
+   "id": "t-20261018-mega2",
+   "token": "MEGA②",
+   "address": "6vwkHvvoJujaPy6SWdjqE2fFc1V3AW6pj6KTh9jipump",
+   "buy": "2026-10-18T23:22:26+09:00",
+   "sell": "2026-10-18T23:33:43+09:00",
+   "mcIn": 492,
+   "mcOut": 338.6,
+   "pnlPct": -31,
+   "pnlSol": -0.0285
+  },
+  {
+   "id": "t-20261018-mucron",
+   "token": "mucron",
+   "address": "3A3qjns31YZA6Ung91ZpoPD7J3p1bDFbTJ4ANFAPpump",
+   "buy": "2026-10-18T19:35:31+09:00",
+   "sell": "2026-10-18T19:40:20+09:00",
+   "mcIn": 201.8,
+   "mcOut": 271.2,
+   "pnlPct": 34.3,
+   "pnlSol": 0.034
+  },
+  {
+   "id": "t-20261018-onboard",
+   "token": "onboard",
+   "address": "5ubruMYpgKqw9ip5J1qrXbVGmMdn2VCsMg421B4bpump",
+   "buy": "2026-10-18T08:01:00+09:00",
+   "sell": "2026-10-18T08:40:50+09:00",
+   "mcIn": 356.2,
+   "mcOut": 264.1,
+   "pnlPct": -26,
+   "pnlSol": -0.0126
+  },
+  {
+   "id": "t-20261018-pingus",
+   "token": "Pingus",
+   "address": "EYLjBuEd7NUF5ZwjcpawqCKnzbaZMDsyHkeA72P2pump",
+   "buy": "2026-10-18T07:10:00+09:00",
+   "sell": "2026-10-18T07:27:00+09:00",
+   "mcIn": 98.72,
+   "mcOut": 70.44,
+   "pnlPct": -29,
+   "pnlSol": -0.0142
+  },
+  {
+   "id": "t-20261018-pips",
+   "token": "PIPS",
+   "address": "4RFbdndphrM31jipKxopRmE7DCsLBEscf3kMEoBYpump",
+   "buy": "2026-10-18T16:23:06+09:00",
+   "sell": "2026-10-18T16:26:19+09:00",
+   "mcIn": 87.2,
+   "mcOut": 126.2,
+   "pnlPct": 44.6,
+   "pnlSol": 0.0443
+  },
+  {
+   "id": "t-20261019-mimi",
+   "token": "Mimi",
+   "address": "8CYyivwMZPg6Edaofxo3eHiveZkDrU6TtUDwtMjTpump",
+   "buy": "2026-10-19T20:05:00+09:00",
+   "sell": "2026-10-19T20:36:00+09:00",
+   "mcIn": 366.4,
+   "mcOut": 338.3,
+   "pnlPct": -7.8,
+   "pnlSol": -0.0077
+  },
+  {
+   "id": "t-20261019-zdog",
+   "token": "ZDOG",
+   "address": "58eo3pKwDZ2GKT2XvRumuns6RustWyvqtgfyubA3kYAJ",
+   "buy": "2026-10-19T12:41:00+09:00",
+   "sell": "2026-10-19T17:23:00+09:00",
+   "mcIn": 327.9,
+   "mcOut": 367.2,
+   "pnlPct": 11.9,
+   "pnlSol": 0.0106
+  },
+  {
+   "id": "t-20261020-collectooor",
+   "token": "COLLECTOOOR",
+   "address": "ESnW5ZbLmoEAg2QEMxnMsY9R3aS8Kw58HJacYURmpump",
+   "buy": "2026-10-20T07:44:00+09:00",
+   "sell": "2026-10-20T07:47:00+09:00",
+   "mcIn": 252.7,
+   "mcOut": 333.4,
+   "pnlPct": 31.9,
+   "pnlSol": 0.0315
+  },
+  {
+   "id": "t-20261020-pikajew",
+   "token": "PikaJew",
+   "address": "AsBqkfnMbu6mvjjgSCW24ZpL3dyzz3A8qygtfM3Rpump",
+   "buy": "2026-10-20T12:47:00+09:00",
+   "sell": "2026-10-20T12:49:00+09:00",
+   "mcIn": 104.4,
+   "mcOut": 121.5,
+   "pnlPct": 16.3,
+   "pnlSol": 0.0161
+  },
+  {
+   "id": "t-20261020-zoo",
+   "token": "Zoo",
+   "address": "GwpXch98ft9MRQByRpjG36SV79mSKMt93L2oo3Pmpump",
+   "buy": "2026-10-20T20:00:00+09:00",
+   "sell": "2026-10-20T20:08:00+09:00",
+   "mcIn": 53.8,
+   "mcOut": 62.5,
+   "pnlPct": 16.2,
+   "pnlSol": 0.016
+  }
+ ]
+}
