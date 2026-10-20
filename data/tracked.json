@@ -308,6 +308,17 @@
    "mcOut": 203.73,
    "pnlPct": -26,
    "pnlSol": -0.026
+  },
+  {
+   "id": "t-20261021-punani",
+   "token": "PUNANI",
+   "address": "6KEiPuRtAEcGgv9Ryi9Zx27yg4mZXm69sZpHUrBZKD9D",
+   "buy": "2026-10-21T00:00:31+09:00",
+   "sell": "2026-10-21T00:04:14+09:00",
+   "mcIn": 348.08,
+   "mcOut": 271.42,
+   "pnlPct": -22,
+   "pnlSol": -0.022
   }
  ]
 }
