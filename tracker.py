@@ -26,6 +26,7 @@ REPORT = os.path.join(DATA, "tracking_report.md")
 CHECKPOINTS_H = [1, 4, 24]
 REQ_INTERVAL = 2.3          # 無料枠は1分30回まで
 MAX_TRADES_PER_RUN = 30     # 1回の実行で処理する取引の上限
+TIME_BUDGET_SEC = 300       # 5分たったら途中でも保存して終える(残りは次回)
 DRY_RUN = os.environ.get("DRY_RUN", "").lower() == "true"
 
 _last_req = [0.0]
@@ -222,7 +223,11 @@ def main():
     now = int(time.time())
     todo = [t for t in tracked if not results.get(t["id"], {}).get("done")]
     log(f"追跡中 {len(todo)} 件 / 全 {len(tracked)} 件")
+    start = time.time()
     for tr in todo[:MAX_TRADES_PER_RUN]:
+        if time.time() - start > TIME_BUDGET_SEC:
+            log("時間切れのため残りは次回に回します")
+            break
         res = results.setdefault(tr["id"], {})
         log(f"- {tr.get('token')} ({tr['id']})")
         try:

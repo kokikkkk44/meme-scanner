@@ -23,7 +23,7 @@ concurrency:
 jobs:
   scan:
     runs-on: ubuntu-latest
-    timeout-minutes: 8
+    timeout-minutes: 12
     steps:
       # (10/19) 実行回数を半分に(15分ごと→30分ごと)。cron-job.org は15分ごとのまま、
       # 毎時 :00前後 と :30前後 の起動だけ実行し、:15前後 と :45前後 は何もせず終わる。
