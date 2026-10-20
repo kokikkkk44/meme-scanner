@@ -1,4 +1,438 @@
 {
+ "t-20261017-ae": {
+  "pre": {
+   "buyPrice": 8.817003041964935e-05,
+   "chg30m": 27.7,
+   "chg60m": 165.3,
+   "fromHigh60m": -21.4,
+   "mcBuyEst": 94.2
+  },
+  "post": {
+   "sellPrice": 0.00011100003829625812,
+   "1h": {
+    "vsSell": -48.8,
+    "vsBuy": -35.5,
+    "mcEst": 56.8
+   },
+   "4h": {
+    "vsSell": -79.3,
+    "vsBuy": -73.9,
+    "mcEst": 23.0
+   },
+   "24h": {
+    "vsSell": -93.5,
+    "vsBuy": -91.9,
+    "mcEst": 7.2
+   },
+   "max24h": {
+    "vsSell": 32.0,
+    "vsBuy": 66.2,
+    "mcEst": 146.5
+   },
+   "min24h": {
+    "vsSell": -94.4,
+    "vsBuy": -93.0,
+    "mcEst": 6.2
+   },
+   "firstHitAfterSell": "+25%(利確)"
+  },
+  "done": true,
+  "updated": "2026-10-20T21:09+09:00"
+ },
+ "t-20261017-elon": {
+  "pre": {
+   "buyPrice": 0.0008218454714745304,
+   "chg30m": -10.9,
+   "chg60m": -5.9,
+   "fromHigh60m": -25.6,
+   "mcBuyEst": 825.0
+  },
+  "post": {
+   "sellPrice": 0.0010000188256385509,
+   "1h": {
+    "vsSell": 97.7,
+    "vsBuy": 140.6,
+    "mcEst": 1977.5
+   },
+   "4h": {
+    "vsSell": 69.2,
+    "vsBuy": 105.9,
+    "mcEst": 1692.1
+   },
+   "24h": {
+    "vsSell": 101.6,
+    "vsBuy": 145.3,
+    "mcEst": 2015.7
+   },
+   "max24h": {
+    "vsSell": 273.6,
+    "vsBuy": 354.6,
+    "mcEst": 3735.9
+   },
+   "min24h": {
+    "vsSell": -13.0,
+    "vsBuy": 5.9,
+    "mcEst": 869.9
+   },
+   "firstHitAfterSell": "+25%(利確)"
+  },
+  "done": true,
+  "updated": "2026-10-20T21:09+09:00"
+ },
+ "t-20261017-gato": {
+  "pre": {
+   "buyPrice": 0.00016583362054412316,
+   "note": "買う前のデータなし"
+  },
+  "post": {
+   "sellPrice": 0.0001241590717864795,
+   "1h": {
+    "vsSell": null,
+    "vsBuy": null,
+    "mcEst": null
+   },
+   "4h": {
+    "vsSell": null,
+    "vsBuy": null,
+    "mcEst": null
+   },
+   "24h": {
+    "vsSell": 447.3,
+    "vsBuy": 309.8,
+    "mcEst": 660.2
+   },
+   "max24h": {
+    "vsSell": 1367.7,
+    "vsBuy": 998.8,
+    "mcEst": 1770.4
+   },
+   "min24h": {
+    "vsSell": 160.3,
+    "vsBuy": 94.8,
+    "mcEst": 313.9
+   },
+   "firstHitAfterSell": "+25%(利確)"
+  },
+  "done": true,
+  "updated": "2026-10-20T21:10+09:00"
+ },
+ "t-20261017-gigabite": {
+  "pre": {
+   "buyPrice": 0.00013342,
+   "note": "買う前のデータなし"
+  },
+  "post": {
+   "sellPrice": 8.991e-05,
+   "1h": {
+    "vsSell": 30.6,
+    "vsBuy": -12.0,
+    "mcEst": 117.4
+   },
+   "4h": {
+    "vsSell": -43.8,
+    "vsBuy": -62.1,
+    "mcEst": 50.5
+   },
+   "24h": {
+    "vsSell": -29.7,
+    "vsBuy": -52.6,
+    "mcEst": 63.2
+   },
+   "max24h": {
+    "vsSell": 357.7,
+    "vsBuy": 208.4,
+    "mcEst": 411.5
+   },
+   "min24h": {
+    "vsSell": -66.5,
+    "vsBuy": -77.4,
+    "mcEst": 30.1
+   },
+   "firstHitAfterSell": "−20%(損切り)"
+  },
+  "done": true,
+  "updated": "2026-10-20T21:11+09:00"
+ },
+ "t-20261017-hallowin": {
+  "pre": {
+   "buyPrice": 0.0006426819969680545,
+   "chg30m": null,
+   "chg60m": null,
+   "fromHigh60m": -0.2,
+   "mcBuyEst": 672.9
+  },
+  "post": {
+   "sellPrice": 5.193947679725892e-05,
+   "1h": {
+    "vsSell": -96.3,
+    "vsBuy": -99.7,
+    "mcEst": 1.9
+   },
+   "4h": {
+    "vsSell": -96.4,
+    "vsBuy": -99.7,
+    "mcEst": 1.9
+   },
+   "24h": {
+    "vsSell": -96.4,
+    "vsBuy": -99.7,
+    "mcEst": 1.9
+   },
+   "max24h": {
+    "vsSell": 1221.8,
+    "vsBuy": 6.8,
+    "mcEst": 683.8
+   },
+   "min24h": {
+    "vsSell": -96.4,
+    "vsBuy": -99.7,
+    "mcEst": 1.9
+   },
+   "firstHitAfterSell": "−20%(損切り)"
+  },
+  "done": true,
+  "updated": "2026-10-20T21:11+09:00"
+ },
+ "t-20261017-mozuku": {
+  "pre": {
+   "buyPrice": 3.066e-05,
+   "chg30m": null,
+   "chg60m": null,
+   "fromHigh60m": -20.8,
+   "mcBuyEst": 37.0
+  },
+  "post": {
+   "sellPrice": 3.63e-05,
+   "1h": {
+    "vsSell": 93.0,
+    "vsBuy": 128.5,
+    "mcEst": 70.1
+   },
+   "4h": {
+    "vsSell": -82.1,
+    "vsBuy": -78.8,
+    "mcEst": 6.5
+   },
+   "24h": {
+    "vsSell": -90.4,
+    "vsBuy": -88.6,
+    "mcEst": 3.5
+   },
+   "max24h": {
+    "vsSell": 106.6,
+    "vsBuy": 144.6,
+    "mcEst": 75.0
+   },
+   "min24h": {
+    "vsSell": -91.1,
+    "vsBuy": -89.5,
+    "mcEst": 3.2
+   },
+   "firstHitAfterSell": "−20%(損切り)"
+  },
+  "done": true,
+  "updated": "2026-10-20T21:12+09:00"
+ },
+ "t-20261017-pepwg": {
+  "pre": {
+   "buyPrice": 7.216172173742135e-05,
+   "chg30m": null,
+   "chg60m": null,
+   "fromHigh60m": -9.2,
+   "mcBuyEst": 94.7
+  },
+  "post": {
+   "sellPrice": 5.0239693988179076e-05,
+   "1h": {
+    "vsSell": -95.3,
+    "vsBuy": -96.7,
+    "mcEst": 2.3
+   },
+   "4h": {
+    "vsSell": -95.6,
+    "vsBuy": -97.0,
+    "mcEst": 2.1
+   },
+   "24h": {
+    "vsSell": -95.7,
+    "vsBuy": -97.0,
+    "mcEst": 2.1
+   },
+   "max24h": {
+    "vsSell": -86.8,
+    "vsBuy": -90.8,
+    "mcEst": 6.5
+   },
+   "min24h": {
+    "vsSell": -95.7,
+    "vsBuy": -97.0,
+    "mcEst": 2.1
+   },
+   "firstHitAfterSell": "−20%(損切り)"
+  },
+  "done": true,
+  "updated": "2026-10-20T21:12+09:00"
+ },
+ "t-20261017-pnus": {
+  "pre": {
+   "buyPrice": 4.412e-05,
+   "chg30m": null,
+   "chg60m": null,
+   "fromHigh60m": -19.6,
+   "mcBuyEst": 44.6
+  },
+  "post": {
+   "sellPrice": 3.5159999999999995e-05,
+   "1h": {
+    "vsSell": -92.5,
+    "vsBuy": -94.0,
+    "mcEst": 2.6
+   },
+   "4h": {
+    "vsSell": -92.4,
+    "vsBuy": -94.0,
+    "mcEst": 2.7
+   },
+   "24h": {
+    "vsSell": -93.3,
+    "vsBuy": -94.7,
+    "mcEst": 2.3
+   },
+   "max24h": {
+    "vsSell": -88.9,
+    "vsBuy": -91.2,
+    "mcEst": 3.9
+   },
+   "min24h": {
+    "vsSell": -93.4,
+    "vsBuy": -94.7,
+    "mcEst": 2.3
+   },
+   "firstHitAfterSell": "−20%(損切り)"
+  },
+  "done": true,
+  "updated": "2026-10-20T21:13+09:00"
+ },
+ "t-20261017-prime": {
+  "pre": {
+   "buyPrice": 7.471055641821097e-05,
+   "chg30m": null,
+   "chg60m": null,
+   "fromHigh60m": -15.5,
+   "mcBuyEst": 81.2
+  },
+  "post": {
+   "sellPrice": 5.904043971263787e-05,
+   "1h": {
+    "vsSell": 368.3,
+    "vsBuy": 270.1,
+    "mcEst": 276.5
+   },
+   "4h": {
+    "vsSell": 363.2,
+    "vsBuy": 266.0,
+    "mcEst": 273.4
+   },
+   "24h": {
+    "vsSell": 46.2,
+    "vsBuy": 15.5,
+    "mcEst": 86.3
+   },
+   "max24h": {
+    "vsSell": 1430.4,
+    "vsBuy": 1109.4,
+    "mcEst": 903.5
+   },
+   "min24h": {
+    "vsSell": -17.6,
+    "vsBuy": -34.9,
+    "mcEst": 48.7
+   },
+   "firstHitAfterSell": "−20%(損切り)"
+  },
+  "done": true,
+  "updated": "2026-10-20T21:13+09:00"
+ },
+ "t-20261017-sexcoin": {
+  "pre": {
+   "buyPrice": 0.00019293,
+   "chg30m": 31.3,
+   "chg60m": 12.6,
+   "fromHigh60m": -38.2,
+   "mcBuyEst": 235.8
+  },
+  "post": {
+   "sellPrice": 0.000243,
+   "1h": {
+    "vsSell": -58.7,
+    "vsBuy": -48.0,
+    "mcEst": 100.3
+   },
+   "4h": {
+    "vsSell": -81.2,
+    "vsBuy": -76.4,
+    "mcEst": 45.6
+   },
+   "24h": {
+    "vsSell": -89.1,
+    "vsBuy": -86.2,
+    "mcEst": 26.5
+   },
+   "max24h": {
+    "vsSell": -25.2,
+    "vsBuy": -5.8,
+    "mcEst": 181.6
+   },
+   "min24h": {
+    "vsSell": -95.1,
+    "vsBuy": -93.8,
+    "mcEst": 12.0
+   },
+   "firstHitAfterSell": "−20%(損切り)"
+  },
+  "done": true,
+  "updated": "2026-10-20T21:14+09:00"
+ },
+ "t-20261017-solana-cn": {
+  "pre": {
+   "buyPrice": 0.000572688966263819,
+   "chg30m": 525.7,
+   "chg60m": null,
+   "fromHigh60m": -10.8,
+   "mcBuyEst": 574.7
+  },
+  "post": {
+   "sellPrice": 0.0004083003906850107,
+   "1h": {
+    "vsSell": 24.7,
+    "vsBuy": -11.1,
+    "mcEst": 502.5
+   },
+   "4h": {
+    "vsSell": -59.5,
+    "vsBuy": -71.1,
+    "mcEst": 163.1
+   },
+   "24h": {
+    "vsSell": -73.0,
+    "vsBuy": -80.7,
+    "mcEst": 108.8
+   },
+   "max24h": {
+    "vsSell": 107.0,
+    "vsBuy": 47.6,
+    "mcEst": 833.6
+   },
+   "min24h": {
+    "vsSell": -83.8,
+    "vsBuy": -88.5,
+    "mcEst": 65.2
+   },
+   "firstHitAfterSell": "−20%(損切り)"
+  },
+  "done": true,
+  "updated": "2026-10-20T21:14+09:00"
+ },
  "_pools": {
   "AeLonprCt3y4dZEWEeRTkPqnUPW2FngSD2YeUmPP6GDk": {
    "pool": "8TVM7UJXk3PZnUj1tPzxYyNbqhsEyKEqPyHVbp5gY3aQ",
@@ -38,6 +472,21 @@
   "Hn89zqQfRaajZDXRck5B6YSdx3XyroYC4xyqgEcFpump": {
    "pool": "36tSLqccbZLfgyhxLniJCi9YzddnkmXfCCzvEMFAEmV4",
    "supply": 1000000000.0000001,
+   "base_is_token": true
+  },
+  "rVWG97Yj6ZbuF9zeQo8TosQG6mUcUeL8BocfHu3pump": {
+   "pool": "E3uzs2APAc4m6CSTCEZDA65yY1orfTvhCGotWyEjbbzr",
+   "supply": 999992552.3481869,
+   "base_is_token": true
+  },
+  "HmqnR7WAWeZgGNF5QbcF74aTfzCAtxcgtsjTEbLHfart": {
+   "pool": "7TEezuvfoXoDxsST4unnr5LieESu9RD7LXRqU47F1bFe",
+   "supply": 1000000000.0,
+   "base_is_token": true
+  },
+  "FeSqDFg1vMsB7dsWXE3UWURwUVksJArWWWynnhgiaaQ6": {
+   "pool": "6PoWW3poGND27f9qHEb2AJmSNNCKKjGgZYRWRSNtUyWx",
+   "supply": 986504076.8739754,
    "base_is_token": true
   }
  }
