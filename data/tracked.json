@@ -286,6 +286,17 @@
    "mcOut": 62.5,
    "pnlPct": 16.2,
    "pnlSol": 0.016
+  },
+  {
+   "id": "t-20261020-lifas",
+   "token": "LIFAS",
+   "address": "4o9tQjy3bWKM3qjDTTnQCYhHb64ie9VcDFCjGqDTpump",
+   "buy": "2026-10-20T20:23:42+09:00",
+   "sell": "2026-10-20T20:28:52+09:00",
+   "mcIn": 127.88,
+   "mcOut": 96.44,
+   "pnlPct": -24.6,
+   "pnlSol": -0.0244
   }
  ]
 }
