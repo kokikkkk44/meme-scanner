@@ -1,0 +1,349 @@
+{
+ "t-20261017-ae": {
+  "pre": {
+   "buyPrice": 9.423970568283873e-05,
+   "chg30m": 27.7,
+   "chg60m": 165.3,
+   "fromHigh60m": -21.4,
+   "mcBuyEst": 94.2
+  },
+  "post": {
+   "sellPrice": 0.00014141540194893395,
+   "1h": {
+    "vsSell": -59.8,
+    "vsBuy": -39.7,
+    "mcEst": 56.8
+   },
+   "4h": {
+    "vsSell": -83.7,
+    "vsBuy": -75.6,
+    "mcEst": 23.0
+   },
+   "24h": {
+    "vsSell": -94.9,
+    "vsBuy": -92.4,
+    "mcEst": 7.2
+   },
+   "max24h": {
+    "vsSell": 3.6,
+    "vsBuy": 55.5,
+    "mcEst": 146.5
+   },
+   "min24h": {
+    "vsSell": -95.6,
+    "vsBuy": -93.4,
+    "mcEst": 6.2
+   },
+   "firstHitAfterSell": "+25%(利確)"
+  },
+  "done": true,
+  "updated": "2026-10-20T20:30+09:00"
+ },
+ "t-20261017-elon": {
+  "pre": {
+   "buyPrice": 0.0008250408163108442,
+   "chg30m": -10.9,
+   "chg60m": -5.9,
+   "fromHigh60m": -25.6,
+   "mcBuyEst": 825.0
+  },
+  "post": {
+   "sellPrice": 0.0019224437004600377,
+   "1h": {
+    "vsSell": 2.9,
+    "vsBuy": 139.7,
+    "mcEst": 1977.5
+   },
+   "4h": {
+    "vsSell": -12.0,
+    "vsBuy": 105.1,
+    "mcEst": 1692.1
+   },
+   "24h": {
+    "vsSell": 4.9,
+    "vsBuy": 144.3,
+    "mcEst": 2015.7
+   },
+   "max24h": {
+    "vsSell": 94.3,
+    "vsBuy": 352.8,
+    "mcEst": 3735.9
+   },
+   "min24h": {
+    "vsSell": -54.7,
+    "vsBuy": 5.4,
+    "mcEst": 869.9
+   },
+   "firstHitAfterSell": "+25%(利確)"
+  },
+  "done": true,
+  "updated": "2026-10-20T20:31+09:00"
+ },
+ "t-20261017-gato": {
+  "pre": {
+   "note": "買う前のデータなし"
+  },
+  "post": {
+   "sellPrice": null,
+   "1h": {
+    "vsSell": null,
+    "vsBuy": null,
+    "mcEst": null
+   },
+   "4h": {
+    "vsSell": null,
+    "vsBuy": null,
+    "mcEst": null
+   },
+   "24h": {
+    "vsSell": null,
+    "vsBuy": null,
+    "mcEst": 660.2
+   },
+   "max24h": {
+    "vsSell": null,
+    "vsBuy": null,
+    "mcEst": 1770.4
+   },
+   "min24h": {
+    "vsSell": null,
+    "vsBuy": null,
+    "mcEst": 313.9
+   }
+  },
+  "done": true,
+  "updated": "2026-10-20T20:31+09:00"
+ },
+ "t-20261017-gigabite": {
+  "pre": {
+   "note": "買う前のデータなし"
+  },
+  "post": {
+   "sellPrice": null,
+   "1h": {
+    "vsSell": null,
+    "vsBuy": null,
+    "mcEst": 117.4
+   },
+   "4h": {
+    "vsSell": null,
+    "vsBuy": null,
+    "mcEst": 50.5
+   },
+   "24h": {
+    "vsSell": null,
+    "vsBuy": null,
+    "mcEst": 63.2
+   },
+   "max24h": {
+    "vsSell": null,
+    "vsBuy": null,
+    "mcEst": 411.5
+   },
+   "min24h": {
+    "vsSell": null,
+    "vsBuy": null,
+    "mcEst": 30.1
+   }
+  },
+  "done": true,
+  "updated": "2026-10-20T20:32+09:00"
+ },
+ "t-20261017-hallowin": {
+  "pre": {
+   "buyPrice": 0.0006756518875986511,
+   "chg30m": null,
+   "chg60m": null,
+   "fromHigh60m": -0.2,
+   "mcBuyEst": 672.9
+  },
+  "post": {
+   "sellPrice": 1.9003420513472462e-06,
+   "1h": {
+    "vsSell": 0.0,
+    "vsBuy": -99.7,
+    "mcEst": 1.9
+   },
+   "4h": {
+    "vsSell": -0.8,
+    "vsBuy": -99.7,
+    "mcEst": 1.9
+   },
+   "24h": {
+    "vsSell": -0.8,
+    "vsBuy": -99.7,
+    "mcEst": 1.9
+   },
+   "max24h": {
+    "vsSell": 36028.3,
+    "vsBuy": 1.6,
+    "mcEst": 683.8
+   },
+   "min24h": {
+    "vsSell": -1.2,
+    "vsBuy": -99.7,
+    "mcEst": 1.9
+   },
+   "firstHitAfterSell": "−20%(損切り)"
+  },
+  "done": true,
+  "updated": "2026-10-20T20:33+09:00"
+ },
+ "t-20261017-mozuku": {
+  "pre": {
+   "note": "買う前のデータなし"
+  },
+  "post": {
+   "sellPrice": 2.6244352070414314e-05,
+   "1h": {
+    "vsSell": 167.0,
+    "vsBuy": null,
+    "mcEst": 70.1
+   },
+   "4h": {
+    "vsSell": -75.2,
+    "vsBuy": null,
+    "mcEst": 6.5
+   },
+   "24h": {
+    "vsSell": -86.7,
+    "vsBuy": null,
+    "mcEst": 3.5
+   },
+   "max24h": {
+    "vsSell": 185.7,
+    "vsBuy": null,
+    "mcEst": 75.0
+   },
+   "min24h": {
+    "vsSell": -87.7,
+    "vsBuy": null,
+    "mcEst": 3.2
+   }
+  },
+  "done": true,
+  "updated": "2026-10-20T20:33+09:00"
+ },
+ "t-20261017-pepwg": {
+  "pre": {
+   "buyPrice": 9.73431678374604e-05,
+   "chg30m": null,
+   "chg60m": null,
+   "fromHigh60m": -9.2,
+   "mcBuyEst": 94.7
+  },
+  "post": {
+   "sellPrice": 2.228273844411809e-06,
+   "1h": {
+    "vsSell": 7.0,
+    "vsBuy": -97.6,
+    "mcEst": 2.3
+   },
+   "4h": {
+    "vsSell": -1.5,
+    "vsBuy": -97.7,
+    "mcEst": 2.1
+   },
+   "24h": {
+    "vsSell": -3.5,
+    "vsBuy": -97.8,
+    "mcEst": 2.1
+   },
+   "max24h": {
+    "vsSell": 198.4,
+    "vsBuy": -93.2,
+    "mcEst": 6.5
+   },
+   "min24h": {
+    "vsSell": -3.5,
+    "vsBuy": -97.8,
+    "mcEst": 2.1
+   },
+   "firstHitAfterSell": "−20%(損切り)"
+  },
+  "done": true,
+  "updated": "2026-10-20T20:34+09:00"
+ },
+ "t-20261017-pnus": {
+  "pre": {
+   "buyPrice": 4.4630194433106115e-05,
+   "chg30m": null,
+   "chg60m": null,
+   "fromHigh60m": -19.6,
+   "mcBuyEst": 44.6
+  },
+  "post": {
+   "sellPrice": 3.6898377836402885e-06,
+   "1h": {
+    "vsSell": -28.4,
+    "vsBuy": -94.1,
+    "mcEst": 2.6
+   },
+   "4h": {
+    "vsSell": -28.0,
+    "vsBuy": -94.0,
+    "mcEst": 2.7
+   },
+   "24h": {
+    "vsSell": -36.4,
+    "vsBuy": -94.7,
+    "mcEst": 2.3
+   },
+   "max24h": {
+    "vsSell": 5.7,
+    "vsBuy": -91.3,
+    "mcEst": 3.9
+   },
+   "min24h": {
+    "vsSell": -37.2,
+    "vsBuy": -94.8,
+    "mcEst": 2.3
+   },
+   "firstHitAfterSell": "−20%(損切り)"
+  },
+  "done": true,
+  "updated": "2026-10-20T20:34+09:00"
+ },
+ "_pools": {
+  "AeLonprCt3y4dZEWEeRTkPqnUPW2FngSD2YeUmPP6GDk": {
+   "pool": "8TVM7UJXk3PZnUj1tPzxYyNbqhsEyKEqPyHVbp5gY3aQ",
+   "supply": 999999654.9887847,
+   "base_is_token": true
+  },
+  "B2GESkSErPjuCq6n4LcaJP5v2z1kJnw3xHVZnop2sZx": {
+   "pool": "CnHqem7jPbjA5p2xHBGPHQG7E9NkZWcQr9q6R9YWb7zf",
+   "supply": 999981174.715847,
+   "base_is_token": true
+  },
+  "55A3VxMBfzw6uSe64zms5iMPw9k6kx9WzzusbCU6pump": {
+   "pool": "H4wp14QGkt3YextGrQXDqF1c3EPZVMxufgGcUhxSRJN4",
+   "supply": 971576206.7507354,
+   "base_is_token": true
+  },
+  "6tsykNmR3WDqouj9uVUFZRgR2Kpai4F1Qm1gAcirpump": {
+   "pool": "FEK1dRG7wzN5JySutUJ8otAZQASxkZN3HXowL9XHtnjv",
+   "supply": 1000000000.0,
+   "base_is_token": true
+  },
+  "87dKDvvNuWjKEETGeyi7QzztUNZ5nYfJ1goRT6VGpump": {
+   "pool": "BGTfrVWm2ReYQSwGEEMiqW3YcaZ1ce7Y35SsPbpHu8up",
+   "supply": 995966905.9032575,
+   "base_is_token": true
+  },
+  "ctjRnP3N77utKsjNNYbNZjytacvSVp3gmghYYGWpump": {
+   "pool": "6dTvT1CWcRmtsU7DSZaubHK3DrXqNpVby2Za12uKe7Wc",
+   "supply": 999999999.9999999,
+   "base_is_token": true
+  },
+  "Be5qxfXUoJhgXZENGVf7B578S4zLapyMbTGGNiRjpump": {
+   "pool": "AeM8o1dztwFUHGvZsHLfTfmvD94pUTiiU41DagKeQC56",
+   "supply": 972537770.8609511,
+   "base_is_token": true
+  },
+  "Hn89zqQfRaajZDXRck5B6YSdx3XyroYC4xyqgEcFpump": {
+   "pool": "36tSLqccbZLfgyhxLniJCi9YzddnkmXfCCzvEMFAEmV4",
+   "supply": 1000000000.0000001,
+   "base_is_token": true
+  }
+ }
+}
