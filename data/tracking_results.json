@@ -595,7 +595,14 @@
    "firstHitAfterSell": "−20%(損切り)"
   },
   "done": true,
-  "updated": "2026-10-20T21:31+09:00"
+  "updated": "2026-10-20T22:30+09:00",
+  "simTries": 1,
+  "sim": {
+   "stop20": "+25%",
+   "stop30": "+25%",
+   "stop40": "+25%",
+   "stop50": "+25%"
+  }
  },
  "t-20261018-gta6": {
   "pre": {
@@ -632,7 +639,14 @@
    "firstHitAfterSell": "−20%(損切り)"
   },
   "done": true,
-  "updated": "2026-10-20T21:32+09:00"
+  "updated": "2026-10-20T22:31+09:00",
+  "simTries": 1,
+  "sim": {
+   "stop20": "-20%",
+   "stop30": "-30%",
+   "stop40": "どちらにも届かず",
+   "stop50": "どちらにも届かず"
+  }
  },
  "t-20261018-marketcat": {
   "pre": {
@@ -672,7 +686,14 @@
    "firstHitAfterSell": "−20%(損切り)"
   },
   "done": true,
-  "updated": "2026-10-20T21:32+09:00"
+  "updated": "2026-10-20T22:31+09:00",
+  "simTries": 1,
+  "sim": {
+   "stop20": "-20%",
+   "stop30": "+25%",
+   "stop40": "+25%",
+   "stop50": "+25%"
+  }
  },
  "t-20261018-mega": {
   "pre": {
@@ -712,7 +733,14 @@
    "firstHitAfterSell": "+25%(利確)"
   },
   "done": true,
-  "updated": "2026-10-20T21:33+09:00"
+  "updated": "2026-10-20T22:32+09:00",
+  "simTries": 1,
+  "sim": {
+   "stop20": "+25%",
+   "stop30": "+25%",
+   "stop40": "+25%",
+   "stop50": "+25%"
+  }
  },
  "t-20261018-mega2": {
   "pre": {
@@ -752,7 +780,14 @@
    "firstHitAfterSell": "−20%(損切り)"
   },
   "done": true,
-  "updated": "2026-10-20T21:33+09:00"
+  "updated": "2026-10-20T22:32+09:00",
+  "simTries": 1,
+  "sim": {
+   "stop20": "-20%",
+   "stop30": "-30%",
+   "stop40": "-40%",
+   "stop50": "-50%"
+  }
  },
  "t-20261018-mucron": {
   "pre": {
@@ -792,7 +827,14 @@
    "firstHitAfterSell": "+25%(利確)"
   },
   "done": true,
-  "updated": "2026-10-20T21:34+09:00"
+  "updated": "2026-10-20T22:33+09:00",
+  "simTries": 1,
+  "sim": {
+   "stop20": "-20%",
+   "stop30": "+25%",
+   "stop40": "+25%",
+   "stop50": "+25%"
+  }
  },
  "t-20261018-onboard": {
   "pre": {
@@ -832,7 +874,14 @@
    "firstHitAfterSell": "−20%(損切り)"
   },
   "done": true,
-  "updated": "2026-10-20T21:35+09:00"
+  "updated": "2026-10-20T22:33+09:00",
+  "simTries": 1,
+  "sim": {
+   "stop20": "+25%",
+   "stop30": "+25%",
+   "stop40": "+25%",
+   "stop50": "+25%"
+  }
  },
  "t-20261018-pingus": {
   "pre": {
@@ -872,7 +921,14 @@
    "firstHitAfterSell": "−20%(損切り)"
   },
   "done": true,
-  "updated": "2026-10-20T21:35+09:00"
+  "updated": "2026-10-20T22:33+09:00",
+  "simTries": 1,
+  "sim": {
+   "stop20": "-20%",
+   "stop30": "-30%",
+   "stop40": "-40%",
+   "stop50": "-50%"
+  }
  },
  "t-20261018-pips": {
   "pre": {
@@ -912,7 +968,91 @@
    "firstHitAfterSell": "+25%(利確)"
   },
   "done": true,
-  "updated": "2026-10-20T21:36+09:00"
+  "updated": "2026-10-20T22:34+09:00",
+  "simTries": 1,
+  "sim": {
+   "stop20": "+25%",
+   "stop30": "+25%",
+   "stop40": "+25%",
+   "stop50": "+25%"
+  }
+ },
+ "t-20261019-mimi": {
+  "pre": {
+   "buyPrice": 0.00036640482290483,
+   "chg30m": -2.7,
+   "chg60m": -15.3,
+   "fromHigh60m": -42.7,
+   "mcBuyEst": 385.5
+  },
+  "post": {
+   "sellPrice": 0.00033830445302593886,
+   "1h": {
+    "vsSell": -44.8,
+    "vsBuy": -49.0,
+    "mcEst": 186.9
+   },
+   "4h": {
+    "vsSell": -19.9,
+    "vsBuy": -26.1,
+    "mcEst": 271.0
+   },
+   "24h": {
+    "vsSell": -73.5,
+    "vsBuy": -75.5,
+    "mcEst": 89.7
+   },
+   "max24h": {
+    "vsSell": 13.1,
+    "vsBuy": 4.4,
+    "mcEst": 382.7
+   },
+   "min24h": {
+    "vsSell": -91.3,
+    "vsBuy": -92.0,
+    "mcEst": 29.3
+   },
+   "firstHitAfterSell": "−20%(損切り)"
+  },
+  "simTries": 1,
+  "sim": {
+   "stop20": "+25%",
+   "stop30": "+25%",
+   "stop40": "+25%",
+   "stop50": "+25%"
+  },
+  "done": true,
+  "updated": "2026-10-20T22:35+09:00"
+ },
+ "t-20261019-zdog": {
+  "pre": {
+   "buyPrice": 0.00032789999999999995,
+   "chg30m": 0.0,
+   "chg60m": 31.3,
+   "fromHigh60m": 0.0,
+   "mcBuyEst": 178.5
+  },
+  "post": {
+   "sellPrice": 0.0003672,
+   "1h": {
+    "vsSell": -51.4,
+    "vsBuy": -45.5,
+    "mcEst": 178.5
+   },
+   "4h": {
+    "vsSell": -51.4,
+    "vsBuy": -45.5,
+    "mcEst": 178.5
+   },
+   "24h": {
+    "vsSell": -51.4,
+    "vsBuy": -45.5,
+    "mcEst": 178.5
+   }
+  },
+  "simTries": 1,
+  "done": true,
+  "updated": "2026-10-20T22:36+09:00"
  },
  "_pools": {
   "AeLonprCt3y4dZEWEeRTkPqnUPW2FngSD2YeUmPP6GDk": {
@@ -1018,6 +1158,16 @@
   "4RFbdndphrM31jipKxopRmE7DCsLBEscf3kMEoBYpump": {
    "pool": "BPfJ6KJBqmvid6fuMbNZxpYSwzkUejhg1Tce4i49kJ7E",
    "supply": 1000000000.0,
+   "base_is_token": true
+  },
+  "8CYyivwMZPg6Edaofxo3eHiveZkDrU6TtUDwtMjTpump": {
+   "pool": "HaEwLk7YSUN3TSyiT87Zzwq1JDpGvP2mvFfpBdE8Seit",
+   "supply": 999986837.2233974,
+   "base_is_token": true
+  },
+  "58eo3pKwDZ2GKT2XvRumuns6RustWyvqtgfyubA3kYAJ": {
+   "pool": "E962e2LUqiFLHcNGR2fmumCMBFFS2ytvUMt5HkSYTPbN",
+   "supply": 1000000000.0000001,
    "base_is_token": true
   }
  }
