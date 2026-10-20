@@ -24,6 +24,8 @@ RESULTS = os.path.join(DATA, "tracking_results.json")
 REPORT = os.path.join(DATA, "tracking_report.md")
 
 CHECKPOINTS_H = [1, 4, 24]
+STOP_LEVELS = [20, 30, 40, 50]   # 損切りラインの比較用(%)
+TARGET = 25                      # 利確ライン(%)
 REQ_INTERVAL = 2.3          # 無料枠は1分30回まで
 MAX_TRADES_PER_RUN = 30     # 1回の実行で処理する取引の上限
 TIME_BUDGET_SEC = 300       # 5分たったら途中でも保存して終える(残りは次回)
@@ -178,7 +180,27 @@ def process(tr, res, pools, now):
                     first = "+25%(利確)"
                     break
             post["firstHitAfterSell"] = first or "どちらにも届かず"
-    if now >= sell_t + 24 * 3600:
+    # 損切りラインを変えたらどうなったか(買った時から24時間、5分足で)。
+    # +25%で利確 と −20/−30/−40/−50%で損切り のどちらに先に届くか。
+    # 同じ足で両方に届いた場合は損切りとして数える(厳しめ)。
+    if "sim" not in res and pb and now >= buy_t + 24 * 3600:
+        res["simTries"] = res.get("simTries", 0) + 1
+        cs5 = candles(pool, addr, 5, buy_t + 24 * 3600, 290)
+        cs5 = [c for c in cs5 if c[0] + 300 > buy_t]
+        if cs5:
+            sim = {}
+            for stop in STOP_LEVELS:
+                out = "どちらにも届かず"
+                for c in cs5:
+                    if c[3] <= pb * (1 - stop / 100):
+                        out = f"-{stop}%"
+                        break
+                    if c[2] >= pb * (1 + TARGET / 100):
+                        out = f"+{TARGET}%"
+                        break
+                sim[f"stop{stop}"] = out
+            res["sim"] = sim
+    if now >= sell_t + 24 * 3600 and ("sim" in res or now >= buy_t + 26 * 3600):
         res["done"] = True
     res["updated"] = datetime.now(JST).isoformat(timespec="minutes")
 
@@ -202,6 +224,17 @@ def write_report(tracked, results):
             fmt(post.get("1h", {}).get("vsSell")), fmt(post.get("4h", {}).get("vsSell")),
             fmt(h24.get("vsSell")), fmt(h24.get("vsBuy")),
             fmt(post.get("max24h", {}).get("vsSell")), fmt(pre.get("chg30m"))))
+    # 損切りラインの比較
+    sims = [r.get("sim") for r in results.values() if r.get("sim")]
+    if sims:
+        lines += ["", f"## 損切りラインを変えたら(+{TARGET}%利確と先にどちらに届いたか・{len(sims)}件)", "",
+                  "| 損切り | 利確できた | 損切り | どちらにも届かず | 1回あたりの平均(手数料前) |", "|---|---|---|---|---|"]
+        for stop in STOP_LEVELS:
+            vals = [s.get(f"stop{stop}") for s in sims]
+            w, l = vals.count(f"+{TARGET}%"), vals.count(f"-{stop}%")
+            n = w + l
+            ev = (w * TARGET - l * stop) / n if n else 0
+            lines.append(f"| -{stop}% | {w} | {l} | {len(vals) - n} | {ev:+.1f}% |")
     lines.append("")
     lines.append(f"更新: {datetime.now(JST):%Y-%m-%d %H:%M} (日本時間)")
     with open(REPORT, "w", encoding="utf-8") as f:
@@ -221,7 +254,12 @@ def main():
     results = load(RESULTS, {})
     pools = results.pop("_pools", {})
     now = int(time.time())
-    todo = [t for t in tracked if not results.get(t["id"], {}).get("done")]
+    def need(r):
+        if not r.get("done"):
+            return True
+        # 損切り比較(sim)が後から追加されたため、まだ無い取引は2回まで取り直す
+        return "sim" not in r and r.get("post") and r.get("simTries", 0) < 2
+    todo = [t for t in tracked if need(results.get(t["id"], {}))]
     log(f"追跡中 {len(todo)} 件 / 全 {len(tracked)} 件")
     start = time.time()
     for tr in todo[:MAX_TRADES_PER_RUN]:
