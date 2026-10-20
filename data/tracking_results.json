@@ -1080,13 +1080,13 @@
     "mcEst": 1131.1
    },
    "min24h": {
-    "vsSell": -36.3,
-    "vsBuy": -15.9,
-    "mcEst": 212.4
+    "vsSell": -40.5,
+    "vsBuy": -21.5,
+    "mcEst": 198.3
    },
    "firstHitAfterSell": "+25%(利確)"
   },
-  "updated": "2026-10-20T23:30+09:00"
+  "updated": "2026-10-21T00:00+09:00"
  },
  "t-20261020-pikajew": {
   "pre": {
@@ -1120,7 +1120,7 @@
    },
    "firstHitAfterSell": "−20%(損切り)"
   },
-  "updated": "2026-10-20T23:30+09:00"
+  "updated": "2026-10-21T00:00+09:00"
  },
  "t-20261020-zoo": {
   "pre": {
@@ -1149,7 +1149,7 @@
    },
    "firstHitAfterSell": "−20%(損切り)"
   },
-  "updated": "2026-10-20T23:30+09:00"
+  "updated": "2026-10-21T00:00+09:00"
  },
  "t-20261020-lifas": {
   "pre": {
@@ -1178,7 +1178,7 @@
    },
    "firstHitAfterSell": "−20%(損切り)"
   },
-  "updated": "2026-10-20T23:30+09:00"
+  "updated": "2026-10-21T00:00+09:00"
  },
  "t-20261020-589": {
   "pre": {
@@ -1196,7 +1196,7 @@
     "mcEst": 93.0
    }
   },
-  "updated": "2026-10-20T23:30+09:00"
+  "updated": "2026-10-21T00:01+09:00"
  },
  "_pools": {
   "AeLonprCt3y4dZEWEeRTkPqnUPW2FngSD2YeUmPP6GDk": {
