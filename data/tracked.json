@@ -341,6 +341,17 @@
    "mcOut": 369.91,
    "pnlPct": 28.1,
    "pnlSol": 0.0277
+  },
+  {
+   "id": "t-20261021-solo",
+   "token": "SOLO",
+   "address": "DxHTm46b1cnxMWi23PWtNX9AfdErYCdg7FAUskF6pump",
+   "buy": "2026-10-21T22:36:52+09:00",
+   "sell": "2026-10-21T22:38:30+09:00",
+   "mcIn": 22.57,
+   "mcOut": 29.49,
+   "pnlPct": 30.6,
+   "pnlSol": 0.015
   }
  ]
 }
