@@ -363,6 +363,17 @@
    "mcOut": 65.64,
    "pnlPct": -24.4,
    "pnlSol": -0.0242
+  },
+  {
+   "id": "t-20261022-php2s",
+   "token": "PHP2S…",
+   "address": "Bo61v44TWErCNGF4qzu2nEWyGgPWeNrNpu1FsV8dpump",
+   "buy": "2026-10-22T07:04:38+09:00",
+   "sell": "2026-10-22T07:12:17+09:00",
+   "mcIn": 226.32,
+   "mcOut": 151.28,
+   "pnlPct": -33.2,
+   "pnlSol": -0.0329
   }
  ]
 }
