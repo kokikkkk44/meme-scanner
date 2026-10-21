@@ -1311,7 +1311,7 @@
     "mcEst": 29.0
    }
   },
-  "updated": "2026-10-21T22:30+09:00",
+  "updated": "2026-10-21T23:00+09:00",
   "note": "売った後のデータなし"
  },
  "t-20261021-cpu": {
@@ -1346,7 +1346,7 @@
     "mcEst": 45.1
    }
   },
-  "updated": "2026-10-21T22:30+09:00",
+  "updated": "2026-10-21T23:00+09:00",
   "note": "売った後のデータなし"
  },
  "t-20261021-guzzl": {
@@ -1381,7 +1381,25 @@
     "mcEst": 4.0
    }
   },
-  "updated": "2026-10-21T22:30+09:00"
+  "updated": "2026-10-21T23:00+09:00"
+ },
+ "t-20261021-solo": {
+  "pre": {
+   "buyPrice": 2.2571431749284647e-05,
+   "chg30m": null,
+   "chg60m": null,
+   "fromHigh60m": -4.6,
+   "mcBuyEst": 28.1
+  }
+ },
+ "t-20261021-chupa": {
+  "pre": {
+   "buyPrice": 8.677e-05,
+   "chg30m": null,
+   "chg60m": null,
+   "fromHigh60m": -30.1,
+   "mcBuyEst": 78.5
+  }
  },
  "_pools": {
   "AeLonprCt3y4dZEWEeRTkPqnUPW2FngSD2YeUmPP6GDk": {
@@ -1537,6 +1555,16 @@
   "4tieigPJCAQbw1C9wBLtg9QZGgPFeuyibRD6Hi2spump": {
    "pool": "3Nazu5yFVWPnLQKXt8uNoiksjoL4UAfK2FBvr5b8YvEu",
    "supply": 974470737.3803754,
+   "base_is_token": true
+  },
+  "DxHTm46b1cnxMWi23PWtNX9AfdErYCdg7FAUskF6pump": {
+   "pool": "B4uBbnNrJtKEB7BbqXgFVf7bvcAv1yKWWmb6fUMTAbC2",
+   "supply": 999936568.0785981,
+   "base_is_token": true
+  },
+  "5iib9k6W8xMwuEfSLMXatv7msr94oBNQwcdaLhtkpump": {
+   "pool": "TGJR6ZfVzT8SpEUcY3mMDJKbRmUPhR38MVhL5AjBm3B",
+   "supply": 1000000000.0,
    "base_is_token": true
   }
  }
