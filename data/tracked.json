@@ -352,6 +352,17 @@
    "mcOut": 29.49,
    "pnlPct": 30.6,
    "pnlSol": 0.015
+  },
+  {
+   "id": "t-20261021-chupa",
+   "token": "Chupa…",
+   "address": "5iib9k6W8xMwuEfSLMXatv7msr94oBNQwcdaLhtkpump",
+   "buy": "2026-10-21T22:48:22+09:00",
+   "sell": "2026-10-21T22:50:34+09:00",
+   "mcIn": 86.77,
+   "mcOut": 65.64,
+   "pnlPct": -24.4,
+   "pnlSol": -0.0242
   }
  ]
 }
