@@ -374,6 +374,17 @@
    "mcOut": 151.28,
    "pnlPct": -33.2,
    "pnlSol": -0.0329
+  },
+  {
+   "id": "t-20261022-truth",
+   "token": "TRUTH",
+   "address": "GZ5kv81uiYgSXRWwxK7rkXrXnpw93mx2UYjfyQdfR4Fh",
+   "buy": "2026-10-22T07:18:13+09:00",
+   "sell": "2026-10-22T07:22:29+09:00",
+   "mcIn": 140.99,
+   "mcOut": 104.87,
+   "pnlPct": -27.4,
+   "pnlSol": -0.0273
   }
  ]
 }
