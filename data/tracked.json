@@ -319,6 +319,17 @@
    "mcOut": 271.42,
    "pnlPct": -22,
    "pnlSol": -0.022
+  },
+  {
+   "id": "t-20261021-cpu",
+   "token": "CPU",
+   "address": "cpuxtvVNNVGDHpk1MHyv4cC6d1rFmHBf7xAJCPHF3NY",
+   "buy": "2026-10-21T12:45:41+09:00",
+   "sell": "2026-10-21T12:51:19+09:00",
+   "mcIn": 108.07,
+   "mcOut": 85.22,
+   "pnlPct": -23.5,
+   "pnlSol": -0.0235
   }
  ]
 }
