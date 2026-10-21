@@ -1169,9 +1169,9 @@
     "mcEst": 67.1
    },
    "min24h": {
-    "vsSell": -95.7,
-    "vsBuy": -95.0,
-    "mcEst": 2.7
+    "vsSell": -95.8,
+    "vsBuy": -95.2,
+    "mcEst": 2.6
    },
    "firstHitAfterSell": "−20%(損切り)",
    "4h": {
@@ -1180,7 +1180,7 @@
     "mcEst": 8.2
    }
   },
-  "updated": "2026-10-21T13:30+09:00"
+  "updated": "2026-10-21T14:00+09:00"
  },
  "t-20261020-lifas": {
   "pre": {
@@ -1214,7 +1214,7 @@
     "mcEst": 16.0
    }
   },
-  "updated": "2026-10-21T13:30+09:00"
+  "updated": "2026-10-21T14:00+09:00"
  },
  "t-20261020-589": {
   "pre": {
@@ -1237,7 +1237,7 @@
     "mcEst": 93.0
    }
   },
-  "updated": "2026-10-21T13:30+09:00"
+  "updated": "2026-10-21T14:00+09:00"
  },
  "t-20261021-punani": {
   "pre": {
@@ -1271,7 +1271,7 @@
     "mcEst": 29.0
    }
   },
-  "updated": "2026-10-21T13:30+09:00"
+  "updated": "2026-10-21T14:00+09:00"
  },
  "t-20261021-cpu": {
   "pre": {
@@ -1280,7 +1280,27 @@
    "chg60m": 31.9,
    "fromHigh60m": -11.5,
    "mcBuyEst": 104.6
-  }
+  },
+  "post": {
+   "sellPrice": 8.619164164899745e-05,
+   "1h": {
+    "vsSell": -27.9,
+    "vsBuy": -43.2,
+    "mcEst": 61.4
+   },
+   "max24h": {
+    "vsSell": 41.1,
+    "vsBuy": 11.2,
+    "mcEst": 120.2
+   },
+   "min24h": {
+    "vsSell": -27.9,
+    "vsBuy": -43.2,
+    "mcEst": 61.4
+   },
+   "firstHitAfterSell": "−20%(損切り)"
+  },
+  "updated": "2026-10-21T14:00+09:00"
  },
  "_pools": {
   "AeLonprCt3y4dZEWEeRTkPqnUPW2FngSD2YeUmPP6GDk": {
