@@ -330,6 +330,17 @@
    "mcOut": 85.22,
    "pnlPct": -23.5,
    "pnlSol": -0.0235
+  },
+  {
+   "id": "t-20261021-guzzl",
+   "token": "GUZZL…",
+   "address": "4tieigPJCAQbw1C9wBLtg9QZGgPFeuyibRD6Hi2spump",
+   "buy": "2026-10-21T17:38:21+09:00",
+   "sell": "2026-10-21T17:50:01+09:00",
+   "mcIn": 288.7,
+   "mcOut": 369.91,
+   "pnlPct": 28.1,
+   "pnlSol": 0.0277
   }
  ]
 }
