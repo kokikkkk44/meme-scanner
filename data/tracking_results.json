@@ -1131,9 +1131,22 @@
     "vsBuy": -99.3,
     "mcEst": 0.7
    },
-   "firstHitAfterSell": "−20%(損切り)"
+   "firstHitAfterSell": "−20%(損切り)",
+   "24h": {
+    "vsSell": -91.8,
+    "vsBuy": -90.4,
+    "mcEst": 10.0
+   }
   },
-  "updated": "2026-10-21T12:30+09:00"
+  "updated": "2026-10-21T13:00+09:00",
+  "simTries": 1,
+  "sim": {
+   "stop20": "-20%",
+   "stop30": "-30%",
+   "stop40": "-40%",
+   "stop50": "-50%"
+  },
+  "done": true
  },
  "t-20261020-zoo": {
   "pre": {
@@ -1156,7 +1169,7 @@
     "mcEst": 67.1
    },
    "min24h": {
-    "vsSell": -95.5,
+    "vsSell": -95.6,
     "vsBuy": -94.8,
     "mcEst": 2.8
    },
@@ -1167,7 +1180,7 @@
     "mcEst": 8.2
    }
   },
-  "updated": "2026-10-21T12:30+09:00"
+  "updated": "2026-10-21T13:00+09:00"
  },
  "t-20261020-lifas": {
   "pre": {
@@ -1201,7 +1214,7 @@
     "mcEst": 16.0
    }
   },
-  "updated": "2026-10-21T12:30+09:00"
+  "updated": "2026-10-21T13:00+09:00"
  },
  "t-20261020-589": {
   "pre": {
@@ -1224,7 +1237,7 @@
     "mcEst": 93.0
    }
   },
-  "updated": "2026-10-21T12:30+09:00"
+  "updated": "2026-10-21T13:00+09:00"
  },
  "t-20261021-punani": {
   "pre": {
@@ -1258,7 +1271,16 @@
     "mcEst": 29.0
    }
   },
-  "updated": "2026-10-21T12:30+09:00"
+  "updated": "2026-10-21T13:01+09:00"
+ },
+ "t-20261021-cpu": {
+  "pre": {
+   "buyPrice": 0.00010930216748424258,
+   "chg30m": 67.7,
+   "chg60m": 31.9,
+   "fromHigh60m": -11.5,
+   "mcBuyEst": 104.6
+  }
  },
  "_pools": {
   "AeLonprCt3y4dZEWEeRTkPqnUPW2FngSD2YeUmPP6GDk": {
@@ -1404,6 +1426,11 @@
   "6KEiPuRtAEcGgv9Ryi9Zx27yg4mZXm69sZpHUrBZKD9D": {
    "pool": "2Qp3sQMDTyFYGJho2y2QUeF9wcam91q6nxqj7aMLCQ39",
    "supply": 977133325.3927995,
+   "base_is_token": true
+  },
+  "cpuxtvVNNVGDHpk1MHyv4cC6d1rFmHBf7xAJCPHF3NY": {
+   "pool": "3aTZQSPRYbSndmchrkjZhx1t1u1UuhEmnndoL4CNXWwc",
+   "supply": 988726962.0300968,
    "base_is_token": true
   }
  }
