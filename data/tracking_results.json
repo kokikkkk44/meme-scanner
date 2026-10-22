@@ -1546,9 +1546,22 @@
     "vsSell": -36.2,
     "vsBuy": -57.4,
     "mcEst": 96.5
+   },
+   "24h": {
+    "vsSell": -60.6,
+    "vsBuy": -73.7,
+    "mcEst": 59.6
    }
   },
-  "updated": "2026-10-23T07:00+09:00"
+  "updated": "2026-10-23T07:30+09:00",
+  "simTries": 1,
+  "sim": {
+   "stop20": "-20%",
+   "stop30": "-30%",
+   "stop40": "+25%",
+   "stop50": "+25%"
+  },
+  "done": true
  },
  "t-20261022-truth": {
   "pre": {
@@ -1580,9 +1593,22 @@
     "vsSell": -54.7,
     "vsBuy": -66.3,
     "mcEst": 47.5
+   },
+   "24h": {
+    "vsSell": -41.0,
+    "vsBuy": -56.1,
+    "mcEst": 61.9
    }
   },
-  "updated": "2026-10-23T07:00+09:00"
+  "updated": "2026-10-23T07:30+09:00",
+  "simTries": 1,
+  "sim": {
+   "stop20": "-20%",
+   "stop30": "-30%",
+   "stop40": "-40%",
+   "stop50": "-50%"
+  },
+  "done": true
  },
  "_pools": {
   "AeLonprCt3y4dZEWEeRTkPqnUPW2FngSD2YeUmPP6GDk": {
