@@ -1348,9 +1348,9 @@
     "mcEst": 1198.4
    },
    "min24h": {
-    "vsSell": -91.1,
-    "vsBuy": -92.9,
-    "mcEst": 7.6
+    "vsSell": -92.8,
+    "vsBuy": -94.3,
+    "mcEst": 6.2
    },
    "firstHitAfterSell": "−20%(損切り)",
    "4h": {
@@ -1359,7 +1359,7 @@
     "mcEst": 45.1
    }
   },
-  "updated": "2026-10-22T11:00+09:00",
+  "updated": "2026-10-22T11:30+09:00",
   "note": "売った後のデータなし"
  },
  "t-20261021-guzzl": {
@@ -1394,7 +1394,7 @@
     "mcEst": 4.0
    }
   },
-  "updated": "2026-10-22T11:00+09:00"
+  "updated": "2026-10-22T11:30+09:00"
  },
  "t-20261021-solo": {
   "pre": {
@@ -1428,7 +1428,7 @@
     "mcEst": 4.6
    }
   },
-  "updated": "2026-10-22T11:00+09:00"
+  "updated": "2026-10-22T11:30+09:00"
  },
  "t-20261021-chupa": {
   "pre": {
@@ -1462,7 +1462,7 @@
     "mcEst": 8.3
    }
   },
-  "updated": "2026-10-22T11:00+09:00"
+  "updated": "2026-10-22T11:30+09:00"
  },
  "t-20261022-php2s": {
   "pre": {
@@ -1489,9 +1489,14 @@
     "vsBuy": -75.9,
     "mcEst": 54.6
    },
-   "firstHitAfterSell": "−20%(損切り)"
+   "firstHitAfterSell": "−20%(損切り)",
+   "4h": {
+    "vsSell": -36.2,
+    "vsBuy": -57.4,
+    "mcEst": 96.5
+   }
   },
-  "updated": "2026-10-22T11:00+09:00"
+  "updated": "2026-10-22T11:30+09:00"
  },
  "t-20261022-truth": {
   "pre": {
@@ -1518,9 +1523,14 @@
     "vsBuy": -72.2,
     "mcEst": 39.2
    },
-   "firstHitAfterSell": "−20%(損切り)"
+   "firstHitAfterSell": "−20%(損切り)",
+   "4h": {
+    "vsSell": -54.7,
+    "vsBuy": -66.3,
+    "mcEst": 47.5
+   }
   },
-  "updated": "2026-10-22T11:01+09:00"
+  "updated": "2026-10-22T11:31+09:00"
  },
  "_pools": {
   "AeLonprCt3y4dZEWEeRTkPqnUPW2FngSD2YeUmPP6GDk": {
