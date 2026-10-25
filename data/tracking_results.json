@@ -1610,6 +1610,15 @@
   },
   "done": true
  },
+ "t-20261025-pump": {
+  "pre": {
+   "buyPrice": 0.00022781000000000003,
+   "chg30m": null,
+   "chg60m": null,
+   "fromHigh60m": -29.3,
+   "mcBuyEst": 173.9
+  }
+ },
  "_pools": {
   "AeLonprCt3y4dZEWEeRTkPqnUPW2FngSD2YeUmPP6GDk": {
    "pool": "8TVM7UJXk3PZnUj1tPzxYyNbqhsEyKEqPyHVbp5gY3aQ",
@@ -1784,6 +1793,11 @@
   "GZ5kv81uiYgSXRWwxK7rkXrXnpw93mx2UYjfyQdfR4Fh": {
    "pool": "5CA2ebQK3iiWR2JQAcr8tAJ4bBrtEVpPXSnudS85UekC",
    "supply": 21000000.000000004,
+   "base_is_token": true
+  },
+  "28ZdKbDwAWSsKPFMwxJTUiB9HbjWxetsHvK1NYwtpump": {
+   "pool": "3Cf4WkHjTSy6zsZmRJX6sdLRFgLyujpD8Bh8oAc97Kgq",
+   "supply": 999999999.9999999,
    "base_is_token": true
   }
  }
