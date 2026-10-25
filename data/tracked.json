@@ -385,6 +385,17 @@
    "mcOut": 104.87,
    "pnlPct": -27.4,
    "pnlSol": -0.0273
+  },
+  {
+   "id": "t-20261025-pump",
+   "token": "PUMP",
+   "address": "28ZdKbDwAWSsKPFMwxJTUiB9HbjWxetsHvK1NYwtpump",
+   "buy": "2026-10-25T11:05:15+09:00",
+   "sell": "2026-10-25T12:12:46+09:00",
+   "mcIn": 227.81,
+   "mcOut": 108.97,
+   "pnlPct": -52.8,
+   "pnlSol": -0.0527
   }
  ]
 }
