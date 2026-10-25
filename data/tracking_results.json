@@ -1642,7 +1642,7 @@
     "mcEst": 31.1
    }
   },
-  "updated": "2026-10-25T22:30+09:00"
+  "updated": "2026-10-25T23:00+09:00"
  },
  "t-20261025-launch": {
   "pre": {
@@ -1651,7 +1651,27 @@
    "chg60m": 847.8,
    "fromHigh60m": -11.3,
    "mcBuyEst": 0.5
-  }
+  },
+  "post": {
+   "sellPrice": 0.1584249965061278,
+   "1h": {
+    "vsSell": -99.9,
+    "vsBuy": -99.9,
+    "mcEst": 0.3
+   },
+   "max24h": {
+    "vsSell": -99.8,
+    "vsBuy": -99.9,
+    "mcEst": 0.4
+   },
+   "min24h": {
+    "vsSell": -99.9,
+    "vsBuy": -99.9,
+    "mcEst": 0.2
+   },
+   "firstHitAfterSell": "−20%(損切り)"
+  },
+  "updated": "2026-10-25T23:00+09:00"
  },
  "_pools": {
   "AeLonprCt3y4dZEWEeRTkPqnUPW2FngSD2YeUmPP6GDk": {
