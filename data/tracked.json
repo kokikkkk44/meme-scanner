@@ -396,6 +396,17 @@
    "mcOut": 108.97,
    "pnlPct": -52.8,
    "pnlSol": -0.0527
+  },
+  {
+   "id": "t-20261025-launch",
+   "token": "LAUNCH",
+   "address": "AhBidGAgv6QbKSWfrSCegGrzFLcBx4E5FNYTKHNQQj6C",
+   "buy": "2026-10-25T21:42:31+09:00",
+   "sell": "2026-10-25T21:48:06+09:00",
+   "mcIn": 308.57,
+   "mcOut": 228.13,
+   "pnlPct": -26.3,
+   "pnlSol": -0.0262
   }
  ]
 }
