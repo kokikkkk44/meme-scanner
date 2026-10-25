@@ -1642,7 +1642,16 @@
     "mcEst": 31.1
    }
   },
-  "updated": "2026-10-25T21:30+09:00"
+  "updated": "2026-10-25T22:00+09:00"
+ },
+ "t-20261025-launch": {
+  "pre": {
+   "buyPrice": 0.21428659611579298,
+   "chg30m": 154.2,
+   "chg60m": 847.8,
+   "fromHigh60m": -11.3,
+   "mcBuyEst": 0.5
+  }
  },
  "_pools": {
   "AeLonprCt3y4dZEWEeRTkPqnUPW2FngSD2YeUmPP6GDk": {
@@ -1824,6 +1833,11 @@
    "pool": "3Cf4WkHjTSy6zsZmRJX6sdLRFgLyujpD8Bh8oAc97Kgq",
    "supply": 999999999.9999999,
    "base_is_token": true
+  },
+  "AhBidGAgv6QbKSWfrSCegGrzFLcBx4E5FNYTKHNQQj6C": {
+   "pool": "GezArkyjgqsjid7m9zg3jkxxFmnHuh8dDzmqUpbL7K59",
+   "supply": 1439987.4074870253,
+   "base_is_token": false
   }
  }
 }
