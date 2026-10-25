@@ -1642,7 +1642,7 @@
     "mcEst": 31.1
    }
   },
-  "updated": "2026-10-26T02:00+09:00"
+  "updated": "2026-10-26T02:30+09:00"
  },
  "t-20261025-launch": {
   "pre": {
@@ -1660,9 +1660,9 @@
     "mcEst": 0.3
    },
    "max24h": {
-    "vsSell": -99.7,
-    "vsBuy": -99.8,
-    "mcEst": 0.6
+    "vsSell": -98.7,
+    "vsBuy": -99.0,
+    "mcEst": 2.9
    },
    "min24h": {
     "vsSell": -100.0,
@@ -1676,7 +1676,7 @@
     "mcEst": 0.5
    }
   },
-  "updated": "2026-10-26T02:00+09:00"
+  "updated": "2026-10-26T02:30+09:00"
  },
  "_pools": {
   "AeLonprCt3y4dZEWEeRTkPqnUPW2FngSD2YeUmPP6GDk": {
