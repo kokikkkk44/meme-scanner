@@ -1687,9 +1687,22 @@
     "vsSell": -99.8,
     "vsBuy": -99.8,
     "mcEst": 0.5
+   },
+   "24h": {
+    "vsSell": -98.6,
+    "vsBuy": -99.0,
+    "mcEst": 3.2
    }
   },
-  "updated": "2026-10-26T21:30+09:00"
+  "updated": "2026-10-26T22:00+09:00",
+  "simTries": 1,
+  "sim": {
+   "stop20": "-20%",
+   "stop30": "-30%",
+   "stop40": "-40%",
+   "stop50": "-50%"
+  },
+  "done": true
  },
  "_pools": {
   "AeLonprCt3y4dZEWEeRTkPqnUPW2FngSD2YeUmPP6GDk": {
