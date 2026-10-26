@@ -1640,16 +1640,22 @@
     "vsSell": -71.5,
     "vsBuy": -86.3,
     "mcEst": 31.1
+   },
+   "24h": {
+    "vsSell": -87.7,
+    "vsBuy": -94.1,
+    "mcEst": 13.5
    }
   },
-  "updated": "2026-10-26T12:00+09:00",
+  "updated": "2026-10-26T12:30+09:00",
   "simTries": 1,
   "sim": {
    "stop20": "-20%",
    "stop30": "-30%",
    "stop40": "+25%",
    "stop50": "+25%"
-  }
+  },
+  "done": true
  },
  "t-20261025-launch": {
   "pre": {
@@ -1683,7 +1689,7 @@
     "mcEst": 0.5
    }
   },
-  "updated": "2026-10-26T12:00+09:00"
+  "updated": "2026-10-26T12:30+09:00"
  },
  "_pools": {
   "AeLonprCt3y4dZEWEeRTkPqnUPW2FngSD2YeUmPP6GDk": {
