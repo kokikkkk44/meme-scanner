@@ -1725,9 +1725,9 @@
     "mcEst": 415.2
    },
    "min24h": {
-    "vsSell": -74.3,
-    "vsBuy": -71.1,
-    "mcEst": 41.0
+    "vsSell": -78.8,
+    "vsBuy": -76.3,
+    "mcEst": 33.7
    },
    "firstHitAfterSell": "+25%(利確)",
    "4h": {
@@ -1736,7 +1736,7 @@
     "mcEst": 148.6
    }
   },
-  "updated": "2026-10-28T04:30+09:00"
+  "updated": "2026-10-28T05:00+09:00"
  },
  "_pools": {
   "AeLonprCt3y4dZEWEeRTkPqnUPW2FngSD2YeUmPP6GDk": {
