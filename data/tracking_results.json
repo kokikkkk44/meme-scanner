@@ -1704,6 +1704,15 @@
   },
   "done": true
  },
+ "t-20261027-wiener": {
+  "pre": {
+   "buyPrice": 0.00014214,
+   "chg30m": 67.1,
+   "chg60m": null,
+   "fromHigh60m": -22.2,
+   "mcBuyEst": 128.0
+  }
+ },
  "_pools": {
   "AeLonprCt3y4dZEWEeRTkPqnUPW2FngSD2YeUmPP6GDk": {
    "pool": "8TVM7UJXk3PZnUj1tPzxYyNbqhsEyKEqPyHVbp5gY3aQ",
@@ -1889,6 +1898,11 @@
    "pool": "GezArkyjgqsjid7m9zg3jkxxFmnHuh8dDzmqUpbL7K59",
    "supply": 1439987.4074870253,
    "base_is_token": false
+  },
+  "EKZGtEsT2VbXH6car15x2zMHyeiYkB28DvMnBZqRpump": {
+   "pool": "HHP4HmZgrCNwU3Qgvh6P7WFZHoXLs7YEcuvbs1wF3hzi",
+   "supply": 1000000000.0,
+   "base_is_token": true
   }
  }
 }
