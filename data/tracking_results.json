@@ -1711,7 +1711,27 @@
    "chg60m": null,
    "fromHigh60m": -22.2,
    "mcBuyEst": 128.0
-  }
+  },
+  "post": {
+   "sellPrice": 0.00015939,
+   "1h": {
+    "vsSell": -10.9,
+    "vsBuy": -0.0,
+    "mcEst": 142.1
+   },
+   "max24h": {
+    "vsSell": 160.5,
+    "vsBuy": 192.1,
+    "mcEst": 415.2
+   },
+   "min24h": {
+    "vsSell": -42.0,
+    "vsBuy": -35.0,
+    "mcEst": 92.4
+   },
+   "firstHitAfterSell": "+25%(利確)"
+  },
+  "updated": "2026-10-27T14:00+09:00"
  },
  "_pools": {
   "AeLonprCt3y4dZEWEeRTkPqnUPW2FngSD2YeUmPP6GDk": {
