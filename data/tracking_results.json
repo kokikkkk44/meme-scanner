@@ -1736,7 +1736,7 @@
     "mcEst": 148.6
    }
   },
-  "updated": "2026-10-28T07:08+09:00"
+  "updated": "2026-10-28T07:30+09:00"
  },
  "t-20261028-lumar": {
   "pre": {
@@ -1745,6 +1745,15 @@
    "chg60m": null,
    "fromHigh60m": -98.8,
    "mcBuyEst": 2.0
+  }
+ },
+ "t-20261028-meat": {
+  "pre": {
+   "buyPrice": 0.00024513595579303803,
+   "chg30m": -2.5,
+   "chg60m": 16.9,
+   "fromHigh60m": -19.0,
+   "mcBuyEst": 137.5
   }
  },
  "_pools": {
@@ -1941,6 +1950,11 @@
   "2k9ThvFBBAtSfubUG3oVhjfS8TY3Js27xq7Gghb8pump": {
    "pool": "9S6UxYagQ7cJgxiXczXeqqxhsqvntfr1n2CdyzoUuyEU",
    "supply": 998425522.9592662,
+   "base_is_token": true
+  },
+  "AwYpgrsz17cA26UosYkHyX9dAhyx7ACZAR4BmneVpump": {
+   "pool": "HkNuUD4vN56Ls664Nf34gDNxQ33JXYTbUKGE699VcccZ",
+   "supply": 987574422.5967011,
    "base_is_token": true
   }
  }
