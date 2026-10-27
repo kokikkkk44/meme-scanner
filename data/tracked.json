@@ -418,6 +418,17 @@
    "mcOut": 159.39,
    "pnlPct": 12.1,
    "pnlSol": 0.012
+  },
+  {
+   "id": "t-20261028-lumar",
+   "token": "Lumar",
+   "address": "2k9ThvFBBAtSfubUG3oVhjfS8TY3Js27xq7Gghb8pump",
+   "buy": "2026-10-28T07:00:06+09:00",
+   "sell": "2026-10-28T07:00:43+09:00",
+   "mcIn": 96.66,
+   "mcOut": 67.67,
+   "pnlPct": -30.0,
+   "pnlSol": -0.0298
   }
  ]
 }
