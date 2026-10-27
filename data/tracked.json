@@ -429,6 +429,17 @@
    "mcOut": 67.67,
    "pnlPct": -30.0,
    "pnlSol": -0.0298
+  },
+  {
+   "id": "t-20261028-meat",
+   "token": "meat",
+   "address": "AwYpgrsz17cA26UosYkHyX9dAhyx7ACZAR4BmneVpump",
+   "buy": "2026-10-28T07:02:42+09:00",
+   "sell": "2026-10-28T07:07:38+09:00",
+   "mcIn": 242.09,
+   "mcOut": 196.39,
+   "pnlPct": -19.7,
+   "pnlSol": -0.0197
   }
  ]
 }
