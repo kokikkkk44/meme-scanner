@@ -1736,7 +1736,16 @@
     "mcEst": 148.6
    }
   },
-  "updated": "2026-10-28T07:00+09:00"
+  "updated": "2026-10-28T07:08+09:00"
+ },
+ "t-20261028-lumar": {
+  "pre": {
+   "buyPrice": 9.681242894663415e-05,
+   "chg30m": null,
+   "chg60m": null,
+   "fromHigh60m": -98.8,
+   "mcBuyEst": 2.0
+  }
  },
  "_pools": {
   "AeLonprCt3y4dZEWEeRTkPqnUPW2FngSD2YeUmPP6GDk": {
@@ -1927,6 +1936,11 @@
   "EKZGtEsT2VbXH6car15x2zMHyeiYkB28DvMnBZqRpump": {
    "pool": "HHP4HmZgrCNwU3Qgvh6P7WFZHoXLs7YEcuvbs1wF3hzi",
    "supply": 1000000000.0,
+   "base_is_token": true
+  },
+  "2k9ThvFBBAtSfubUG3oVhjfS8TY3Js27xq7Gghb8pump": {
+   "pool": "9S6UxYagQ7cJgxiXczXeqqxhsqvntfr1n2CdyzoUuyEU",
+   "supply": 998425522.9592662,
    "base_is_token": true
   }
  }
