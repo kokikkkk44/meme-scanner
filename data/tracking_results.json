@@ -1783,7 +1783,7 @@
     "mcEst": 2.0
    }
   },
-  "updated": "2026-10-28T18:00+09:00"
+  "updated": "2026-10-28T18:30+09:00"
  },
  "t-20261028-meat": {
   "pre": {
@@ -1806,9 +1806,9 @@
     "mcEst": 379.1
    },
    "min24h": {
-    "vsSell": -64.1,
-    "vsBuy": -70.8,
-    "mcEst": 70.6
+    "vsSell": -77.6,
+    "vsBuy": -81.8,
+    "mcEst": 44.0
    },
    "firstHitAfterSell": "−20%(損切り)",
    "4h": {
@@ -1817,7 +1817,7 @@
     "mcEst": 131.2
    }
   },
-  "updated": "2026-10-28T18:00+09:00"
+  "updated": "2026-10-28T18:30+09:00"
  },
  "_pools": {
   "AeLonprCt3y4dZEWEeRTkPqnUPW2FngSD2YeUmPP6GDk": {
