@@ -1734,9 +1734,22 @@
     "vsSell": -6.7,
     "vsBuy": 4.6,
     "mcEst": 148.6
+   },
+   "24h": {
+    "vsSell": -66.9,
+    "vsBuy": -62.9,
+    "mcEst": 52.7
    }
   },
-  "updated": "2026-10-28T12:30+09:00"
+  "updated": "2026-10-28T13:00+09:00",
+  "simTries": 1,
+  "sim": {
+   "stop20": "-20%",
+   "stop30": "-30%",
+   "stop40": "-40%",
+   "stop50": "-50%"
+  },
+  "done": true
  },
  "t-20261028-lumar": {
   "pre": {
@@ -1770,7 +1783,7 @@
     "mcEst": 2.0
    }
   },
-  "updated": "2026-10-28T12:30+09:00"
+  "updated": "2026-10-28T13:00+09:00"
  },
  "t-20261028-meat": {
   "pre": {
@@ -1804,7 +1817,7 @@
     "mcEst": 131.2
    }
   },
-  "updated": "2026-10-28T12:30+09:00"
+  "updated": "2026-10-28T13:00+09:00"
  },
  "_pools": {
   "AeLonprCt3y4dZEWEeRTkPqnUPW2FngSD2YeUmPP6GDk": {
