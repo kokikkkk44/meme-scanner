@@ -1725,9 +1725,9 @@
     "mcEst": 415.2
    },
    "min24h": {
-    "vsSell": -83.9,
-    "vsBuy": -81.9,
-    "mcEst": 25.7
+    "vsSell": -85.7,
+    "vsBuy": -83.9,
+    "mcEst": 22.8
    },
    "firstHitAfterSell": "+25%(利確)",
    "4h": {
@@ -1736,7 +1736,7 @@
     "mcEst": 148.6
    }
   },
-  "updated": "2026-10-28T09:30+09:00"
+  "updated": "2026-10-28T10:00+09:00"
  },
  "t-20261028-lumar": {
   "pre": {
@@ -1765,7 +1765,7 @@
    },
    "firstHitAfterSell": "−20%(損切り)"
   },
-  "updated": "2026-10-28T09:30+09:00"
+  "updated": "2026-10-28T10:00+09:00"
  },
  "t-20261028-meat": {
   "pre": {
@@ -1794,7 +1794,7 @@
    },
    "firstHitAfterSell": "−20%(損切り)"
   },
-  "updated": "2026-10-28T09:30+09:00"
+  "updated": "2026-10-28T10:00+09:00"
  },
  "_pools": {
   "AeLonprCt3y4dZEWEeRTkPqnUPW2FngSD2YeUmPP6GDk": {
